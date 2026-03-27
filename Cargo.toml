@@ -1,0 +1,37 @@
+[package]
+name = "iced_modifier"
+version = "0.1.0"
+edition = "2024"
+description = "SwiftUI/Jetpack Compose-style modifier API for iced — chainable styling, layout, interactions, tooltips, and scrolling"
+license = "MIT"
+repository = "https://github.com/moon3482/iced-modifier"
+keywords = ["iced", "gui", "modifier", "ui", "swiftui"]
+categories = ["gui"]
+readme = "README.md"
+
+[features]
+default = []
+icons = ["dep:iced_fonts"]
+animation = ["dep:iced_anim"]
+drag-drop = ["dep:iced_drop"]
+all = ["icons", "animation", "drag-drop"]
+
+[dependencies]
+iced = { version = "0.14.0", features = ["advanced"] }
+iced_fonts = { version = "0.3.0", features = ["bootstrap"], optional = true }
+iced_anim = { version = "0.3.1", optional = true }
+iced_drop = { version = "0.2", optional = true }
+
+[[example]]
+name = "basic"
+path = "examples/basic.rs"
+
+[[example]]
+name = "icons"
+path = "examples/icons.rs"
+required-features = ["icons"]
+
+[[example]]
+name = "drag_drop"
+path = "examples/drag_drop.rs"
+required-features = ["drag-drop"]
