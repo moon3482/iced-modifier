@@ -105,3 +105,18 @@ fn padding_from_different_types() {
     let _: E = text("b").modify(Modifier::new().padding(10.0f32));
     let _: E = text("c").modify(Modifier::new().padding([10.0, 20.0]));
 }
+
+#[test]
+fn size_fixed() {
+    let _: E = text("hello").modify(Modifier::new().size(Length::Fixed(100.0)));
+}
+
+#[test]
+fn size_fill() {
+    let _: E = text("hello").modify(Modifier::new().size(Length::Fill));
+}
+
+#[test]
+fn size_zero() {
+    let _: E = text("hello").modify(Modifier::new().size(Length::Fixed(0.0)));
+}

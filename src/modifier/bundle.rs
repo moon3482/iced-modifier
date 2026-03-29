@@ -235,6 +235,13 @@ pub trait ModifyBase: Sized {
     /// Compose: `.fillMaxSize()`
     fn fill(self) -> Self { self.fill_width().fill_height() }
 
+    /// Set both width and height to the same value.
+    /// Compose: `Modifier.size()` / SwiftUI: `.frame(width:height:)`
+    fn size(self, size: impl Into<Length>) -> Self {
+        let size = size.into();
+        self.width(size).height(size)
+    }
+
     /// Fill a proportional portion of available width.
     /// Compose: `.weight()` / `.fillMaxWidth(fraction)`
     fn fill_portion(self, portion: u16) -> Self {
