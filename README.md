@@ -5,7 +5,7 @@
 
 **SwiftUI/Jetpack Compose-style modifier API for [iced](https://github.com/iced-rs/iced)**
 
-Chainable styling, layout, interactions, tooltips, and scrolling — all in one fluent API.
+Chainable styling, layout, interactions, and widget-specific properties — all in one fluent API.
 
 > [한국어 문서 (Korean)](docs/README-kr.md)
 
@@ -13,38 +13,38 @@ Chainable styling, layout, interactions, tooltips, and scrolling — all in one 
 
 ```toml
 [dependencies]
-iced_modifier = "0.1"
+iced_modifier = "0.2"
 ```
 
 ```rust
-use iced::widget::text;
-use iced::Color;
 use iced_modifier::prelude::*;
 
-// Pure styling — returns Element directly, no .into() needed
-let card = text("Hello").modify(
-    Modifier::new()
-        .padding(16)
-        .background_color(Color::WHITE)
-        .corner_radius(12)
-);
+// Direct chaining — SwiftUI style
+Text::new("Hello")
+    .font_size(16)
+    .padding(12)
+    .background_color(Color::WHITE)
+    .corner_radius(8)
+    .on_press(Message::Clicked)
+    .cursor(mouse::Interaction::Pointer)
 
-// With interactions (click, hover, cursor)
-let button = text("Click me").modify(
-    Modifier::new()
-        .padding(12)
-        .background_color(Color::WHITE)
-        .corner_radius(8)
-        .on_press(Message::Clicked)
-        .on_enter(Message::Hovered(true))
-        .on_exit(Message::Hovered(false))
-        .cursor(mouse::Interaction::Pointer)
-);
+// Column with spacing
+column![
+    Text::new("Item A").font_size(14).padding(8),
+    Text::new("Item B").font_size(14).padding(8),
+]
+.spacing(8)
+.padding(12)
+.background_color(Color::WHITE)
+
+// Button with styled content
+Button::new(Text::new("Submit").font_size(14).color(Color::WHITE))
+    .on_press(Message::Submit)
+    .padding(12)
+    .corner_radius(8)
 ```
 
 ## Why iced_modifier?
-
-iced's current API requires verbose Container wrapping for common styling:
 
 ```rust
 // Before: verbose Container wrapping + style closure
@@ -57,11 +57,34 @@ container(text("Hello"))
     })
     .into()
 
-// After: one-liner with iced_modifier
-text("Hello").modify(
-    Modifier::new().padding(16).background_color(Color::WHITE).corner_radius(12)
-)
+// After: direct chaining
+Text::new("Hello")
+    .padding(16)
+    .background_color(Color::WHITE)
+    .corner_radius(12)
 ```
+
+## Widget Wrappers
+
+All 12 major iced widgets have modifier-aware wrappers with direct chaining:
+
+| Widget | Pattern | Widget-Specific Methods |
+|--------|---------|----------------------|
+| `Text` | A (→ InteractiveText) | `font_size`, `size`, `font`, `color`, `text_width`, `text_height` |
+| `Image` | A (→ InteractiveImage) | `opacity`, `rotation`, `content_fit`, `scale` |
+| `Column` | B | `spacing`, `push`, `extend`, `column![]` |
+| `Row` | B | `spacing`, `push`, `extend`, `row![]` |
+| `Button` | B | `on_press`, `on_press_maybe`, `button_padding` |
+| `TextInput` | B | `font_size`, `on_input`, `on_submit`, `on_paste`, `secure` |
+| `TextEditor` | B | `font_size`, `on_action`, `wrapping`, `editor_padding` |
+| `Checkbox` | B | `on_toggle`, `label`, `check_size`, `check_spacing`, `text_size` |
+| `Radio` | B | `radio_size`, `radio_spacing`, `text_size` |
+| `Toggler` | B | `on_toggle`, `label`, `toggler_size`, `toggler_spacing`, `text_size` |
+| `Slider` | B | `step`, `shift_step`, `on_release`, `slider_width`, `slider_height` |
+| `PickList` | B | `placeholder`, `text_size`, `menu_height`, `on_open`, `on_close` |
+
+**Pattern A**: No Message generic. Interaction methods (`.on_press()`) transition to interactive type.
+**Pattern B**: Has Message generic from children/callbacks. Interactions available directly.
 
 ## Features
 
@@ -116,11 +139,13 @@ text("Hello").modify(
 | `.scrollable_id()` | Scrollable widget ID | — | — |
 | `.hidden(bool)` | Visibility toggle | `AnimatedVisibility` | `.hidden()` |
 | `.id()` | Widget ID | `.testTag()` | `.id()` |
+| `.font_size()` | Font size (widget wrappers) | `fontSize` | `.font(.system(size:))` |
+| `.spacing()` | Child spacing (widget wrappers) | `Arrangement.spacedBy()` | `VStack(spacing:)` |
 
 ### Composition
 
 ```rust
-// Reusable styles
+// Reusable styles (Modifier still available)
 fn card_style() -> Modifier {
     Modifier::new()
         .background_color(Color::WHITE)
@@ -128,26 +153,25 @@ fn card_style() -> Modifier {
         .padding(16)
 }
 
-// Compose with then()
-let elevated = card_style().then(Modifier::new().shadow(shadow));
+// Apply with .modify() (backward compatible)
+text("Hello").modify(card_style())
 
 // Conditional modifiers
-Modifier::new()
+Text::new("Status")
     .padding(10)
-    .modify_if(is_error, |m| m.background_color(Color::RED))
+    .modify_if(is_error, |t| t.background_color(Color::RED))
 
 // Order-dependent layering
-Modifier::new()
+Text::new("Layered")
     .padding(20)
-    .layer()  // flush current layer
-    .background_color(Color::RED)  // applied outside padding
+    .layer()
+    .background_color(Color::RED)
 ```
 
 ## Feature Flags
 
 ```toml
-# Optional features
-iced_modifier = { version = "0.1", features = ["icons", "drag-drop", "animation"] }
+iced_modifier = { version = "0.2", features = ["icons", "drag-drop", "animation"] }
 ```
 
 | Feature | Crate | Description |
@@ -155,6 +179,7 @@ iced_modifier = { version = "0.1", features = ["icons", "drag-drop", "animation"
 | `icons` | [iced_fonts](https://crates.io/crates/iced_fonts) | Bootstrap icon fonts, `icon_label()` helper |
 | `drag-drop` | [iced_drop](https://crates.io/crates/iced_drop) | `.on_drag()` / `.on_drop()` / `.draggable()` on Element |
 | `animation` | [iced_anim](https://crates.io/crates/iced_anim) | Re-exports `iced_anim` for animation support |
+| `image` | iced (image feature) | `Image` / `InteractiveImage` widget wrapper |
 | `all` | All above | Enable everything |
 
 ## Examples
@@ -164,6 +189,14 @@ cargo run --example basic
 cargo run --example icons --features icons
 cargo run --example drag_drop --features drag-drop
 ```
+
+## Migration from v0.1
+
+- `use iced::widget::text` → Remove, use `text` from prelude (our wrapper)
+- `use iced::widget::{column, row}` → Use `use iced_modifier::{column, row}` macros
+- `.modify(Modifier::new()...)` → Still works, but direct chaining preferred
+- `Extras::tooltip_text` field → Renamed to `Extras::tooltip` (type changed to `TooltipConfig`)
+- `Extras::scrollable` field → Type changed from `ScrollDirection` to `ScrollConfig`
 
 ## Compatibility
 
