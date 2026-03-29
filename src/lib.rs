@@ -56,7 +56,8 @@ pub use modifier::{Interactor, IntoModified, Modifier, Modify, ModifyBase, modif
 /// Includes [`Modifier`], [`Interactor`], [`Modify`], [`ModifyBase`], and [`modify`].
 pub mod prelude {
     pub use crate::modifier::{Interactor, IntoModified, Modifier, Modify, ModifyBase, modify};
-    pub use crate::widget::{Text, text};
+    pub use crate::widget::{Text, text, Column, Row};
+    pub use crate::{column, row};
 }
 
 /// Icon font utilities (requires `icons` feature).
