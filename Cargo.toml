@@ -1,6 +1,6 @@
 [package]
 name = "iced_modifier"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 description = "SwiftUI/Jetpack Compose-style modifier API for iced — chainable styling, layout, interactions, tooltips, and scrolling"
 license = "MIT"
