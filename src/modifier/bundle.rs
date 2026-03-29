@@ -3,11 +3,13 @@
 //! This module contains [`Modifier`] (pure styling), [`Interactor`] (styling + interactions),
 //! and the [`ModifyBase`] trait that provides all chainable methods.
 
+use std::sync::Arc;
+
 use iced::border;
 use iced::widget::tooltip;
-use iced::{alignment, mouse, widget, Background, Border, Color, Length, Padding, Pixels, Shadow};
+use iced::{alignment, mouse, widget, Background, Border, Color, Length, Padding, Pixels, Point, Shadow};
 
-use super::accumulator::{Extras, Interactions, Layer, ScrollDirection};
+use super::accumulator::{Extras, Interactions, Layer, ScrollConfig, ScrollDirection, TooltipConfig};
 
 /// Shared modifier data for styling, layout, and extras.
 /// Internal storage used by both [`Modifier`] and [`Interactor`].
@@ -289,6 +291,22 @@ pub trait ModifyBase: Sized {
         this
     }
 
+    /// Align top and set height.
+    /// SwiftUI: `.frame(alignment: .top)` / Compose: `Alignment.Top`
+    fn align_top(self, height: impl Into<Length>) -> Self {
+        let mut this = self.align_y(alignment::Vertical::Top);
+        this.data_mut().current.layout.height = Some(height.into());
+        this
+    }
+
+    /// Align bottom and set height.
+    /// SwiftUI: `.frame(alignment: .bottom)` / Compose: `Alignment.Bottom`
+    fn align_bottom(self, height: impl Into<Length>) -> Self {
+        let mut this = self.align_y(alignment::Vertical::Bottom);
+        this.data_mut().current.layout.height = Some(height.into());
+        this
+    }
+
     /// Enable or disable content clipping.
     fn clip(mut self, clip: bool) -> Self {
         self.data_mut().current.layout.clip = Some(clip);
@@ -314,27 +332,108 @@ pub trait ModifyBase: Sized {
     /// Add a text tooltip at the given position.
     /// Compose: `TooltipBox` / SwiftUI: `.help()`
     fn tooltip_text(mut self, text: impl Into<String>, position: tooltip::Position) -> Self {
-        self.data_mut().extras.tooltip_text = Some((text.into(), position));
+        self.data_mut().extras.tooltip = Some(TooltipConfig {
+            text: text.into(),
+            position,
+            gap: None,
+            padding: None,
+            snap_within_viewport: None,
+        });
+        self
+    }
+
+    /// Set the gap between the content and the tooltip.
+    /// Only effective after calling [`tooltip_text`](Self::tooltip_text).
+    fn tooltip_gap(mut self, gap: f32) -> Self {
+        if let Some(ref mut config) = self.data_mut().extras.tooltip {
+            config.gap = Some(gap);
+        }
+        self
+    }
+
+    /// Set internal padding of the tooltip.
+    /// Only effective after calling [`tooltip_text`](Self::tooltip_text).
+    fn tooltip_padding(mut self, padding: impl Into<Pixels>) -> Self {
+        if let Some(ref mut config) = self.data_mut().extras.tooltip {
+            config.padding = Some(padding.into().0);
+        }
+        self
+    }
+
+    /// Snap the tooltip within the viewport bounds.
+    /// Only effective after calling [`tooltip_text`](Self::tooltip_text).
+    fn tooltip_snap(mut self, snap: bool) -> Self {
+        if let Some(ref mut config) = self.data_mut().extras.tooltip {
+            config.snap_within_viewport = Some(snap);
+        }
         self
     }
 
     /// Make content vertically scrollable.
     /// Compose: `.verticalScroll()` / SwiftUI: `ScrollView`
     fn scrollable(mut self) -> Self {
-        self.data_mut().extras.scrollable = Some(ScrollDirection::Vertical);
+        let d = self.data_mut();
+        match d.extras.scrollable {
+            Some(ref mut config) => config.direction = ScrollDirection::Vertical,
+            None => d.extras.scrollable = Some(ScrollConfig::new(ScrollDirection::Vertical)),
+        }
         self
     }
 
     /// Make content horizontally scrollable.
     /// Compose: `.horizontalScroll()` / SwiftUI: `ScrollView(.horizontal)`
     fn scrollable_x(mut self) -> Self {
-        self.data_mut().extras.scrollable = Some(ScrollDirection::Horizontal);
+        let d = self.data_mut();
+        match d.extras.scrollable {
+            Some(ref mut config) => config.direction = ScrollDirection::Horizontal,
+            None => d.extras.scrollable = Some(ScrollConfig::new(ScrollDirection::Horizontal)),
+        }
         self
     }
 
     /// Make content scrollable in both directions.
     fn scrollable_xy(mut self) -> Self {
-        self.data_mut().extras.scrollable = Some(ScrollDirection::Both);
+        let d = self.data_mut();
+        match d.extras.scrollable {
+            Some(ref mut config) => config.direction = ScrollDirection::Both,
+            None => d.extras.scrollable = Some(ScrollConfig::new(ScrollDirection::Both)),
+        }
+        self
+    }
+
+    /// Set a widget ID for the scrollable wrapper.
+    /// Only effective after calling a scrollable method.
+    fn scrollable_id(mut self, id: impl Into<widget::Id>) -> Self {
+        if let Some(ref mut config) = self.data_mut().extras.scrollable {
+            config.id = Some(id.into());
+        }
+        self
+    }
+
+    /// Anchor scrollable content to the bottom (vertical scroll starts at end).
+    /// Only effective after calling a scrollable method.
+    fn scroll_anchor_bottom(mut self) -> Self {
+        if let Some(ref mut config) = self.data_mut().extras.scrollable {
+            config.anchor_y = Some(iced::widget::scrollable::Anchor::End);
+        }
+        self
+    }
+
+    /// Anchor scrollable content to the right (horizontal scroll starts at end).
+    /// Only effective after calling a scrollable method.
+    fn scroll_anchor_right(mut self) -> Self {
+        if let Some(ref mut config) = self.data_mut().extras.scrollable {
+            config.anchor_x = Some(iced::widget::scrollable::Anchor::End);
+        }
+        self
+    }
+
+    /// Set spacing between scrollbar and content.
+    /// Only effective after calling a scrollable method.
+    fn scroll_spacing(mut self, spacing: impl Into<Pixels>) -> Self {
+        if let Some(ref mut config) = self.data_mut().extras.scrollable {
+            config.spacing = Some(spacing.into().0);
+        }
         self
     }
 }
@@ -474,6 +573,23 @@ impl Modifier {
         i.interactions.cursor = Some(cursor);
         i
     }
+
+    /// Set scroll event handler. Converts to [`Interactor<M>`].
+    /// Receives [`mouse::ScrollDelta`] with scroll direction and amount.
+    pub fn on_scroll<M: Clone>(self, f: impl Fn(mouse::ScrollDelta) -> M + Send + Sync + 'static) -> Interactor<M> {
+        let mut i = Interactor::from_modifier(self);
+        i.interactions.on_scroll = Some(Arc::new(f));
+        i
+    }
+
+    /// Set mouse move handler. Converts to [`Interactor<M>`].
+    /// Receives [`Point`] with cursor position.
+    /// Compose: `.pointerInput()` / SwiftUI: `.onContinuousHover()`
+    pub fn on_move<M: Clone>(self, f: impl Fn(Point) -> M + Send + Sync + 'static) -> Interactor<M> {
+        let mut i = Interactor::from_modifier(self);
+        i.interactions.on_move = Some(Arc::new(f));
+        i
+    }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -572,6 +688,18 @@ impl<M: Clone> Interactor<M> {
     /// Set or override cursor style.
     pub fn cursor(mut self, cursor: mouse::Interaction) -> Self {
         self.interactions.cursor = Some(cursor);
+        self
+    }
+
+    /// Set or override scroll event handler.
+    pub fn on_scroll(mut self, f: impl Fn(mouse::ScrollDelta) -> M + Send + Sync + 'static) -> Self {
+        self.interactions.on_scroll = Some(Arc::new(f));
+        self
+    }
+
+    /// Set or override mouse move handler.
+    pub fn on_move(mut self, f: impl Fn(Point) -> M + Send + Sync + 'static) -> Self {
+        self.interactions.on_move = Some(Arc::new(f));
         self
     }
 }

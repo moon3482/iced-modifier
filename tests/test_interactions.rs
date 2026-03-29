@@ -102,3 +102,141 @@ fn interactor_with_id() {
 fn interactor_overwrite_on_press() {
     let _: E = text("hello").modify(Modifier::new().on_press(Msg::A).on_press(Msg::B));
 }
+
+#[test]
+fn on_scroll_callback() {
+    let _: E = text("hello").modify(
+        Modifier::new().on_scroll(|_delta| Msg::A),
+    );
+}
+
+#[test]
+fn on_move_callback() {
+    let _: E = text("hello").modify(
+        Modifier::new().on_move(|_point| Msg::A),
+    );
+}
+
+#[test]
+fn on_scroll_with_other_interactions() {
+    let _: E = text("hello").modify(
+        Modifier::new()
+            .on_press(Msg::A)
+            .on_scroll(|_delta| Msg::B)
+            .on_move(|_point| Msg::A)
+            .cursor(mouse::Interaction::Pointer),
+    );
+}
+
+#[test]
+fn on_scroll_on_interactor() {
+    let _: E = text("hello").modify(
+        Modifier::new()
+            .padding(10)
+            .on_press(Msg::A)
+            .on_scroll(|_delta| Msg::B),
+    );
+}
+
+// ── Edge cases: on_scroll/on_move ──
+
+#[test]
+fn on_scroll_overwrite() {
+    // Second on_scroll should replace the first
+    let _: E = text("hello").modify(
+        Modifier::new()
+            .on_scroll(|_delta| Msg::A)
+            .on_scroll(|_delta| Msg::B),
+    );
+}
+
+#[test]
+fn on_move_overwrite() {
+    let _: E = text("hello").modify(
+        Modifier::new()
+            .on_move(|_point| Msg::A)
+            .on_move(|_point| Msg::B),
+    );
+}
+
+#[test]
+fn on_move_with_enter_exit() {
+    // on_move, on_enter, on_exit should all coexist
+    let _: E = text("hello").modify(
+        Modifier::new()
+            .on_enter(Msg::Hover(true))
+            .on_exit(Msg::Hover(false))
+            .on_move(|_point| Msg::A),
+    );
+}
+
+#[test]
+fn on_scroll_on_move_combined() {
+    let _: E = text("hello").modify(
+        Modifier::new()
+            .on_scroll(|_delta| Msg::A)
+            .on_move(|_point| Msg::B),
+    );
+}
+
+#[test]
+fn callback_interactor_clone() {
+    // Arc<dyn Fn> enables clone — verify no panic
+    let interactor = Modifier::new()
+        .on_scroll(|_delta| Msg::A)
+        .on_move(|_point| Msg::B);
+    let cloned = interactor.clone();
+    let _: E = text("a").modify(interactor);
+    let _: E = text("b").modify(cloned);
+}
+
+#[test]
+fn on_scroll_with_hidden() {
+    let _: E = text("hello").modify(
+        Modifier::new()
+            .on_scroll(|_delta| Msg::A)
+            .hidden(true),
+    );
+}
+
+#[test]
+fn on_move_with_tooltip_and_scrollable() {
+    let _: E = column![text("a")].modify(
+        Modifier::new()
+            .height(100)
+            .on_move(|_point| Msg::A)
+            .tooltip_text("info", tooltip::Position::Top)
+            .scrollable(),
+    );
+}
+
+#[test]
+fn on_scroll_with_styling_and_layers() {
+    let _: E = text("hello").modify(
+        Modifier::new()
+            .padding(10)
+            .background_color(Color::WHITE)
+            .layer()
+            .corner_radius(8)
+            .on_scroll(|_delta| Msg::A),
+    );
+}
+
+#[test]
+fn all_interactions_including_callbacks() {
+    let _: E = text("hello").modify(
+        Modifier::new()
+            .on_press(Msg::A)
+            .on_release(Msg::A)
+            .on_double_click(Msg::A)
+            .on_right_press(Msg::A)
+            .on_right_release(Msg::A)
+            .on_middle_press(Msg::A)
+            .on_middle_release(Msg::A)
+            .on_enter(Msg::A)
+            .on_exit(Msg::A)
+            .on_scroll(|_delta| Msg::B)
+            .on_move(|_point| Msg::B)
+            .cursor(mouse::Interaction::Pointer),
+    );
+}

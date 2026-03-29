@@ -37,7 +37,7 @@ where
     let (layers, extras, interactions) = modifier.into_parts();
 
     if layers.is_empty() && !extras.hidden && !interactions.has_content()
-        && extras.tooltip_text.is_none() && extras.scrollable.is_none()
+        && extras.tooltip.is_none() && extras.scrollable.is_none()
         && extras.widget_id.is_none()
     {
         return element;

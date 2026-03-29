@@ -1,5 +1,8 @@
-use iced::widget::container;
-use iced::{alignment, Background, Border, Color, Length, Padding, Shadow, widget};
+use std::fmt;
+use std::sync::Arc;
+
+use iced::widget::{container, scrollable, tooltip};
+use iced::{alignment, mouse, Background, Border, Color, Length, Padding, Point, Shadow, widget};
 
 #[derive(Debug, Clone, Copy, Default)]
 pub struct StyleAccumulator {
@@ -122,13 +125,23 @@ impl Layer {
     }
 }
 
+/// Configuration for tooltip wrapping.
+#[derive(Debug, Clone)]
+pub struct TooltipConfig {
+    pub text: String,
+    pub position: tooltip::Position,
+    pub gap: Option<f32>,
+    pub padding: Option<f32>,
+    pub snap_within_viewport: Option<bool>,
+}
+
 /// Extra properties that apply to the entire modifier, not per-layer.
 #[derive(Debug, Clone, Default)]
 pub struct Extras {
     pub hidden: bool,
     pub widget_id: Option<widget::Id>,
-    pub tooltip_text: Option<(String, iced::widget::tooltip::Position)>,
-    pub scrollable: Option<ScrollDirection>,
+    pub tooltip: Option<TooltipConfig>,
+    pub scrollable: Option<ScrollConfig>,
 }
 
 #[derive(Debug, Clone, Copy, Default)]
@@ -139,8 +152,29 @@ pub enum ScrollDirection {
     Both,
 }
 
-/// Interaction handlers for MouseArea wrapping.
+/// Configuration for scrollable wrapping.
 #[derive(Debug, Clone)]
+pub struct ScrollConfig {
+    pub direction: ScrollDirection,
+    pub id: Option<widget::Id>,
+    pub anchor_x: Option<scrollable::Anchor>,
+    pub anchor_y: Option<scrollable::Anchor>,
+    pub spacing: Option<f32>,
+}
+
+impl ScrollConfig {
+    pub fn new(direction: ScrollDirection) -> Self {
+        Self {
+            direction,
+            id: None,
+            anchor_x: None,
+            anchor_y: None,
+            spacing: None,
+        }
+    }
+}
+
+/// Interaction handlers for MouseArea wrapping.
 pub struct Interactions<Message> {
     pub on_press: Option<Message>,
     pub on_release: Option<Message>,
@@ -151,7 +185,47 @@ pub struct Interactions<Message> {
     pub on_middle_release: Option<Message>,
     pub on_enter: Option<Message>,
     pub on_exit: Option<Message>,
-    pub cursor: Option<iced::mouse::Interaction>,
+    pub on_scroll: Option<Arc<dyn Fn(mouse::ScrollDelta) -> Message + Send + Sync>>,
+    pub on_move: Option<Arc<dyn Fn(Point) -> Message + Send + Sync>>,
+    pub cursor: Option<mouse::Interaction>,
+}
+
+impl<Message: Clone> Clone for Interactions<Message> {
+    fn clone(&self) -> Self {
+        Self {
+            on_press: self.on_press.clone(),
+            on_release: self.on_release.clone(),
+            on_double_click: self.on_double_click.clone(),
+            on_right_press: self.on_right_press.clone(),
+            on_right_release: self.on_right_release.clone(),
+            on_middle_press: self.on_middle_press.clone(),
+            on_middle_release: self.on_middle_release.clone(),
+            on_enter: self.on_enter.clone(),
+            on_exit: self.on_exit.clone(),
+            on_scroll: self.on_scroll.clone(),
+            on_move: self.on_move.clone(),
+            cursor: self.cursor,
+        }
+    }
+}
+
+impl<Message: fmt::Debug> fmt::Debug for Interactions<Message> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Interactions")
+            .field("on_press", &self.on_press)
+            .field("on_release", &self.on_release)
+            .field("on_double_click", &self.on_double_click)
+            .field("on_right_press", &self.on_right_press)
+            .field("on_right_release", &self.on_right_release)
+            .field("on_middle_press", &self.on_middle_press)
+            .field("on_middle_release", &self.on_middle_release)
+            .field("on_enter", &self.on_enter)
+            .field("on_exit", &self.on_exit)
+            .field("on_scroll", &self.on_scroll.as_ref().map(|_| ".."))
+            .field("on_move", &self.on_move.as_ref().map(|_| ".."))
+            .field("cursor", &self.cursor)
+            .finish()
+    }
 }
 
 impl<Message> Interactions<Message> {
@@ -166,12 +240,12 @@ impl<Message> Interactions<Message> {
             on_middle_release: None,
             on_enter: None,
             on_exit: None,
+            on_scroll: None,
+            on_move: None,
             cursor: None,
         }
     }
-}
 
-impl<Message> Interactions<Message> {
     pub fn has_content(&self) -> bool {
         self.on_press.is_some()
             || self.on_release.is_some()
@@ -182,6 +256,8 @@ impl<Message> Interactions<Message> {
             || self.on_middle_release.is_some()
             || self.on_enter.is_some()
             || self.on_exit.is_some()
+            || self.on_scroll.is_some()
+            || self.on_move.is_some()
             || self.cursor.is_some()
     }
 }

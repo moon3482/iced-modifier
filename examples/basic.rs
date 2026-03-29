@@ -1,5 +1,5 @@
 use iced::widget::{column, container, row, text, tooltip};
-use iced::{Border, Color, Element, Length, Shadow, Theme, Vector, mouse};
+use iced::{Border, Color, Element, Length, Point, Shadow, Theme, Vector, mouse};
 use iced_modifier::prelude::*;
 
 fn main() -> iced::Result {
@@ -14,11 +14,15 @@ enum Message {
     CardClicked,
     Hovered(bool),
     RightClicked,
+    Scrolled(String),
+    MouseMoved(Point),
 }
 
 #[derive(Default)]
 struct App {
     hover_count: u32,
+    last_scroll: String,
+    last_mouse_pos: Option<Point>,
 }
 
 fn update(state: &mut App, message: Message) -> iced::Task<Message> {
@@ -31,6 +35,12 @@ fn update(state: &mut App, message: Message) -> iced::Task<Message> {
             }
         }
         Message::RightClicked => println!("Right clicked!"),
+        Message::Scrolled(info) => {
+            state.last_scroll = info;
+        }
+        Message::MouseMoved(pos) => {
+            state.last_mouse_pos = Some(pos);
+        }
     }
     iced::Task::none()
 }
@@ -102,6 +112,18 @@ fn view(state: &App) -> Element<'_, Message> {
             .tooltip_text("This is a helpful tooltip!", tooltip::Position::Top),
     );
 
+    // 6b. Tooltip with full config (gap, padding, snap)
+    let tooltip_configured = text("Tooltip with config").size(14).modify(
+        Modifier::new()
+            .padding(12)
+            .background_color(Color::from_rgb(0.85, 0.88, 0.95))
+            .corner_radius(6)
+            .tooltip_text("gap=12, padding=8, snap=true", tooltip::Position::Bottom)
+            .tooltip_gap(12.0)
+            .tooltip_padding(8)
+            .tooltip_snap(true),
+    );
+
     // 7. Hidden / conditional visibility (SwiftUI: .hidden())
     let hidden_item = text("You can't see me").modify(Modifier::new().hidden(true).padding(10));
     let visible_item = text("I'm visible").size(14).modify(
@@ -159,6 +181,29 @@ fn view(state: &App) -> Element<'_, Message> {
             .scrollable(),
     );
 
+    // 10b. Scrollable with anchor + spacing (chat-style: starts at bottom)
+    let chat_scrollable = column![
+        text("Message 1").size(13),
+        text("Message 2").size(13),
+        text("Message 3").size(13),
+        text("Message 4").size(13),
+        text("Message 5").size(13),
+        text("Message 6").size(13),
+        text("Message 7").size(13),
+        text("Message 8 (latest)").size(13),
+    ]
+    .spacing(4)
+    .modify(
+        Modifier::new()
+            .height(80)
+            .padding(8)
+            .background_color(Color::from_rgb(0.95, 0.95, 1.0))
+            .corner_radius(6)
+            .scrollable()
+            .scroll_anchor_bottom()
+            .scroll_spacing(4),
+    );
+
     // 11. Reusable style + then() composition
     fn card_base() -> Modifier {
         Modifier::new()
@@ -185,6 +230,60 @@ fn view(state: &App) -> Element<'_, Message> {
             }),
     );
 
+    // 13. on_scroll / on_move callbacks (MouseArea)
+    let scroll_label = if state.last_scroll.is_empty() {
+        "Scroll wheel here".to_string()
+    } else {
+        format!("Scrolled: {}", state.last_scroll)
+    };
+    let mouse_label = match state.last_mouse_pos {
+        Some(p) => format!("Mouse: ({:.0}, {:.0})", p.x, p.y),
+        None => "Move mouse here".to_string(),
+    };
+    let scroll_area = text(scroll_label).size(14).modify(
+        Modifier::new()
+            .padding(14)
+            .background_color(Color::from_rgb(0.9, 1.0, 0.95))
+            .corner_radius(8)
+            .on_scroll(|delta| {
+                Message::Scrolled(format!("{:?}", delta))
+            }),
+    );
+    let move_area = text(mouse_label).size(14).modify(
+        Modifier::new()
+            .padding(14)
+            .fill_width()
+            .background_color(Color::from_rgb(1.0, 0.97, 0.88))
+            .corner_radius(8)
+            .on_move(Message::MouseMoved),
+    );
+
+    // 14. align_top / align_bottom
+    let alignment_demo = row![
+        text("Top").size(14).modify(
+            Modifier::new()
+                .padding(8)
+                .background_color(Color::from_rgb(0.9, 0.92, 1.0))
+                .corner_radius(4)
+                .align_top(Length::Fixed(80.0))
+        ),
+        text("Bottom").size(14).modify(
+            Modifier::new()
+                .padding(8)
+                .background_color(Color::from_rgb(1.0, 0.92, 0.9))
+                .corner_radius(4)
+                .align_bottom(Length::Fixed(80.0))
+        ),
+        text("Center").size(14).modify(
+            Modifier::new()
+                .padding(8)
+                .background_color(Color::from_rgb(0.92, 1.0, 0.9))
+                .corner_radius(4)
+                .center_y(Length::Fixed(80.0))
+        ),
+    ]
+    .spacing(8);
+
     // Main layout
     let content = column![
         text("iced_modifier Demo").size(28),
@@ -200,6 +299,7 @@ fn view(state: &App) -> Element<'_, Message> {
         text("").size(8),
         text("Tooltip").size(18),
         with_tooltip,
+        tooltip_configured,
         text("").size(8),
         text("Visibility").size(18),
         hidden_item, visible_item,
@@ -212,9 +312,17 @@ fn view(state: &App) -> Element<'_, Message> {
         text("").size(8),
         text("Scrollable").size(18),
         scrollable_content,
+        chat_scrollable,
         text("").size(8),
         text("Composition & Conditional").size(18),
         composed, status,
+        text("").size(8),
+        text("Mouse Callbacks (on_scroll, on_move)").size(18),
+        scroll_area,
+        move_area,
+        text("").size(8),
+        text("Vertical Alignment (align_top, align_bottom)").size(18),
+        alignment_demo,
     ]
     .spacing(6)
     .padding(20);

@@ -35,6 +35,21 @@ fn center_x_then_align_right_last_wins() {
 }
 
 #[test]
+fn align_top_sets_vertical_alignment_and_height() {
+    let _: E = text("hello").modify(Modifier::new().align_top(Fill));
+}
+
+#[test]
+fn align_bottom_sets_vertical_alignment_and_height() {
+    let _: E = text("hello").modify(Modifier::new().align_bottom(Fill));
+}
+
+#[test]
+fn center_y_then_align_bottom_last_wins() {
+    let _: E = text("hello").modify(Modifier::new().center_y(Fill).align_bottom(Fill));
+}
+
+#[test]
 fn width_fixed_then_fill_width_last_wins() {
     let _: E = text("hello").modify(
         Modifier::new().width(Length::Fixed(100.0)).fill_width(),
