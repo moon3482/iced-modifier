@@ -72,3 +72,46 @@ fn row_scrollable() {
         .scrollable_x()
         .into();
 }
+
+// ── Edge cases ──
+
+#[test]
+fn row_push_after_styling() {
+    let _: E = Row::new()
+        .padding(10)
+        .background_color(Color::WHITE)
+        .push(text("A"))
+        .push(text("B"))
+        .into();
+}
+
+#[test]
+fn row_with_interactive_children() {
+    let _: E = row![
+        Text::new("click").on_press(Msg::A).padding(4),
+        text("plain").padding(4),
+    ]
+    .spacing(8)
+    .into();
+}
+
+#[test]
+fn row_deeply_nested() {
+    let _: E = row![
+        row![
+            row![text("deep")].padding(2),
+        ].padding(4),
+    ].padding(8).into();
+}
+
+#[test]
+fn row_in_column_with_interactions() {
+    let _: E = column![
+        row![text("A"), text("B")]
+            .spacing(4)
+            .on_press(Msg::A)
+            .cursor(mouse::Interaction::Pointer),
+    ]
+    .spacing(8)
+    .into();
+}

@@ -277,3 +277,97 @@ fn in_column_auto_convert() {
     ]
     .into();
 }
+
+// ═══════════════════════════════════════════════════════════════
+// API conflict edge cases
+// ═══════════════════════════════════════════════════════════════
+
+#[test]
+fn text_width_vs_container_width() {
+    // .width() = ModifyBase (Container width)
+    // .text_width() = iced native (text boundary width before wrapping)
+    let _: E = text("long text that might wrap")
+        .text_width(100)   // text boundary
+        .width(200)        // container width (ModifyBase)
+        .into();
+}
+
+#[test]
+fn text_height_vs_container_height() {
+    let _: E = text("hello")
+        .text_height(50)   // text boundary
+        .height(100)       // container height (ModifyBase)
+        .into();
+}
+
+#[test]
+fn font_size_always_overrides_size() {
+    // font_size (extras) overwrites size (inner) during From conversion
+    // regardless of call order
+    let _: E = text("hello").size(12).font_size(24).into();    // → 24px
+    let _: E = text("hello").font_size(24).size(12).into();    // → 24px (font_size wins)
+}
+
+#[test]
+fn interactive_text_text_width() {
+    // text_width should work on InteractiveText too
+    let _: E = Text::new("hello")
+        .on_press(Msg::A)
+        .text_width(150)
+        .padding(10)
+        .into();
+}
+
+#[test]
+fn interactive_text_in_column() {
+    use iced::widget::column;
+    let _: E = column![
+        Text::new("A").on_press(Msg::A).padding(4),
+        Text::new("B").font_size(14),
+    ]
+    .into();
+}
+
+#[test]
+fn text_all_modifybase_methods_chain() {
+    // Verify all ModifyBase methods compile and chain on Text
+    let _: E = Text::new("hello")
+        .padding(10)
+        .padding_x(5)
+        .padding_y(5)
+        .margin(4)
+        .width(200)
+        .height(50)
+        .max_width(300)
+        .max_height(100)
+        .fill_width()
+        .background_color(Color::WHITE)
+        .corner_radius(8)
+        .border_width(1)
+        .border_color(Color::BLACK)
+        .text_color(Color::BLACK)
+        .clip(true)
+        .into();
+}
+
+#[test]
+fn text_layer_with_font_size() {
+    // font_size applies to inner Text, layers apply to Container wrapping
+    let _: E = Text::new("hello")
+        .font_size(20)
+        .padding(10)
+        .background_color(Color::WHITE)
+        .layer()
+        .padding(5)
+        .background_color(Color::BLACK)
+        .into();
+}
+
+#[test]
+fn modify_if_on_interactive() {
+    let _: E = Text::new("hello")
+        .on_press(Msg::A)
+        .modify_if(true, |t| t.background_color(Color::WHITE))
+        .modify_if(false, |t| t.padding(999))
+        .into();
+}

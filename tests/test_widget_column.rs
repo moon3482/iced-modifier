@@ -149,3 +149,77 @@ fn column_nested() {
     .spacing(12)
     .into();
 }
+
+// ── API conflict edge cases ──
+
+#[test]
+fn column_spacing_inherent_vs_modifybase() {
+    // .spacing() on Column is inherent (widget-specific, sets inner.spacing)
+    // ModifyBase .spacing() would set extras.spacing, but inherent takes priority
+    let _: E = column![text("A"), text("B")]
+        .spacing(8)  // inherent method → inner.spacing
+        .padding(10)
+        .into();
+}
+
+#[test]
+fn column_push_after_styling() {
+    // push() works even after styling methods (independent storage)
+    let _: E = Column::new()
+        .padding(10)
+        .background_color(Color::WHITE)
+        .push(text("A"))
+        .spacing(4)
+        .push(text("B"))
+        .into();
+}
+
+#[test]
+fn column_deeply_nested() {
+    let _: E = column![
+        column![
+            column![text("deep")].padding(2),
+        ].padding(4),
+    ].padding(8).into();
+}
+
+#[test]
+fn column_with_interactive_children() {
+    let _: E = column![
+        Text::new("click me")
+            .on_press(Msg::A)
+            .padding(4),
+        Text::new("hover me")
+            .on_enter(Msg::Hover(true))
+            .on_exit(Msg::Hover(false))
+            .padding(4),
+        text("plain").padding(4),
+    ]
+    .spacing(8)
+    .into();
+}
+
+#[test]
+fn column_all_modifybase_methods() {
+    let _: E = column![text("A")]
+        .padding(10)
+        .margin(4)
+        .width(200)
+        .height(100)
+        .max_width(300)
+        .fill_width()
+        .background_color(Color::WHITE)
+        .corner_radius(8)
+        .clip(true)
+        .into();
+}
+
+#[test]
+fn column_with_row_children() {
+    let _: E = column![
+        row![text("A"), text("B")].spacing(4),
+        row![text("C"), text("D")].spacing(4),
+    ]
+    .spacing(12)
+    .into();
+}

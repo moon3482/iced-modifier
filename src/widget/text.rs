@@ -315,6 +315,23 @@ macro_rules! impl_text_widget_methods {
                 self
             }
 
+            /// Set the text boundary width (iced native).
+            ///
+            /// This controls the maximum width before text wraps.
+            /// Different from ModifyBase `.width()` which sets the Container width.
+            pub fn text_width(mut self, width: impl Into<iced::Length>) -> Self {
+                self.inner = self.inner.width(width);
+                self
+            }
+
+            /// Set the text boundary height (iced native).
+            ///
+            /// Different from ModifyBase `.height()` which sets the Container height.
+            pub fn text_height(mut self, height: impl Into<iced::Length>) -> Self {
+                self.inner = self.inner.height(height);
+                self
+            }
+
             /// Set the font family.
             pub fn font(mut self, font: impl Into<Renderer::Font>) -> Self {
                 self.inner = self.inner.font(font);
