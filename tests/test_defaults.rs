@@ -1,7 +1,7 @@
 mod common;
 
-use iced::widget::text;
 use iced::Color;
+use iced::widget::text;
 use iced_modifier::prelude::*;
 
 use common::{E, Msg};
@@ -23,9 +23,7 @@ fn layer_on_empty_current_is_noop() {
 
 #[test]
 fn layer_consecutive_calls_no_crash() {
-    let _: E = text("hello").modify(
-        Modifier::new().padding(10).layer().layer().layer(),
-    );
+    let _: E = text("hello").modify(Modifier::new().padding(10).layer().layer().layer());
 }
 
 #[test]

@@ -1,5 +1,5 @@
-use iced::widget::{container, scrollable, text};
 use iced::Element;
+use iced::widget::{container, scrollable, text};
 
 use super::accumulator::{Extras, Interactions, Layer};
 use super::build::build_element;
@@ -52,8 +52,11 @@ where
         let element = self.into();
         let (layers, extras, interactions) = modifier.into_parts();
 
-        if layers.is_empty() && !extras.hidden && !interactions.has_content()
-            && extras.tooltip_text.is_none() && extras.scrollable.is_none()
+        if layers.is_empty()
+            && !extras.hidden
+            && !interactions.has_content()
+            && extras.tooltip.is_none()
+            && extras.scrollable.is_none()
             && extras.widget_id.is_none()
         {
             return element;

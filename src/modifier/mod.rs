@@ -5,9 +5,9 @@
 //!
 //! See the [crate-level documentation](crate) for usage examples.
 
-mod accumulator;
-mod build;
-mod bundle;
+pub(crate) mod accumulator;
+pub(crate) mod build;
+pub(crate) mod bundle;
 mod ext;
 
 pub use bundle::{Interactor, Modifier, ModifyBase};
@@ -36,8 +36,11 @@ where
     let element = widget.into();
     let (layers, extras, interactions) = modifier.into_parts();
 
-    if layers.is_empty() && !extras.hidden && !interactions.has_content()
-        && extras.tooltip_text.is_none() && extras.scrollable.is_none()
+    if layers.is_empty()
+        && !extras.hidden
+        && !interactions.has_content()
+        && extras.tooltip.is_none()
+        && extras.scrollable.is_none()
         && extras.widget_id.is_none()
     {
         return element;

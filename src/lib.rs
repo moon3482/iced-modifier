@@ -47,6 +47,7 @@
 //! | `animation` | `iced_anim` | Re-exports `iced_anim` |
 
 pub mod modifier;
+pub mod widget;
 
 pub use modifier::{Interactor, IntoModified, Modifier, Modify, ModifyBase, modify};
 
@@ -55,6 +56,13 @@ pub use modifier::{Interactor, IntoModified, Modifier, Modify, ModifyBase, modif
 /// Includes [`Modifier`], [`Interactor`], [`Modify`], [`ModifyBase`], and [`modify`].
 pub mod prelude {
     pub use crate::modifier::{Interactor, IntoModified, Modifier, Modify, ModifyBase, modify};
+    pub use crate::widget::{
+        Button, Checkbox, Column, PickList, Radio, Row, Slider, Text, TextEditor, TextInput,
+        Toggler, button, checkbox, radio, slider, text, text_editor, text_input, toggler,
+    };
+    #[cfg(feature = "image")]
+    pub use crate::widget::{Image, image};
+    pub use crate::{column, row};
 }
 
 /// Icon font utilities (requires `icons` feature).

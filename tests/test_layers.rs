@@ -10,9 +10,14 @@ use common::E;
 fn three_layers_deeply_nested() {
     let _: E = text("hello").modify(
         Modifier::new()
-            .padding(5).background_color(Color::from_rgb(1.0, 0.0, 0.0)).layer()
-            .padding(10).background_color(Color::from_rgb(0.0, 1.0, 0.0)).layer()
-            .padding(15).background_color(Color::from_rgb(0.0, 0.0, 1.0)),
+            .padding(5)
+            .background_color(Color::from_rgb(1.0, 0.0, 0.0))
+            .layer()
+            .padding(10)
+            .background_color(Color::from_rgb(0.0, 1.0, 0.0))
+            .layer()
+            .padding(15)
+            .background_color(Color::from_rgb(0.0, 0.0, 1.0)),
     );
 }
 
@@ -20,9 +25,12 @@ fn three_layers_deeply_nested() {
 fn four_layers() {
     let _: E = text("hello").modify(
         Modifier::new()
-            .padding(1).layer()
-            .padding(2).layer()
-            .padding(3).layer()
+            .padding(1)
+            .layer()
+            .padding(2)
+            .layer()
+            .padding(3)
+            .layer()
             .padding(4),
     );
 }
@@ -30,7 +38,11 @@ fn four_layers() {
 #[test]
 fn layer_then_margin_only() {
     let _: E = text("hello").modify(
-        Modifier::new().padding(10).background_color(Color::WHITE).layer().margin(Padding::from(8)),
+        Modifier::new()
+            .padding(10)
+            .background_color(Color::WHITE)
+            .layer()
+            .margin(Padding::from(8)),
     );
 }
 
@@ -52,7 +64,10 @@ fn background_before_and_after_layer() {
 #[test]
 fn layer_with_only_style_no_layout() {
     let _: E = text("hello").modify(
-        Modifier::new().background_color(Color::WHITE).layer().background_color(Color::BLACK),
+        Modifier::new()
+            .background_color(Color::WHITE)
+            .layer()
+            .background_color(Color::BLACK),
     );
 }
 
@@ -65,7 +80,10 @@ fn layer_with_only_layout_no_style() {
 fn margin_on_multiple_layers() {
     let _: E = text("hello").modify(
         Modifier::new()
-            .padding(5).margin(Padding::from(3)).layer()
-            .padding(10).margin(Padding::from(6)),
+            .padding(5)
+            .margin(Padding::from(3))
+            .layer()
+            .padding(10)
+            .margin(Padding::from(6)),
     );
 }

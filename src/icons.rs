@@ -18,7 +18,7 @@
 pub use iced_fonts::bootstrap;
 pub use iced_fonts::{BOOTSTRAP_FONT, BOOTSTRAP_FONT_BYTES};
 
-use iced::widget::{row, text, Row};
+use iced::widget::{Row, row, text};
 use iced::{Element, Font};
 
 /// Load all enabled icon fonts. Call this in your app's boot/init function.

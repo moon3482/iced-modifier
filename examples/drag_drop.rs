@@ -25,14 +25,21 @@ fn update(state: &mut App, message: Message) -> iced::Task<Message> {
     match message {
         Message::Dragging(name, point) => {
             let msg = format!("Dragging '{}' at ({:.0}, {:.0})", name, point.x, point.y);
-            if state.log.last().map_or(true, |last| !last.starts_with("Dragging")) {
+            if state
+                .log
+                .last()
+                .map_or(true, |last| !last.starts_with("Dragging"))
+            {
                 state.log.push(msg);
             } else if let Some(last) = state.log.last_mut() {
                 *last = msg;
             }
         }
         Message::Dropped(name, point) => {
-            state.log.push(format!("Dropped '{}' at ({:.0}, {:.0})", name, point.x, point.y));
+            state.log.push(format!(
+                "Dropped '{}' at ({:.0}, {:.0})",
+                name, point.x, point.y
+            ));
         }
     }
     if state.log.len() > 10 {
@@ -43,53 +50,59 @@ fn update(state: &mut App, message: Message) -> iced::Task<Message> {
 
 fn view(state: &App) -> Element<'_, Message> {
     // Draggable cards
-    let card_a = text("Card A").size(16).modify(
-        Modifier::new()
-            .padding(20)
-            .background_color(Color::from_rgb(0.9, 0.95, 1.0))
-            .corner_radius(8)
-            .cursor(iced::mouse::Interaction::Grab),
-    )
-    .draggable(
-        {
-            let name = "Card A".to_string();
-            move |p, _r| Message::Dragging(name.clone(), p)
-        },
-        {
-            let name = "Card A".to_string();
-            move |p, _r| Message::Dropped(name.clone(), p)
-        },
-    );
+    let card_a = text("Card A")
+        .size(16)
+        .modify(
+            Modifier::new()
+                .padding(20)
+                .background_color(Color::from_rgb(0.9, 0.95, 1.0))
+                .corner_radius(8)
+                .cursor(iced::mouse::Interaction::Grab),
+        )
+        .draggable(
+            {
+                let name = "Card A".to_string();
+                move |p, _r| Message::Dragging(name.clone(), p)
+            },
+            {
+                let name = "Card A".to_string();
+                move |p, _r| Message::Dropped(name.clone(), p)
+            },
+        );
 
-    let card_b = text("Card B").size(16).modify(
-        Modifier::new()
-            .padding(20)
-            .background_color(Color::from_rgb(1.0, 0.95, 0.9))
-            .corner_radius(8)
-            .cursor(iced::mouse::Interaction::Grab),
-    )
-    .draggable(
-        {
-            let name = "Card B".to_string();
-            move |p, _r| Message::Dragging(name.clone(), p)
-        },
-        {
-            let name = "Card B".to_string();
-            move |p, _r| Message::Dropped(name.clone(), p)
-        },
-    );
+    let card_b = text("Card B")
+        .size(16)
+        .modify(
+            Modifier::new()
+                .padding(20)
+                .background_color(Color::from_rgb(1.0, 0.95, 0.9))
+                .corner_radius(8)
+                .cursor(iced::mouse::Interaction::Grab),
+        )
+        .draggable(
+            {
+                let name = "Card B".to_string();
+                move |p, _r| Message::Dragging(name.clone(), p)
+            },
+            {
+                let name = "Card B".to_string();
+                move |p, _r| Message::Dropped(name.clone(), p)
+            },
+        );
 
-    let card_c = text("Card C").size(16).modify(
-        Modifier::new()
-            .padding(20)
-            .background_color(Color::from_rgb(0.95, 1.0, 0.9))
-            .corner_radius(8)
-            .cursor(iced::mouse::Interaction::Grab),
-    )
-    .on_drop({
-        let name = "Card C".to_string();
-        move |p, _r| Message::Dropped(name.clone(), p)
-    });
+    let card_c = text("Card C")
+        .size(16)
+        .modify(
+            Modifier::new()
+                .padding(20)
+                .background_color(Color::from_rgb(0.95, 1.0, 0.9))
+                .corner_radius(8)
+                .cursor(iced::mouse::Interaction::Grab),
+        )
+        .on_drop({
+            let name = "Card C".to_string();
+            move |p, _r| Message::Dropped(name.clone(), p)
+        });
 
     // Event log
     let log_entries: Vec<Element<Message>> = state

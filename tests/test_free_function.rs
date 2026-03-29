@@ -1,7 +1,7 @@
 mod common;
 
-use iced::widget::{text, tooltip};
 use iced::Color;
+use iced::widget::{text, tooltip};
 use iced_modifier::prelude::*;
 
 use common::{E, Msg};
@@ -29,7 +29,8 @@ fn free_fn_with_all_features() {
     let _: E = iced_modifier::modify(
         text("hello"),
         Modifier::new()
-            .padding(10).background_color(Color::WHITE)
+            .padding(10)
+            .background_color(Color::WHITE)
             .on_press(Msg::A)
             .tooltip_text("tip", tooltip::Position::Top)
             .scrollable(),

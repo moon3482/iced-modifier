@@ -1,7 +1,7 @@
 mod common;
 
-use iced::widget::{text, tooltip};
 use iced::Color;
+use iced::widget::{text, tooltip};
 use iced_modifier::prelude::*;
 
 use common::{E, Msg};
@@ -9,7 +9,11 @@ use common::{E, Msg};
 #[test]
 fn hidden_true_ignores_styling() {
     let _: E = text("hello").modify(
-        Modifier::new().padding(10).background_color(Color::WHITE).corner_radius(8).hidden(true),
+        Modifier::new()
+            .padding(10)
+            .background_color(Color::WHITE)
+            .corner_radius(8)
+            .hidden(true),
     );
 }
 
@@ -31,7 +35,9 @@ fn hidden_toggle_last_wins_true() {
 #[test]
 fn hidden_with_tooltip() {
     let _: E = text("hello").modify(
-        Modifier::new().tooltip_text("tip", tooltip::Position::Top).hidden(true),
+        Modifier::new()
+            .tooltip_text("tip", tooltip::Position::Top)
+            .hidden(true),
     );
 }
 

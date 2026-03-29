@@ -1,7 +1,7 @@
-use iced::widget::{container, mouse_area, scrollable, text, tooltip, Container, Space};
 use iced::Element;
+use iced::widget::{Container, Space, container, mouse_area, scrollable, text, tooltip};
 
-use super::accumulator::{Extras, Interactions, Layer, ScrollDirection};
+use super::accumulator::{Extras, Interactions, Layer, ScrollConfig, ScrollDirection};
 
 pub(crate) fn build_element<'a, Message, Theme, Renderer>(
     element: Element<'a, Message, Theme, Renderer>,
@@ -101,6 +101,12 @@ where
         if let Some(msg) = interactions.on_exit {
             area = area.on_exit(msg);
         }
+        if let Some(f) = interactions.on_scroll {
+            area = area.on_scroll(move |delta| f(delta));
+        }
+        if let Some(f) = interactions.on_move {
+            area = area.on_move(move |point| f(point));
+        }
         if let Some(cursor) = interactions.cursor {
             area = area.interaction(cursor);
         }
@@ -109,29 +115,59 @@ where
     }
 
     // Wrap with Tooltip if set
-    if let Some((tip_text, position)) = extras.tooltip_text {
-        current = tooltip(current, text(tip_text), position)
-            .gap(4)
-            .into();
+    if let Some(config) = extras.tooltip {
+        let mut tip =
+            tooltip(current, text(config.text), config.position).gap(config.gap.unwrap_or(4.0));
+        if let Some(p) = config.padding {
+            tip = tip.padding(p);
+        }
+        if let Some(s) = config.snap_within_viewport {
+            tip = tip.snap_within_viewport(s);
+        }
+        current = tip.into();
     }
 
     // Wrap with Scrollable if set
-    if let Some(direction) = extras.scrollable {
-        current = match direction {
-            ScrollDirection::Vertical => scrollable(current).into(),
-            ScrollDirection::Horizontal => scrollable(current).horizontal().into(),
-            ScrollDirection::Both => {
-                scrollable::Scrollable::with_direction(
-                    current,
-                    scrollable::Direction::Both {
-                        vertical: scrollable::Scrollbar::default(),
-                        horizontal: scrollable::Scrollbar::default(),
-                    },
-                )
-                .into()
-            }
-        };
+    if let Some(config) = extras.scrollable {
+        current = build_scrollable(current, config);
     }
 
     current
+}
+
+fn build_scrollable<'a, Message, Theme, Renderer>(
+    content: Element<'a, Message, Theme, Renderer>,
+    config: ScrollConfig,
+) -> Element<'a, Message, Theme, Renderer>
+where
+    Message: Clone + 'a,
+    Theme: scrollable::Catalog + 'a,
+    Renderer: iced::advanced::Renderer + iced::advanced::text::Renderer + 'a,
+{
+    let mut s = match config.direction {
+        ScrollDirection::Vertical => scrollable(content),
+        ScrollDirection::Horizontal => scrollable(content).horizontal(),
+        ScrollDirection::Both => scrollable::Scrollable::with_direction(
+            content,
+            scrollable::Direction::Both {
+                vertical: scrollable::Scrollbar::default(),
+                horizontal: scrollable::Scrollbar::default(),
+            },
+        ),
+    };
+
+    if let Some(id) = config.id {
+        s = s.id(id);
+    }
+    if let Some(anchor_x) = config.anchor_x {
+        s = s.anchor_x(anchor_x);
+    }
+    if let Some(anchor_y) = config.anchor_y {
+        s = s.anchor_y(anchor_y);
+    }
+    if let Some(spacing) = config.spacing {
+        s = s.spacing(spacing);
+    }
+
+    s.into()
 }
