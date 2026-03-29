@@ -5,4 +5,4 @@
 
 mod text;
 
-pub use text::{Text, text};
+pub use text::{Text, InteractiveText, text};

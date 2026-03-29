@@ -5,9 +5,9 @@
 //!
 //! See the [crate-level documentation](crate) for usage examples.
 
-mod accumulator;
+pub(crate) mod accumulator;
 pub(crate) mod build;
-mod bundle;
+pub(crate) mod bundle;
 mod ext;
 
 pub use bundle::{Interactor, Modifier, ModifyBase};
