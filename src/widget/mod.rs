@@ -8,8 +8,12 @@ mod column;
 mod row;
 mod button;
 mod text_input;
+mod text_editor;
 mod checkbox;
+mod radio;
 mod toggler;
+mod slider;
+mod pick_list;
 #[cfg(feature = "image")]
 mod image;
 
@@ -18,8 +22,12 @@ pub use column::Column;
 pub use row::Row;
 pub use button::{Button, button};
 pub use text_input::{TextInput, text_input};
+pub use text_editor::{TextEditor, text_editor};
 pub use checkbox::{Checkbox, checkbox};
+pub use radio::{Radio, radio};
 pub use toggler::{Toggler, toggler};
+pub use slider::{Slider, slider};
+pub use pick_list::PickList;
 #[cfg(feature = "image")]
 pub use image::{Image, InteractiveImage, image};
 

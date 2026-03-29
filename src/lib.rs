@@ -60,8 +60,12 @@ pub mod prelude {
         Text, text, Column, Row,
         Button, button,
         TextInput, text_input,
+        TextEditor, text_editor,
         Checkbox, checkbox,
+        Radio, radio,
         Toggler, toggler,
+        Slider, slider,
+        PickList,
     };
     #[cfg(feature = "image")]
     pub use crate::widget::{Image, image};

@@ -19,6 +19,7 @@ all = ["icons", "animation", "drag-drop", "image"]
 
 [dependencies]
 iced = { version = "0.14.0", features = ["advanced"] }
+num-traits = "0.2"
 iced_fonts = { version = "0.3.0", features = ["bootstrap"], optional = true }
 iced_anim = { version = "0.3.1", optional = true }
 iced_drop = { version = "0.2", optional = true }
