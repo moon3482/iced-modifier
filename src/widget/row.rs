@@ -16,7 +16,7 @@ use std::sync::Arc;
 
 use iced::advanced::text as advanced_text;
 use iced::widget::{container, scrollable, text as iced_text};
-use iced::{alignment, mouse, Element, Pixels, Point};
+use iced::{Element, Pixels, Point, alignment, mouse};
 
 use crate::modifier::accumulator::Interactions;
 use crate::modifier::build::build_element;
@@ -142,7 +142,10 @@ where
         self.interactions.cursor = Some(cursor);
         self
     }
-    pub fn on_scroll(mut self, f: impl Fn(mouse::ScrollDelta) -> Message + Send + Sync + 'static) -> Self {
+    pub fn on_scroll(
+        mut self,
+        f: impl Fn(mouse::ScrollDelta) -> Message + Send + Sync + 'static,
+    ) -> Self {
         self.interactions.on_scroll = Some(Arc::new(f));
         self
     }

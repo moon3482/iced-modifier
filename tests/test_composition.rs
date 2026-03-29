@@ -24,7 +24,10 @@ fn then_chain_three() {
 #[test]
 fn then_with_layered_modifier() {
     let base = Modifier::new().padding(10);
-    let layered = Modifier::new().background_color(Color::WHITE).layer().padding(5);
+    let layered = Modifier::new()
+        .background_color(Color::WHITE)
+        .layer()
+        .padding(5);
     let _: E = text("hello").modify(base.then(layered));
 }
 
@@ -42,13 +45,18 @@ fn then_self_clone() {
 #[test]
 fn reusable_modifier_fn_with_clone() {
     fn card() -> Modifier {
-        Modifier::new().padding(16).background_color(Color::WHITE).corner_radius(12)
+        Modifier::new()
+            .padding(16)
+            .background_color(Color::WHITE)
+            .corner_radius(12)
     }
 
     let _: E = text("a").modify(card());
     let _: E = text("b").modify(card());
     let _: E = text("c").modify(card().then(Modifier::new().shadow(Shadow {
-        color: Color::BLACK, offset: Vector::ZERO, blur_radius: 4.0,
+        color: Color::BLACK,
+        offset: Vector::ZERO,
+        blur_radius: 4.0,
     })));
     let _: E = text("d").modify(card().on_press(Msg::A));
 }
@@ -73,16 +81,11 @@ fn conditional_on_interactor() {
 
 #[test]
 fn conditional_if_else_on_interactor() {
-    let _: E = text("hello").modify(
-        Modifier::new()
-            .padding(10)
-            .on_press(Msg::A)
-            .modify_if_else(
-                true,
-                |m| m.background_color(Color::from_rgb(0.0, 1.0, 0.0)),
-                |m| m.background_color(Color::from_rgb(0.5, 0.5, 0.5)),
-            ),
-    );
+    let _: E = text("hello").modify(Modifier::new().padding(10).on_press(Msg::A).modify_if_else(
+        true,
+        |m| m.background_color(Color::from_rgb(0.0, 1.0, 0.0)),
+        |m| m.background_color(Color::from_rgb(0.5, 0.5, 0.5)),
+    ));
 }
 
 #[test]
@@ -96,11 +99,9 @@ fn modify_if_true() {
 
 #[test]
 fn modify_if_false() {
-    let _: E = text("hello").modify(
-        Modifier::new()
-            .padding(10)
-            .modify_if(false, |m| m.background_color(Color::from_rgb(1.0, 0.0, 0.0))),
-    );
+    let _: E = text("hello").modify(Modifier::new().padding(10).modify_if(false, |m| {
+        m.background_color(Color::from_rgb(1.0, 0.0, 0.0))
+    }));
 }
 
 #[test]

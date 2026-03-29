@@ -3,33 +3,33 @@
 //! These types wrap iced's native widgets to support widget-specific properties
 //! (like `font_size`, `spacing`) through the modifier chain.
 
-mod text;
-mod column;
-mod row;
 mod button;
-mod text_input;
-mod text_editor;
 mod checkbox;
-mod radio;
-mod toggler;
-mod slider;
-mod pick_list;
+mod column;
 #[cfg(feature = "image")]
 mod image;
+mod pick_list;
+mod radio;
+mod row;
+mod slider;
+mod text;
+mod text_editor;
+mod text_input;
+mod toggler;
 
-pub use text::{Text, InteractiveText, text};
-pub use column::Column;
-pub use row::Row;
 pub use button::{Button, button};
-pub use text_input::{TextInput, text_input};
-pub use text_editor::{TextEditor, text_editor};
 pub use checkbox::{Checkbox, checkbox};
-pub use radio::{Radio, radio};
-pub use toggler::{Toggler, toggler};
-pub use slider::{Slider, slider};
-pub use pick_list::PickList;
+pub use column::Column;
 #[cfg(feature = "image")]
 pub use image::{Image, InteractiveImage, image};
+pub use pick_list::PickList;
+pub use radio::{Radio, radio};
+pub use row::Row;
+pub use slider::{Slider, slider};
+pub use text::{InteractiveText, Text, text};
+pub use text_editor::{TextEditor, text_editor};
+pub use text_input::{TextInput, text_input};
+pub use toggler::{Toggler, toggler};
 
 /// Macro to implement MouseArea interaction methods on a pattern-B widget.
 /// Pattern B widgets have `interactions: Interactions<Message>` field.

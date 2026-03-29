@@ -2,7 +2,7 @@ use std::fmt;
 use std::sync::Arc;
 
 use iced::widget::{container, scrollable, tooltip};
-use iced::{alignment, mouse, Background, Border, Color, Length, Padding, Point, Shadow, widget};
+use iced::{Background, Border, Color, Length, Padding, Point, Shadow, alignment, mouse, widget};
 
 #[derive(Debug, Clone, Copy, Default)]
 pub struct StyleAccumulator {
@@ -265,4 +265,3 @@ impl<Message> Interactions<Message> {
             || self.cursor.is_some()
     }
 }
-

@@ -1,6 +1,6 @@
 mod common;
 
-use iced::{mouse, Color};
+use iced::{Color, mouse};
 use iced_modifier::prelude::*;
 use iced_modifier::{column, row};
 
@@ -8,10 +8,7 @@ use common::{E, Msg};
 
 #[test]
 fn row_with_push() {
-    let _: E = Row::new()
-        .push(text("A"))
-        .push(text("B"))
-        .into();
+    let _: E = Row::new().push(text("A")).push(text("B")).into();
 }
 
 #[test]
@@ -27,13 +24,10 @@ fn row_with_spacing_and_styling() {
 
 #[test]
 fn row_macro() {
-    let _: E = row![
-        text("A").font_size(14),
-        text("B").font_size(18),
-    ]
-    .spacing(8)
-    .padding(12)
-    .into();
+    let _: E = row![text("A").font_size(14), text("B").font_size(18),]
+        .spacing(8)
+        .padding(12)
+        .into();
 }
 
 #[test]
@@ -67,10 +61,7 @@ fn row_hidden() {
 
 #[test]
 fn row_scrollable() {
-    let _: E = row![text("A"), text("B")]
-        .width(50)
-        .scrollable_x()
-        .into();
+    let _: E = row![text("A"), text("B")].width(50).scrollable_x().into();
 }
 
 // ── Edge cases ──
@@ -97,11 +88,9 @@ fn row_with_interactive_children() {
 
 #[test]
 fn row_deeply_nested() {
-    let _: E = row![
-        row![
-            row![text("deep")].padding(2),
-        ].padding(4),
-    ].padding(8).into();
+    let _: E = row![row![row![text("deep")].padding(2),].padding(4),]
+        .padding(8)
+        .into();
 }
 
 #[test]

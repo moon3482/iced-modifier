@@ -7,9 +7,13 @@ use std::sync::Arc;
 
 use iced::border;
 use iced::widget::tooltip;
-use iced::{alignment, mouse, widget, Background, Border, Color, Length, Padding, Pixels, Point, Shadow};
+use iced::{
+    Background, Border, Color, Length, Padding, Pixels, Point, Shadow, alignment, mouse, widget,
+};
 
-use super::accumulator::{Extras, Interactions, Layer, ScrollConfig, ScrollDirection, TooltipConfig};
+use super::accumulator::{
+    Extras, Interactions, Layer, ScrollConfig, ScrollDirection, TooltipConfig,
+};
 
 /// Shared modifier data for styling, layout, and extras.
 /// Internal storage used by both [`Modifier`] and [`Interactor`].
@@ -89,7 +93,11 @@ pub trait ModifyBase: Sized {
         if_true: impl FnOnce(Self) -> Self,
         if_false: impl FnOnce(Self) -> Self,
     ) -> Self {
-        if condition { if_true(self) } else { if_false(self) }
+        if condition {
+            if_true(self)
+        } else {
+            if_false(self)
+        }
     }
 
     // ── Style ──
@@ -225,15 +233,21 @@ pub trait ModifyBase: Sized {
 
     /// Fill all available width. Shorthand for `.width(Length::Fill)`.
     /// Compose: `.fillMaxWidth()`
-    fn fill_width(self) -> Self { self.width(Length::Fill) }
+    fn fill_width(self) -> Self {
+        self.width(Length::Fill)
+    }
 
     /// Fill all available height. Shorthand for `.height(Length::Fill)`.
     /// Compose: `.fillMaxHeight()`
-    fn fill_height(self) -> Self { self.height(Length::Fill) }
+    fn fill_height(self) -> Self {
+        self.height(Length::Fill)
+    }
 
     /// Fill both axes. Shorthand for `.fill_width().fill_height()`.
     /// Compose: `.fillMaxSize()`
-    fn fill(self) -> Self { self.fill_width().fill_height() }
+    fn fill(self) -> Self {
+        self.fill_width().fill_height()
+    }
 
     /// Fill a proportional portion of available width.
     /// Compose: `.weight()` / `.fillMaxWidth(fraction)`
@@ -496,12 +510,16 @@ pub struct Modifier {
 }
 
 impl ModifyBase for Modifier {
-    fn data_mut(&mut self) -> &mut ModifierData { &mut self.data }
+    fn data_mut(&mut self) -> &mut ModifierData {
+        &mut self.data
+    }
 }
 
 impl Modifier {
     /// Create a new empty `Modifier`.
-    pub fn new() -> Self { Self::default() }
+    pub fn new() -> Self {
+        Self::default()
+    }
 
     /// Compose two modifiers. Values in `other` override values in `self`.
     /// Flushed layers from `other` are appended after `self`'s layers.
@@ -594,7 +612,10 @@ impl Modifier {
 
     /// Set scroll event handler. Converts to [`Interactor<M>`].
     /// Receives [`mouse::ScrollDelta`] with scroll direction and amount.
-    pub fn on_scroll<M: Clone>(self, f: impl Fn(mouse::ScrollDelta) -> M + Send + Sync + 'static) -> Interactor<M> {
+    pub fn on_scroll<M: Clone>(
+        self,
+        f: impl Fn(mouse::ScrollDelta) -> M + Send + Sync + 'static,
+    ) -> Interactor<M> {
         let mut i = Interactor::from_modifier(self);
         i.interactions.on_scroll = Some(Arc::new(f));
         i
@@ -603,7 +624,10 @@ impl Modifier {
     /// Set mouse move handler. Converts to [`Interactor<M>`].
     /// Receives [`Point`] with cursor position.
     /// Compose: `.pointerInput()` / SwiftUI: `.onContinuousHover()`
-    pub fn on_move<M: Clone>(self, f: impl Fn(Point) -> M + Send + Sync + 'static) -> Interactor<M> {
+    pub fn on_move<M: Clone>(
+        self,
+        f: impl Fn(Point) -> M + Send + Sync + 'static,
+    ) -> Interactor<M> {
         let mut i = Interactor::from_modifier(self);
         i.interactions.on_move = Some(Arc::new(f));
         i
@@ -638,7 +662,9 @@ pub struct Interactor<Message> {
 }
 
 impl<M> ModifyBase for Interactor<M> {
-    fn data_mut(&mut self) -> &mut ModifierData { &mut self.data }
+    fn data_mut(&mut self) -> &mut ModifierData {
+        &mut self.data
+    }
 }
 
 impl<M: Clone> Interactor<M> {
@@ -710,7 +736,10 @@ impl<M: Clone> Interactor<M> {
     }
 
     /// Set or override scroll event handler.
-    pub fn on_scroll(mut self, f: impl Fn(mouse::ScrollDelta) -> M + Send + Sync + 'static) -> Self {
+    pub fn on_scroll(
+        mut self,
+        f: impl Fn(mouse::ScrollDelta) -> M + Send + Sync + 'static,
+    ) -> Self {
         self.interactions.on_scroll = Some(Arc::new(f));
         self
     }

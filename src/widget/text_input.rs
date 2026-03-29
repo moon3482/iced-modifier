@@ -1,9 +1,8 @@
 //! Modifier-aware TextInput widget.
 
-
+use iced::Pixels;
 use iced::advanced::text as advanced_text;
 use iced::widget::text_input as iced_text_input;
-use iced::Pixels;
 
 use crate::modifier::accumulator::Interactions;
 use crate::modifier::bundle::{ModifierData, ModifyBase};
@@ -37,7 +36,9 @@ where
     Theme: iced_text_input::Catalog,
     Renderer: advanced_text::Renderer,
 {
-    fn data_mut(&mut self) -> &mut ModifierData { &mut self.data }
+    fn data_mut(&mut self) -> &mut ModifierData {
+        &mut self.data
+    }
 }
 
 impl<'a, Message: Clone, Theme, Renderer> TextInput<'a, Message, Theme, Renderer>

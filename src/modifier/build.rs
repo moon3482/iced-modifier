@@ -1,5 +1,5 @@
-use iced::widget::{container, mouse_area, scrollable, text, tooltip, Container, Space};
 use iced::Element;
+use iced::widget::{Container, Space, container, mouse_area, scrollable, text, tooltip};
 
 use super::accumulator::{Extras, Interactions, Layer, ScrollConfig, ScrollDirection};
 
@@ -116,8 +116,8 @@ where
 
     // Wrap with Tooltip if set
     if let Some(config) = extras.tooltip {
-        let mut tip = tooltip(current, text(config.text), config.position)
-            .gap(config.gap.unwrap_or(4.0));
+        let mut tip =
+            tooltip(current, text(config.text), config.position).gap(config.gap.unwrap_or(4.0));
         if let Some(p) = config.padding {
             tip = tip.padding(p);
         }

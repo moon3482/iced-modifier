@@ -1,6 +1,5 @@
 //! Modifier-aware Button widget.
 
-
 use iced::Element;
 
 use crate::modifier::accumulator::Interactions;
@@ -33,7 +32,9 @@ where
     Theme: iced::widget::button::Catalog,
     Renderer: iced::advanced::Renderer,
 {
-    fn data_mut(&mut self) -> &mut ModifierData { &mut self.data }
+    fn data_mut(&mut self) -> &mut ModifierData {
+        &mut self.data
+    }
 }
 
 impl<'a, Message, Theme, Renderer> Button<'a, Message, Theme, Renderer>

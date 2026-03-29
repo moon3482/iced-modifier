@@ -1,8 +1,8 @@
 mod common;
 
 use iced::Color;
-use iced_modifier::prelude::*;
 use iced_modifier::column;
+use iced_modifier::prelude::*;
 
 use common::{E, Msg};
 
@@ -29,9 +29,7 @@ fn radio_with_styling() {
 
 #[test]
 fn radio_helper() {
-    let _: E = radio("Choice", 1, Some(1), |v| Msg::A)
-        .padding(4)
-        .into();
+    let _: E = radio("Choice", 1, Some(1), |v| Msg::A).padding(4).into();
 }
 
 #[test]
@@ -49,9 +47,7 @@ fn radio_in_column() {
 
 #[test]
 fn slider_basic() {
-    let _: E = Slider::new(0.0..=100.0, 50.0, |v| Msg::A)
-        .padding(8)
-        .into();
+    let _: E = Slider::new(0.0..=100.0, 50.0, |v| Msg::A).padding(8).into();
 }
 
 #[test]
@@ -66,9 +62,7 @@ fn slider_with_options() {
 
 #[test]
 fn slider_helper() {
-    let _: E = slider(0.0..=1.0, 0.5, |v| Msg::A)
-        .padding(4)
-        .into();
+    let _: E = slider(0.0..=1.0, 0.5, |v| Msg::A).padding(4).into();
 }
 
 // ═══════════ TextEditor ═══════════
@@ -132,7 +126,10 @@ fn all_remaining_in_column() {
     let _: E = column![
         Radio::new("Radio", 1, Some(1), |v| Msg::A).padding(4),
         Slider::new(0.0..=100.0, 50.0, |v| Msg::A).padding(4),
-        TextEditor::new(&content).on_action(|_| Msg::A).font_size(14).padding(4),
+        TextEditor::new(&content)
+            .on_action(|_| Msg::A)
+            .font_size(14)
+            .padding(4),
         PickList::new(vec!["A", "B"], Some("A"), |v| Msg::A).padding(4),
     ]
     .spacing(8)

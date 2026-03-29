@@ -1,6 +1,6 @@
 mod common;
 
-use iced::{mouse, Color};
+use iced::{Color, mouse};
 use iced_modifier::prelude::*;
 
 use common::{E, Msg};
@@ -48,20 +48,18 @@ fn button_native_padding() {
     let _: E = Button::new(text("Click"))
         .on_press(Msg::A)
         .button_padding(8)
-        .padding(4)  // Container padding
+        .padding(4) // Container padding
         .into();
 }
 
 #[test]
 fn button_with_styled_text() {
-    let _: E = Button::new(
-        Text::new("Styled").font_size(16).color(Color::WHITE)
-    )
-    .on_press(Msg::A)
-    .padding(12)
-    .background_color(Color::from_rgb(0.2, 0.4, 0.8))
-    .corner_radius(8)
-    .into();
+    let _: E = Button::new(Text::new("Styled").font_size(16).color(Color::WHITE))
+        .on_press(Msg::A)
+        .padding(12)
+        .background_color(Color::from_rgb(0.2, 0.4, 0.8))
+        .corner_radius(8)
+        .into();
 }
 
 #[test]

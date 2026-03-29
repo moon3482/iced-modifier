@@ -64,7 +64,9 @@ fn transparent_text_color() {
 #[test]
 fn transparent_border_color() {
     let _: E = text("hello").modify(
-        Modifier::new().border_color(Color::TRANSPARENT).border_width(1.0),
+        Modifier::new()
+            .border_color(Color::TRANSPARENT)
+            .border_width(1.0),
     );
 }
 
@@ -81,9 +83,11 @@ fn long_string_tooltip() {
 
 #[test]
 fn shadow_zero_blur() {
-    let _: E = text("hello").modify(
-        Modifier::new().shadow(Shadow { color: Color::BLACK, offset: Vector::ZERO, blur_radius: 0.0 }),
-    );
+    let _: E = text("hello").modify(Modifier::new().shadow(Shadow {
+        color: Color::BLACK,
+        offset: Vector::ZERO,
+        blur_radius: 0.0,
+    }));
 }
 
 #[test]

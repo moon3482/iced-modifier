@@ -36,8 +36,11 @@ where
     let element = widget.into();
     let (layers, extras, interactions) = modifier.into_parts();
 
-    if layers.is_empty() && !extras.hidden && !interactions.has_content()
-        && extras.tooltip.is_none() && extras.scrollable.is_none()
+    if layers.is_empty()
+        && !extras.hidden
+        && !interactions.has_content()
+        && extras.tooltip.is_none()
+        && extras.scrollable.is_none()
         && extras.widget_id.is_none()
     {
         return element;

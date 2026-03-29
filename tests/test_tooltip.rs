@@ -27,7 +27,8 @@ fn tooltip_position_right() {
 
 #[test]
 fn tooltip_position_follow_cursor() {
-    let _: E = text("t").modify(Modifier::new().tooltip_text("tip", tooltip::Position::FollowCursor));
+    let _: E =
+        text("t").modify(Modifier::new().tooltip_text("tip", tooltip::Position::FollowCursor));
 }
 
 #[test]
@@ -92,14 +93,18 @@ fn tooltip_gap_without_tooltip_is_noop() {
 #[test]
 fn tooltip_padding_without_tooltip_is_noop() {
     let _: E = text("t").modify(
-        Modifier::new().tooltip_padding(10).tooltip_text("tip", tooltip::Position::Top),
+        Modifier::new()
+            .tooltip_padding(10)
+            .tooltip_text("tip", tooltip::Position::Top),
     );
 }
 
 #[test]
 fn tooltip_snap_without_tooltip_is_noop() {
     let _: E = text("t").modify(
-        Modifier::new().tooltip_snap(true).tooltip_text("tip", tooltip::Position::Top),
+        Modifier::new()
+            .tooltip_snap(true)
+            .tooltip_text("tip", tooltip::Position::Top),
     );
 }
 
@@ -122,21 +127,27 @@ fn tooltip_overwrite_resets_config() {
 #[test]
 fn tooltip_gap_zero() {
     let _: E = text("t").modify(
-        Modifier::new().tooltip_text("tip", tooltip::Position::Top).tooltip_gap(0.0),
+        Modifier::new()
+            .tooltip_text("tip", tooltip::Position::Top)
+            .tooltip_gap(0.0),
     );
 }
 
 #[test]
 fn tooltip_gap_negative() {
     let _: E = text("t").modify(
-        Modifier::new().tooltip_text("tip", tooltip::Position::Top).tooltip_gap(-5.0),
+        Modifier::new()
+            .tooltip_text("tip", tooltip::Position::Top)
+            .tooltip_gap(-5.0),
     );
 }
 
 #[test]
 fn tooltip_padding_zero() {
     let _: E = text("t").modify(
-        Modifier::new().tooltip_text("tip", tooltip::Position::Top).tooltip_padding(0),
+        Modifier::new()
+            .tooltip_text("tip", tooltip::Position::Top)
+            .tooltip_padding(0),
     );
 }
 

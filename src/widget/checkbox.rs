@@ -1,9 +1,8 @@
 //! Modifier-aware Checkbox widget.
 
-
-use iced::advanced::text as advanced_text;
-use iced::widget::{text as iced_text, checkbox as iced_checkbox};
 use iced::Pixels;
+use iced::advanced::text as advanced_text;
+use iced::widget::{checkbox as iced_checkbox, text as iced_text};
 
 use crate::modifier::accumulator::Interactions;
 use crate::modifier::bundle::{ModifierData, ModifyBase};
@@ -36,7 +35,9 @@ where
     Theme: iced_checkbox::Catalog + iced_text::Catalog,
     Renderer: advanced_text::Renderer,
 {
-    fn data_mut(&mut self) -> &mut ModifierData { &mut self.data }
+    fn data_mut(&mut self) -> &mut ModifierData {
+        &mut self.data
+    }
 }
 
 impl<'a, Message: Clone, Theme, Renderer> Checkbox<'a, Message, Theme, Renderer>

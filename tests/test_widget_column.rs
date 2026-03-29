@@ -1,9 +1,9 @@
 mod common;
 
 use iced::widget::tooltip;
-use iced::{mouse, Color};
-use iced_modifier::prelude::*;
+use iced::{Color, mouse};
 use iced_modifier::column;
+use iced_modifier::prelude::*;
 
 use common::{E, Msg};
 
@@ -11,10 +11,7 @@ use common::{E, Msg};
 
 #[test]
 fn column_with_push() {
-    let _: E = Column::new()
-        .push(text("A"))
-        .push(text("B"))
-        .into();
+    let _: E = Column::new().push(text("A")).push(text("B")).into();
 }
 
 #[test]
@@ -31,13 +28,10 @@ fn column_with_spacing_and_styling() {
 
 #[test]
 fn column_macro() {
-    let _: E = column![
-        text("A").font_size(14),
-        text("B").font_size(18),
-    ]
-    .spacing(8)
-    .padding(12)
-    .into();
+    let _: E = column![text("A").font_size(14), text("B").font_size(18),]
+        .spacing(8)
+        .padding(12)
+        .into();
 }
 
 #[test]
@@ -47,24 +41,15 @@ fn column_macro_empty() {
 
 #[test]
 fn column_with_children() {
-    let children: Vec<E> = vec![
-        text("A").into(),
-        text("B").into(),
-    ];
-    let _: E = Column::with_children(children)
-        .spacing(4)
-        .padding(8)
-        .into();
+    let children: Vec<E> = vec![text("A").into(), text("B").into()];
+    let _: E = Column::with_children(children).spacing(4).padding(8).into();
 }
 
 // ── Interactions ──
 
 #[test]
 fn column_on_press() {
-    let _: E = column![text("click")]
-        .on_press(Msg::A)
-        .padding(10)
-        .into();
+    let _: E = column![text("click")].on_press(Msg::A).padding(10).into();
 }
 
 #[test]
@@ -109,10 +94,7 @@ fn column_scrollable() {
 
 #[test]
 fn column_hidden() {
-    let _: E = column![text("A")]
-        .spacing(8)
-        .hidden(true)
-        .into();
+    let _: E = column![text("A")].spacing(8).hidden(true).into();
 }
 
 #[test]
@@ -135,9 +117,7 @@ fn column_no_children() {
 
 #[test]
 fn column_spacing_zero() {
-    let _: E = column![text("A"), text("B")]
-        .spacing(0)
-        .into();
+    let _: E = column![text("A"), text("B")].spacing(0).into();
 }
 
 #[test]
@@ -157,7 +137,7 @@ fn column_spacing_inherent_vs_modifybase() {
     // .spacing() on Column is inherent (widget-specific, sets inner.spacing)
     // ModifyBase .spacing() would set extras.spacing, but inherent takes priority
     let _: E = column![text("A"), text("B")]
-        .spacing(8)  // inherent method → inner.spacing
+        .spacing(8) // inherent method → inner.spacing
         .padding(10)
         .into();
 }
@@ -176,19 +156,15 @@ fn column_push_after_styling() {
 
 #[test]
 fn column_deeply_nested() {
-    let _: E = column![
-        column![
-            column![text("deep")].padding(2),
-        ].padding(4),
-    ].padding(8).into();
+    let _: E = column![column![column![text("deep")].padding(2),].padding(4),]
+        .padding(8)
+        .into();
 }
 
 #[test]
 fn column_with_interactive_children() {
     let _: E = column![
-        Text::new("click me")
-            .on_press(Msg::A)
-            .padding(4),
+        Text::new("click me").on_press(Msg::A).padding(4),
         Text::new("hover me")
             .on_enter(Msg::Hover(true))
             .on_exit(Msg::Hover(false))

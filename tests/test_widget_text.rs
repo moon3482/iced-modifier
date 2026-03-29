@@ -1,7 +1,7 @@
 mod common;
 
 use iced::widget::tooltip;
-use iced::{mouse, Color};
+use iced::{Color, mouse};
 use iced_modifier::prelude::*;
 
 use common::{E, Msg};
@@ -51,10 +51,7 @@ fn direct_text_helper() {
 
 #[test]
 fn on_press_transitions_type() {
-    let _: E = Text::new("click me")
-        .padding(10)
-        .on_press(Msg::A)
-        .into();
+    let _: E = Text::new("click me").padding(10).on_press(Msg::A).into();
 }
 
 #[test]
@@ -119,7 +116,10 @@ fn size_method() {
 
 #[test]
 fn color_method() {
-    let _: E = text("hello").color(Color::from_rgb(1.0, 0.0, 0.0)).padding(10).into();
+    let _: E = text("hello")
+        .color(Color::from_rgb(1.0, 0.0, 0.0))
+        .padding(10)
+        .into();
 }
 
 #[test]
@@ -129,10 +129,7 @@ fn text_center_method() {
 
 #[test]
 fn font_size_on_interactive() {
-    let _: E = Text::new("hello")
-        .on_press(Msg::A)
-        .font_size(20)
-        .into();
+    let _: E = Text::new("hello").on_press(Msg::A).font_size(20).into();
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -146,9 +143,7 @@ fn modify_with_modifier() {
 
 #[test]
 fn modify_with_interactor() {
-    let _: E = text("hello").modify(
-        Modifier::new().font_size(16).padding(12).on_press(Msg::A),
-    );
+    let _: E = text("hello").modify(Modifier::new().font_size(16).padding(12).on_press(Msg::A));
 }
 
 #[test]
@@ -221,7 +216,10 @@ fn into_element_plain() {
 
 #[test]
 fn into_element_with_styling() {
-    let _: E = Text::new("hello").padding(10).background_color(Color::WHITE).into();
+    let _: E = Text::new("hello")
+        .padding(10)
+        .background_color(Color::WHITE)
+        .into();
 }
 
 #[test]
@@ -287,16 +285,16 @@ fn text_width_vs_container_width() {
     // .width() = ModifyBase (Container width)
     // .text_width() = iced native (text boundary width before wrapping)
     let _: E = text("long text that might wrap")
-        .text_width(100)   // text boundary
-        .width(200)        // container width (ModifyBase)
+        .text_width(100) // text boundary
+        .width(200) // container width (ModifyBase)
         .into();
 }
 
 #[test]
 fn text_height_vs_container_height() {
     let _: E = text("hello")
-        .text_height(50)   // text boundary
-        .height(100)       // container height (ModifyBase)
+        .text_height(50) // text boundary
+        .height(100) // container height (ModifyBase)
         .into();
 }
 
@@ -304,8 +302,8 @@ fn text_height_vs_container_height() {
 fn font_size_always_overrides_size() {
     // font_size (extras) overwrites size (inner) during From conversion
     // regardless of call order
-    let _: E = text("hello").size(12).font_size(24).into();    // → 24px
-    let _: E = text("hello").font_size(24).size(12).into();    // → 24px (font_size wins)
+    let _: E = text("hello").size(12).font_size(24).into(); // → 24px
+    let _: E = text("hello").font_size(24).size(12).into(); // → 24px (font_size wins)
 }
 
 #[test]

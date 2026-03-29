@@ -1,8 +1,8 @@
 //! Modifier-aware TextEditor widget.
 
+use iced::Pixels;
 use iced::advanced::text as advanced_text;
 use iced::widget::{text as iced_text, text_editor as iced_text_editor};
-use iced::Pixels;
 
 use crate::modifier::accumulator::Interactions;
 use crate::modifier::bundle::{ModifierData, ModifyBase};
@@ -14,7 +14,13 @@ where
     Theme: iced_text_editor::Catalog,
     Renderer: advanced_text::Renderer,
 {
-    inner: iced::widget::TextEditor<'a, iced::advanced::text::highlighter::PlainText, Message, Theme, Renderer>,
+    inner: iced::widget::TextEditor<
+        'a,
+        iced::advanced::text::highlighter::PlainText,
+        Message,
+        Theme,
+        Renderer,
+    >,
     data: ModifierData,
     interactions: Interactions<Message>,
 }
@@ -35,7 +41,9 @@ where
     Theme: iced_text_editor::Catalog,
     Renderer: advanced_text::Renderer,
 {
-    fn data_mut(&mut self) -> &mut ModifierData { &mut self.data }
+    fn data_mut(&mut self) -> &mut ModifierData {
+        &mut self.data
+    }
 }
 
 impl<'a, Message: Clone, Theme, Renderer> TextEditor<'a, Message, Theme, Renderer>

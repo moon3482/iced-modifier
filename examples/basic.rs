@@ -60,7 +60,9 @@ fn update(state: &mut App, message: Message) -> iced::Task<Message> {
     match message {
         Message::CardClicked => println!("Card clicked!"),
         Message::Hovered(entered) => {
-            if entered { state.hover_count += 1; }
+            if entered {
+                state.hover_count += 1;
+            }
         }
         Message::RightClicked => println!("Right clicked!"),
         Message::Scrolled(info) => state.last_scroll = info,
@@ -92,7 +94,11 @@ fn view(state: &App) -> Element<'_, Message> {
         .padding(20)
         .background_color(Color::WHITE)
         .corner_radius(8)
-        .border(Border { color: Color::from_rgb(0.8, 0.8, 0.85), width: 1.0, ..Border::default() })
+        .border(Border {
+            color: Color::from_rgb(0.8, 0.8, 0.85),
+            width: 1.0,
+            ..Border::default()
+        })
         .shadow(Shadow {
             color: Color::from_rgba(0.0, 0.0, 0.0, 0.15),
             offset: Vector::new(0.0, 2.0),
@@ -112,9 +118,18 @@ fn view(state: &App) -> Element<'_, Message> {
     // ═══════════════════════════════════════════════════
 
     let styled_column = column![
-        Text::new("Item A").font_size(14).padding(8).background_color(Color::from_rgb(1.0, 0.95, 0.95)),
-        Text::new("Item B").font_size(14).padding(8).background_color(Color::from_rgb(0.95, 1.0, 0.95)),
-        Text::new("Item C").font_size(14).padding(8).background_color(Color::from_rgb(0.95, 0.95, 1.0)),
+        Text::new("Item A")
+            .font_size(14)
+            .padding(8)
+            .background_color(Color::from_rgb(1.0, 0.95, 0.95)),
+        Text::new("Item B")
+            .font_size(14)
+            .padding(8)
+            .background_color(Color::from_rgb(0.95, 1.0, 0.95)),
+        Text::new("Item C")
+            .font_size(14)
+            .padding(8)
+            .background_color(Color::from_rgb(0.95, 0.95, 1.0)),
     ]
     .spacing(4)
     .padding(12)
@@ -122,8 +137,16 @@ fn view(state: &App) -> Element<'_, Message> {
     .corner_radius(8);
 
     let styled_row = row![
-        Text::new("Left (1/3)").font_size(14).fill_portion(1).padding(8).background_color(Color::from_rgb(1.0, 0.9, 0.9)),
-        Text::new("Right (2/3)").font_size(14).fill_portion(2).padding(8).background_color(Color::from_rgb(0.9, 0.9, 1.0)),
+        Text::new("Left (1/3)")
+            .font_size(14)
+            .fill_portion(1)
+            .padding(8)
+            .background_color(Color::from_rgb(1.0, 0.9, 0.9)),
+        Text::new("Right (2/3)")
+            .font_size(14)
+            .fill_portion(2)
+            .padding(8)
+            .background_color(Color::from_rgb(0.9, 0.9, 1.0)),
     ]
     .spacing(4);
 
@@ -131,20 +154,20 @@ fn view(state: &App) -> Element<'_, Message> {
     // 3. Button
     // ═══════════════════════════════════════════════════
 
-    let styled_button = Button::new(
-        Text::new("Styled Button").font_size(14).color(Color::WHITE)
-    )
-    .on_press(Message::CardClicked)
-    .button_padding(12)
-    .padding(4)
-    .background_color(Color::from_rgb(0.2, 0.5, 0.9))
-    .corner_radius(8)
-    .on_enter(Message::Hovered(true))
-    .on_exit(Message::Hovered(false))
-    .cursor(mouse::Interaction::Pointer);
+    let styled_button = Button::new(Text::new("Styled Button").font_size(14).color(Color::WHITE))
+        .on_press(Message::CardClicked)
+        .button_padding(12)
+        .padding(4)
+        .background_color(Color::from_rgb(0.2, 0.5, 0.9))
+        .corner_radius(8)
+        .on_enter(Message::Hovered(true))
+        .on_exit(Message::Hovered(false))
+        .cursor(mouse::Interaction::Pointer);
 
     let disabled_button = Button::new(
-        Text::new("Disabled").font_size(14).color(Color::from_rgb(0.6, 0.6, 0.6))
+        Text::new("Disabled")
+            .font_size(14)
+            .color(Color::from_rgb(0.6, 0.6, 0.6)),
     )
     .on_press_maybe(None::<Message>)
     .button_padding(12)
@@ -187,11 +210,14 @@ fn view(state: &App) -> Element<'_, Message> {
 
     let radios = column![
         Radio::new("Option A", 1, state.selected_radio, Message::RadioSelected)
-            .text_size(14).padding(4),
+            .text_size(14)
+            .padding(4),
         Radio::new("Option B", 2, state.selected_radio, Message::RadioSelected)
-            .text_size(14).padding(4),
+            .text_size(14)
+            .padding(4),
         Radio::new("Option C", 3, state.selected_radio, Message::RadioSelected)
-            .text_size(14).padding(4),
+            .text_size(14)
+            .padding(4),
     ]
     .spacing(2);
 
@@ -220,12 +246,14 @@ fn view(state: &App) -> Element<'_, Message> {
     };
     let pick_demo = column![
         Text::new(pick_label).font_size(14),
-        PickList::new(options, state.picked.as_deref(), |v: &str| Message::PickSelected(v.to_string()))
-            .placeholder("Choose language...")
-            .text_size(14)
-            .list_padding(8)
-            .padding(4)
-            .corner_radius(6),
+        PickList::new(options, state.picked.as_deref(), |v: &str| {
+            Message::PickSelected(v.to_string())
+        })
+        .placeholder("Choose language...")
+        .text_size(14)
+        .list_padding(8)
+        .padding(4)
+        .corner_radius(6),
     ]
     .spacing(4);
 
@@ -264,8 +292,12 @@ fn view(state: &App) -> Element<'_, Message> {
 
     let scrollable_content = column![
         Text::new("Scroll me").font_size(14),
-        text("Line 1"), text("Line 2"), text("Line 3"),
-        text("Line 4"), text("Line 5"), text("Line 6"),
+        text("Line 1"),
+        text("Line 2"),
+        text("Line 3"),
+        text("Line 4"),
+        text("Line 5"),
+        text("Line 6"),
     ]
     .spacing(4)
     .height(80)
@@ -288,13 +320,18 @@ fn view(state: &App) -> Element<'_, Message> {
         None => "Move mouse here".to_string(),
     };
     let scroll_area = Text::new(scroll_label)
-        .font_size(14).padding(14)
-        .background_color(Color::from_rgb(0.9, 1.0, 0.95)).corner_radius(8)
+        .font_size(14)
+        .padding(14)
+        .background_color(Color::from_rgb(0.9, 1.0, 0.95))
+        .corner_radius(8)
         .on_scroll(|delta| Message::Scrolled(format!("{:?}", delta)));
 
     let move_area = Text::new(mouse_label)
-        .font_size(14).padding(14).fill_width()
-        .background_color(Color::from_rgb(1.0, 0.97, 0.88)).corner_radius(8)
+        .font_size(14)
+        .padding(14)
+        .fill_width()
+        .background_color(Color::from_rgb(1.0, 0.97, 0.88))
+        .corner_radius(8)
         .on_move(Message::MouseMoved);
 
     // ═══════════════════════════════════════════════════
@@ -302,19 +339,24 @@ fn view(state: &App) -> Element<'_, Message> {
     // ═══════════════════════════════════════════════════
 
     fn card_base() -> Modifier {
-        Modifier::new().background_color(Color::WHITE).corner_radius(8).padding(16)
+        Modifier::new()
+            .background_color(Color::WHITE)
+            .corner_radius(8)
+            .padding(16)
     }
-    let composed = text("Composed (base + shadow)").size(14).modify(
-        card_base().then(Modifier::new().shadow(Shadow {
+    let composed = text("Composed (base + shadow)")
+        .size(14)
+        .modify(card_base().then(Modifier::new().shadow(Shadow {
             color: Color::from_rgba(0.0, 0.0, 0.0, 0.2),
             offset: Vector::new(0.0, 4.0),
             blur_radius: 12.0,
-        })),
-    );
+        })));
 
     let is_error = true;
     let status = Text::new("Error status")
-        .font_size(14).padding(10).corner_radius(4)
+        .font_size(14)
+        .padding(10)
+        .corner_radius(4)
         .modify_if(is_error, |t| {
             t.background_color(Color::from_rgb(1.0, 0.9, 0.9))
                 .text_color(Color::from_rgb(0.8, 0.0, 0.0))
@@ -326,44 +368,42 @@ fn view(state: &App) -> Element<'_, Message> {
 
     let content = column![
         Text::new("iced_modifier Demo").font_size(28),
-        Text::new("SwiftUI/Compose-style direct chaining for iced").font_size(14)
+        Text::new("SwiftUI/Compose-style direct chaining for iced")
+            .font_size(14)
             .color(Color::from_rgb(0.4, 0.4, 0.5)),
-
         section("Text — Direct Chaining"),
-        direct_card, direct_shadow, direct_clickable,
-
+        direct_card,
+        direct_shadow,
+        direct_clickable,
         section("Column & Row"),
-        styled_column, styled_row,
-
+        styled_column,
+        styled_row,
         section("Button"),
         row![styled_button, disabled_button].spacing(8),
-
         section("TextInput & TextEditor"),
-        input, editor,
-
+        input,
+        editor,
         section("Checkbox / Toggler / Radio"),
-        check, toggle, radios,
-
+        check,
+        toggle,
+        radios,
         section("Slider"),
         slider_demo,
-
         section("PickList"),
         pick_demo,
-
         section("Hover & Tooltip"),
-        hover_card, with_tooltip,
-
+        hover_card,
+        with_tooltip,
         section("Layering"),
         layered,
-
         section("Scrollable"),
         scrollable_content,
-
         section("Mouse Callbacks"),
-        scroll_area, move_area,
-
+        scroll_area,
+        move_area,
         section("Composition (.modify)"),
-        composed, status,
+        composed,
+        status,
     ]
     .spacing(6)
     .padding(20);
@@ -375,7 +415,10 @@ fn view(state: &App) -> Element<'_, Message> {
 }
 
 fn section<'a>(title: &'a str) -> Text<'a> {
-    Text::new(title)
-        .font_size(18)
-        .padding(iced::Padding { top: 16.0, right: 0.0, bottom: 0.0, left: 0.0 })
+    Text::new(title).font_size(18).padding(iced::Padding {
+        top: 16.0,
+        right: 0.0,
+        bottom: 0.0,
+        left: 0.0,
+    })
 }

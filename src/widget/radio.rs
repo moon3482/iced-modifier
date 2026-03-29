@@ -1,8 +1,8 @@
 //! Modifier-aware Radio widget.
 
+use iced::Pixels;
 use iced::advanced::text as advanced_text;
 use iced::widget::{radio as iced_radio, text as iced_text};
-use iced::Pixels;
 
 use crate::modifier::accumulator::Interactions;
 use crate::modifier::bundle::{ModifierData, ModifyBase};
@@ -39,7 +39,9 @@ where
     Theme: iced_radio::Catalog + iced_text::Catalog,
     Renderer: advanced_text::Renderer,
 {
-    fn data_mut(&mut self) -> &mut ModifierData { &mut self.data }
+    fn data_mut(&mut self) -> &mut ModifierData {
+        &mut self.data
+    }
 }
 
 impl<'a, Message: Clone, Theme, Renderer> Radio<'a, Message, Theme, Renderer>

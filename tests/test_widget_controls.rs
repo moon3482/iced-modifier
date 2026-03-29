@@ -1,8 +1,8 @@
 mod common;
 
 use iced::Color;
-use iced_modifier::prelude::*;
 use iced_modifier::column;
+use iced_modifier::prelude::*;
 
 use common::{E, Msg};
 
@@ -53,8 +53,8 @@ fn text_input_secure() {
 fn text_input_native_padding() {
     let _: E = TextInput::new("ph", "val")
         .on_input(|s| Msg::A)
-        .input_padding(8)  // iced native
-        .padding(4)        // Container
+        .input_padding(8) // iced native
+        .padding(4) // Container
         .into();
 }
 
@@ -78,10 +78,7 @@ fn checkbox_basic() {
 
 #[test]
 fn checkbox_helper() {
-    let _: E = checkbox(false)
-        .label("Option")
-        .on_toggle(|b| Msg::A)
-        .into();
+    let _: E = checkbox(false).label("Option").on_toggle(|b| Msg::A).into();
 }
 
 #[test]
@@ -150,10 +147,22 @@ fn toggler_hidden() {
 #[test]
 fn controls_in_column() {
     let _: E = column![
-        TextInput::new("Name", "").on_input(|s| Msg::A).font_size(14).padding(8),
-        Checkbox::new(true).label("Agree").on_toggle(|b| Msg::A).padding(4),
-        Toggler::new(false).label("Enable").on_toggle(|b| Msg::A).padding(4),
-        Button::new(text("Submit")).on_press(Msg::B).padding(12).corner_radius(8),
+        TextInput::new("Name", "")
+            .on_input(|s| Msg::A)
+            .font_size(14)
+            .padding(8),
+        Checkbox::new(true)
+            .label("Agree")
+            .on_toggle(|b| Msg::A)
+            .padding(4),
+        Toggler::new(false)
+            .label("Enable")
+            .on_toggle(|b| Msg::A)
+            .padding(4),
+        Button::new(text("Submit"))
+            .on_press(Msg::B)
+            .padding(12)
+            .corner_radius(8),
     ]
     .spacing(8)
     .padding(16)

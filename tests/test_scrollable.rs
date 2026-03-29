@@ -1,7 +1,7 @@
 mod common;
 
-use iced::widget::{column, row, text, tooltip};
 use iced::Color;
+use iced::widget::{column, row, text, tooltip};
 use iced_modifier::prelude::*;
 
 use common::{E, Msg};
@@ -34,14 +34,22 @@ fn scrollable_with_interaction() {
 #[test]
 fn scrollable_with_tooltip() {
     let _: E = text("a").modify(
-        Modifier::new().height(100).tooltip_text("scroll", tooltip::Position::Top).scrollable(),
+        Modifier::new()
+            .height(100)
+            .tooltip_text("scroll", tooltip::Position::Top)
+            .scrollable(),
     );
 }
 
 #[test]
 fn scrollable_with_styling() {
     let _: E = column![text("a"), text("b")].modify(
-        Modifier::new().height(100).padding(8).background_color(Color::WHITE).corner_radius(6).scrollable(),
+        Modifier::new()
+            .height(100)
+            .padding(8)
+            .background_color(Color::WHITE)
+            .corner_radius(6)
+            .scrollable(),
     );
 }
 
@@ -53,29 +61,37 @@ fn scrollable_no_size_constraint() {
 #[test]
 fn scrollable_with_id() {
     let _: E = column![text("a")].modify(
-        Modifier::new().height(100).scrollable().scrollable_id("my-scroll"),
+        Modifier::new()
+            .height(100)
+            .scrollable()
+            .scrollable_id("my-scroll"),
     );
 }
 
 #[test]
 fn scrollable_anchor_bottom() {
     let _: E = column![text("a")].modify(
-        Modifier::new().height(100).scrollable().scroll_anchor_bottom(),
+        Modifier::new()
+            .height(100)
+            .scrollable()
+            .scroll_anchor_bottom(),
     );
 }
 
 #[test]
 fn scrollable_anchor_right() {
     let _: E = row![text("a")].modify(
-        Modifier::new().width(100).scrollable_x().scroll_anchor_right(),
+        Modifier::new()
+            .width(100)
+            .scrollable_x()
+            .scroll_anchor_right(),
     );
 }
 
 #[test]
 fn scrollable_with_spacing() {
-    let _: E = column![text("a")].modify(
-        Modifier::new().height(100).scrollable().scroll_spacing(8),
-    );
+    let _: E =
+        column![text("a")].modify(Modifier::new().height(100).scrollable().scroll_spacing(8));
 }
 
 #[test]
@@ -96,22 +112,27 @@ fn scrollable_full_config() {
 fn scrollable_id_without_scrollable_is_noop() {
     // scrollable_id before scrollable() should be ignored (no panic)
     let _: E = column![text("a")].modify(
-        Modifier::new().scrollable_id("ignored").height(100).scrollable(),
+        Modifier::new()
+            .scrollable_id("ignored")
+            .height(100)
+            .scrollable(),
     );
 }
 
 #[test]
 fn scroll_anchor_without_scrollable_is_noop() {
     let _: E = column![text("a")].modify(
-        Modifier::new().scroll_anchor_bottom().height(100).scrollable(),
+        Modifier::new()
+            .scroll_anchor_bottom()
+            .height(100)
+            .scrollable(),
     );
 }
 
 #[test]
 fn scroll_spacing_without_scrollable_is_noop() {
-    let _: E = column![text("a")].modify(
-        Modifier::new().scroll_spacing(10).height(100).scrollable(),
-    );
+    let _: E =
+        column![text("a")].modify(Modifier::new().scroll_spacing(10).height(100).scrollable());
 }
 
 // ── Edge cases: direction change preserves config ──
@@ -148,7 +169,10 @@ fn direction_change_preserves_anchor() {
 fn anchor_bottom_on_horizontal_only() {
     // Technically anchor_y on horizontal scroll — iced allows it, no panic
     let _: E = row![text("a")].modify(
-        Modifier::new().width(100).scrollable_x().scroll_anchor_bottom(),
+        Modifier::new()
+            .width(100)
+            .scrollable_x()
+            .scroll_anchor_bottom(),
     );
 }
 
@@ -156,7 +180,10 @@ fn anchor_bottom_on_horizontal_only() {
 fn anchor_right_on_vertical_only() {
     // anchor_x on vertical scroll — iced allows it, no panic
     let _: E = column![text("a")].modify(
-        Modifier::new().height(100).scrollable().scroll_anchor_right(),
+        Modifier::new()
+            .height(100)
+            .scrollable()
+            .scroll_anchor_right(),
     );
 }
 
@@ -164,7 +191,8 @@ fn anchor_right_on_vertical_only() {
 fn both_anchors_on_both_directions() {
     let _: E = text("a").modify(
         Modifier::new()
-            .width(100).height(100)
+            .width(100)
+            .height(100)
             .scrollable_xy()
             .scroll_anchor_bottom()
             .scroll_anchor_right(),
@@ -175,9 +203,8 @@ fn both_anchors_on_both_directions() {
 
 #[test]
 fn scroll_spacing_zero() {
-    let _: E = column![text("a")].modify(
-        Modifier::new().height(100).scrollable().scroll_spacing(0),
-    );
+    let _: E =
+        column![text("a")].modify(Modifier::new().height(100).scrollable().scroll_spacing(0));
 }
 
 // ── Edge cases: interactions with other features ──

@@ -20,12 +20,12 @@ use std::sync::Arc;
 
 use iced::advanced::text as advanced_text;
 use iced::widget::{container, scrollable, text as iced_text};
-use iced::{alignment, mouse, Color, Element, Pixels, Point};
+use iced::{Color, Element, Pixels, Point, alignment, mouse};
 
+use crate::IntoModified;
+use crate::modifier::accumulator::Interactions;
 use crate::modifier::build::build_element;
 use crate::modifier::bundle::{ModifierData, ModifyBase};
-use crate::modifier::accumulator::Interactions;
-use crate::IntoModified;
 
 // ═══════════════════════════════════════════════════════════════
 // Text: pure styling (no Message generic)
@@ -122,10 +122,18 @@ where
 
         // Merge extras (modifier extras override for non-set fields)
         let mut extras = self.data.extras;
-        if !extras.hidden { extras.hidden = mod_extras.hidden; }
-        if extras.widget_id.is_none() { extras.widget_id = mod_extras.widget_id; }
-        if extras.tooltip.is_none() { extras.tooltip = mod_extras.tooltip; }
-        if extras.scrollable.is_none() { extras.scrollable = mod_extras.scrollable; }
+        if !extras.hidden {
+            extras.hidden = mod_extras.hidden;
+        }
+        if extras.widget_id.is_none() {
+            extras.widget_id = mod_extras.widget_id;
+        }
+        if extras.tooltip.is_none() {
+            extras.tooltip = mod_extras.tooltip;
+        }
+        if extras.scrollable.is_none() {
+            extras.scrollable = mod_extras.scrollable;
+        }
 
         if layers.is_empty()
             && !extras.hidden
@@ -173,7 +181,10 @@ where
     impl_text_to_interactive!(on_exit, on_exit);
 
     /// Set cursor style. Transitions to [`InteractiveText`].
-    pub fn cursor<M: Clone>(self, cursor: mouse::Interaction) -> InteractiveText<'a, M, Theme, Renderer> {
+    pub fn cursor<M: Clone>(
+        self,
+        cursor: mouse::Interaction,
+    ) -> InteractiveText<'a, M, Theme, Renderer> {
         let mut interactions = Interactions::empty();
         interactions.cursor = Some(cursor);
         InteractiveText {
@@ -184,7 +195,10 @@ where
     }
 
     /// Set scroll event handler. Transitions to [`InteractiveText`].
-    pub fn on_scroll<M: Clone>(self, f: impl Fn(mouse::ScrollDelta) -> M + Send + Sync + 'static) -> InteractiveText<'a, M, Theme, Renderer> {
+    pub fn on_scroll<M: Clone>(
+        self,
+        f: impl Fn(mouse::ScrollDelta) -> M + Send + Sync + 'static,
+    ) -> InteractiveText<'a, M, Theme, Renderer> {
         let mut interactions = Interactions::empty();
         interactions.on_scroll = Some(Arc::new(f));
         InteractiveText {
@@ -195,7 +209,10 @@ where
     }
 
     /// Set mouse move handler. Transitions to [`InteractiveText`].
-    pub fn on_move<M: Clone>(self, f: impl Fn(Point) -> M + Send + Sync + 'static) -> InteractiveText<'a, M, Theme, Renderer> {
+    pub fn on_move<M: Clone>(
+        self,
+        f: impl Fn(Point) -> M + Send + Sync + 'static,
+    ) -> InteractiveText<'a, M, Theme, Renderer> {
         let mut interactions = Interactions::empty();
         interactions.on_move = Some(Arc::new(f));
         InteractiveText {
@@ -281,7 +298,10 @@ where
         self.interactions.cursor = Some(cursor);
         self
     }
-    pub fn on_scroll(mut self, f: impl Fn(mouse::ScrollDelta) -> M + Send + Sync + 'static) -> Self {
+    pub fn on_scroll(
+        mut self,
+        f: impl Fn(mouse::ScrollDelta) -> M + Send + Sync + 'static,
+    ) -> Self {
         self.interactions.on_scroll = Some(Arc::new(f));
         self
     }
