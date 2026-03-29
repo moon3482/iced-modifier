@@ -91,7 +91,6 @@ text("Hello").modify(
 | `.padding()` | 내부 여백 | `.padding()` | `.padding()` |
 | `.margin()` | 외부 여백 | N/A (padding 사용) | N/A |
 | `.width()` / `.height()` | 크기 지정 | `.size()` | `.frame()` |
-| `.size()` | 너비/높이 동일 설정 | `Modifier.size()` | `.frame(width:height:)` |
 | `.fill_width()` | 가용 너비 채우기 | `.fillMaxWidth()` | `.frame(maxWidth: .infinity)` |
 | `.fill_portion(n)` | 비율 채우기 | `.weight()` | N/A |
 | `.center()` | 양축 중앙 정렬 | `.align(Alignment.Center)` | `.center()` |

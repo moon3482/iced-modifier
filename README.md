@@ -82,7 +82,6 @@ text("Hello").modify(
 | `.padding()` | Inner padding | `.padding()` | `.padding()` |
 | `.margin()` | Outer spacing | N/A | N/A |
 | `.width()` / `.height()` | Dimensions | `.size()` | `.frame()` |
-| `.size()` | Equal width & height | `Modifier.size()` | `.frame(width:height:)` |
 | `.fill_width()` | Fill available width | `.fillMaxWidth()` | `.frame(maxWidth: .infinity)` |
 | `.fill_portion(n)` | Proportional fill | `.weight()` | N/A |
 | `.center()` | Center both axes | `.align(Alignment.Center)` | `.center()` |
