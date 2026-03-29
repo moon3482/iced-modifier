@@ -436,6 +436,24 @@ pub trait ModifyBase: Sized {
         }
         self
     }
+
+    // ── Widget-specific (applied by widget wrappers) ──
+
+    /// Set font size for text-based widgets.
+    /// Applied by widget wrappers (e.g. `widget::Text`). Ignored on plain `iced::widget::text`.
+    /// Compose: `fontSize` / SwiftUI: `.font(.system(size:))`
+    fn font_size(mut self, size: impl Into<Pixels>) -> Self {
+        self.data_mut().extras.font_size = Some(size.into());
+        self
+    }
+
+    /// Set spacing between children for layout widgets (Column, Row).
+    /// Applied by widget wrappers. Ignored on plain `iced::widget::column`/`row`.
+    /// Compose: `Arrangement.spacedBy()` / SwiftUI: `VStack(spacing:)`
+    fn spacing(mut self, spacing: impl Into<Pixels>) -> Self {
+        self.data_mut().extras.spacing = Some(spacing.into());
+        self
+    }
 }
 
 // ═══════════════════════════════════════════════════════════════

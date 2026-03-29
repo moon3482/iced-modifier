@@ -1,4 +1,4 @@
-use iced::widget::{column, container, row, text, tooltip};
+use iced::widget::{column, container, row, tooltip};
 use iced::{Border, Color, Element, Length, Point, Shadow, Theme, Vector, mouse};
 use iced_modifier::prelude::*;
 
@@ -284,6 +284,32 @@ fn view(state: &App) -> Element<'_, Message> {
     ]
     .spacing(8);
 
+    // 15. Font size via modifier (widget::Text)
+    let font_size_demo = row![
+        text("Small (12)").modify(
+            Modifier::new()
+                .font_size(12)
+                .padding(8)
+                .background_color(Color::from_rgb(0.93, 0.95, 1.0))
+                .corner_radius(4)
+        ),
+        text("Medium (18)").modify(
+            Modifier::new()
+                .font_size(18)
+                .padding(8)
+                .background_color(Color::from_rgb(0.95, 0.93, 1.0))
+                .corner_radius(4)
+        ),
+        text("Large (28)").modify(
+            Modifier::new()
+                .font_size(28)
+                .padding(8)
+                .background_color(Color::from_rgb(1.0, 0.93, 0.95))
+                .corner_radius(4)
+        ),
+    ]
+    .spacing(8);
+
     // Main layout
     let content = column![
         text("iced_modifier Demo").size(28),
@@ -323,6 +349,9 @@ fn view(state: &App) -> Element<'_, Message> {
         text("").size(8),
         text("Vertical Alignment (align_top, align_bottom)").size(18),
         alignment_demo,
+        text("").size(8),
+        text("Font Size via Modifier (widget::Text)").size(18),
+        font_size_demo,
     ]
     .spacing(6)
     .padding(20);

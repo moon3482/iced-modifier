@@ -47,6 +47,7 @@
 //! | `animation` | `iced_anim` | Re-exports `iced_anim` |
 
 pub mod modifier;
+pub mod widget;
 
 pub use modifier::{Interactor, IntoModified, Modifier, Modify, ModifyBase, modify};
 
@@ -55,6 +56,7 @@ pub use modifier::{Interactor, IntoModified, Modifier, Modify, ModifyBase, modif
 /// Includes [`Modifier`], [`Interactor`], [`Modify`], [`ModifyBase`], and [`modify`].
 pub mod prelude {
     pub use crate::modifier::{Interactor, IntoModified, Modifier, Modify, ModifyBase, modify};
+    pub use crate::widget::{Text, text};
 }
 
 /// Icon font utilities (requires `icons` feature).

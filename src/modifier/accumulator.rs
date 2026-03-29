@@ -142,6 +142,10 @@ pub struct Extras {
     pub widget_id: Option<widget::Id>,
     pub tooltip: Option<TooltipConfig>,
     pub scrollable: Option<ScrollConfig>,
+    /// Font size for text-based widgets. Applied by widget wrappers before Element conversion.
+    pub font_size: Option<iced::Pixels>,
+    /// Spacing between children for layout widgets (Column, Row). Applied by widget wrappers.
+    pub spacing: Option<iced::Pixels>,
 }
 
 #[derive(Debug, Clone, Copy, Default)]

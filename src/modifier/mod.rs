@@ -6,7 +6,7 @@
 //! See the [crate-level documentation](crate) for usage examples.
 
 mod accumulator;
-mod build;
+pub(crate) mod build;
 mod bundle;
 mod ext;
 
