@@ -56,7 +56,15 @@ pub use modifier::{Interactor, IntoModified, Modifier, Modify, ModifyBase, modif
 /// Includes [`Modifier`], [`Interactor`], [`Modify`], [`ModifyBase`], and [`modify`].
 pub mod prelude {
     pub use crate::modifier::{Interactor, IntoModified, Modifier, Modify, ModifyBase, modify};
-    pub use crate::widget::{Text, text, Column, Row};
+    pub use crate::widget::{
+        Text, text, Column, Row,
+        Button, button,
+        TextInput, text_input,
+        Checkbox, checkbox,
+        Toggler, toggler,
+    };
+    #[cfg(feature = "image")]
+    pub use crate::widget::{Image, image};
     pub use crate::{column, row};
 }
 

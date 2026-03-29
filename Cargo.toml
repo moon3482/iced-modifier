@@ -14,7 +14,8 @@ default = []
 icons = ["dep:iced_fonts"]
 animation = ["dep:iced_anim"]
 drag-drop = ["dep:iced_drop"]
-all = ["icons", "animation", "drag-drop"]
+image = ["iced/image"]
+all = ["icons", "animation", "drag-drop", "image"]
 
 [dependencies]
 iced = { version = "0.14.0", features = ["advanced"] }
