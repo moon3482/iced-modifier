@@ -85,6 +85,8 @@ text("Hello").modify(
 | `.fill_width()` | Fill available width | `.fillMaxWidth()` | `.frame(maxWidth: .infinity)` |
 | `.fill_portion(n)` | Proportional fill | `.weight()` | N/A |
 | `.center()` | Center both axes | `.align(Alignment.Center)` | `.center()` |
+| `.align_top()` | Align top + set height | `Alignment.Top` | `.frame(alignment: .top)` |
+| `.align_bottom()` | Align bottom + set height | `Alignment.Bottom` | `.frame(alignment: .bottom)` |
 
 ### Interactions
 
@@ -94,6 +96,8 @@ text("Hello").modify(
 | `.on_double_click(msg)` | Double-click | `.combinedClickable()` | `.onTapGesture(count: 2)` |
 | `.on_enter(msg)` | Hover enter | `.hoverable()` | `.onHover {}` |
 | `.on_exit(msg)` | Hover exit | `.hoverable()` | `.onHover {}` |
+| `.on_scroll(fn)` | Scroll wheel event | `.pointerInput()` | `.onScrollGesture {}` |
+| `.on_move(fn)` | Mouse move tracking | `.pointerInput()` | `.onContinuousHover {}` |
 | `.cursor()` | Cursor style | `.pointerInput()` | `.cursor()` |
 
 ### Extras
@@ -101,8 +105,15 @@ text("Hello").modify(
 | Method | Description | Compose | SwiftUI |
 |--------|-------------|---------|---------|
 | `.tooltip_text()` | Tooltip | `TooltipBox` | `.help()` |
+| `.tooltip_gap()` | Tooltip-content gap | — | — |
+| `.tooltip_padding()` | Tooltip inner padding | — | — |
+| `.tooltip_snap()` | Snap tooltip in viewport | — | — |
 | `.scrollable()` | Vertical scroll | `.verticalScroll()` | `ScrollView` |
 | `.scrollable_x()` | Horizontal scroll | `.horizontalScroll()` | `ScrollView(.horizontal)` |
+| `.scroll_anchor_bottom()` | Start scrolled to bottom | `reverseLayout` | `.defaultScrollAnchor(.bottom)` |
+| `.scroll_anchor_right()` | Start scrolled to right | — | `.defaultScrollAnchor(.trailing)` |
+| `.scroll_spacing()` | Scrollbar-content spacing | — | — |
+| `.scrollable_id()` | Scrollable widget ID | — | — |
 | `.hidden(bool)` | Visibility toggle | `AnimatedVisibility` | `.hidden()` |
 | `.id()` | Widget ID | `.testTag()` | `.id()` |
 

@@ -94,6 +94,8 @@ text("Hello").modify(
 | `.fill_width()` | 가용 너비 채우기 | `.fillMaxWidth()` | `.frame(maxWidth: .infinity)` |
 | `.fill_portion(n)` | 비율 채우기 | `.weight()` | N/A |
 | `.center()` | 양축 중앙 정렬 | `.align(Alignment.Center)` | `.center()` |
+| `.align_top()` | 상단 정렬 + 높이 설정 | `Alignment.Top` | `.frame(alignment: .top)` |
+| `.align_bottom()` | 하단 정렬 + 높이 설정 | `Alignment.Bottom` | `.frame(alignment: .bottom)` |
 | `.max_width()` / `.max_height()` | 최대 크기 | `.requiredSize()` | `.frame(maxWidth:)` |
 | `.clip(bool)` | 오버플로 클리핑 | `.clip()` | `.clipped()` |
 
@@ -107,6 +109,8 @@ text("Hello").modify(
 | `.on_right_press(msg)` | 우클릭 | — | `.contextMenu {}` |
 | `.on_enter(msg)` | 호버 진입 | `.hoverable()` | `.onHover {}` |
 | `.on_exit(msg)` | 호버 이탈 | `.hoverable()` | `.onHover {}` |
+| `.on_scroll(fn)` | 스크롤 휠 이벤트 | `.pointerInput()` | `.onScrollGesture {}` |
+| `.on_move(fn)` | 마우스 이동 추적 | `.pointerInput()` | `.onContinuousHover {}` |
 | `.cursor()` | 커서 스타일 | `.pointerInput()` | `.cursor()` |
 
 ### 추가 기능
@@ -114,9 +118,16 @@ text("Hello").modify(
 | 메서드 | 설명 | Compose 대응 | SwiftUI 대응 |
 |--------|------|-------------|-------------|
 | `.tooltip_text()` | 툴팁 | `TooltipBox` | `.help()` |
+| `.tooltip_gap()` | 툴팁-콘텐츠 간격 | — | — |
+| `.tooltip_padding()` | 툴팁 내부 패딩 | — | — |
+| `.tooltip_snap()` | 뷰포트 내 툴팁 스냅 | — | — |
 | `.scrollable()` | 세로 스크롤 | `.verticalScroll()` | `ScrollView` |
 | `.scrollable_x()` | 가로 스크롤 | `.horizontalScroll()` | `ScrollView(.horizontal)` |
 | `.scrollable_xy()` | 양방향 스크롤 | — | — |
+| `.scroll_anchor_bottom()` | 하단에서 스크롤 시작 | `reverseLayout` | `.defaultScrollAnchor(.bottom)` |
+| `.scroll_anchor_right()` | 우측에서 스크롤 시작 | — | `.defaultScrollAnchor(.trailing)` |
+| `.scroll_spacing()` | 스크롤바-콘텐츠 간격 | — | — |
+| `.scrollable_id()` | 스크롤 위젯 ID | — | — |
 | `.hidden(bool)` | 가시성 토글 | `AnimatedVisibility` | `.hidden()` |
 | `.id()` | 위젯 ID | `.testTag()` | `.id()` |
 
