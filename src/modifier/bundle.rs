@@ -8,7 +8,7 @@ use std::sync::Arc;
 use iced::border;
 use iced::widget::tooltip;
 use iced::{
-    Background, Border, Color, Length, Padding, Pixels, Point, Shadow, alignment, mouse, widget,
+    Background, Color, Length, Padding, Pixels, Point, Shadow, alignment, mouse, widget,
 };
 
 use super::accumulator::{
@@ -126,8 +126,14 @@ pub trait ModifyBase: Sized {
 
     /// Set the full border (color, width, radius).
     /// Compose: `.border()` / SwiftUI: `.border()`
-    fn border(mut self, border: impl Into<Border>) -> Self {
-        self.data_mut().current.style.border = Some(border.into());
+    ///
+    /// Accepts:
+    /// - `Border` — iced Border struct directly
+    /// - `f32` — uniform corner radius only
+    /// - `(Color, f32)` or `(&str, f32)` — color + width
+    /// - `(Color, f32, f32)` or `(&str, f32, f32)` — color + width + radius
+    fn border(mut self, border: impl crate::IntoBorder) -> Self {
+        self.data_mut().current.style.border = Some(border.into_border());
         self
     }
 

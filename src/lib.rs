@@ -40,10 +40,12 @@
 //! | `drag-drop` | `iced_drop` | `DragExt` trait — `.on_drag()` / `.on_drop()` on Element |
 //! | `animation` | `iced_anim` | Re-exports `iced_anim` |
 
+pub mod border;
 pub mod color;
 pub mod modifier;
 pub mod widget;
 
+pub use border::IntoBorder;
 pub use color::IntoColor;
 pub use modifier::{Interactor, IntoModified, Modifier, Modify, ModifyBase, modify};
 
@@ -59,8 +61,10 @@ pub use modifier::{Interactor, IntoModified, Modifier, Modify, ModifyBase, modif
 /// - **Modifier types**: `Modifier`, `Interactor`, `Modify`, `ModifyBase`,
 ///   `IntoModified`, `modify()`.
 /// - **Color**: `IntoColor`.
+/// - **Border**: `IntoBorder`.
 /// - **Macros**: `column!`, `row!`.
 pub mod prelude {
+    pub use crate::border::IntoBorder;
     pub use crate::color::IntoColor;
     pub use crate::modifier::{Interactor, IntoModified, Modifier, Modify, ModifyBase, modify};
     pub use crate::widget::{
