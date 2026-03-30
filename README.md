@@ -7,13 +7,13 @@
 
 Chainable styling, layout, interactions, and widget-specific properties — all in one fluent API.
 
-> [한국어 문서 (Korean)](docs/README-kr.md)
+> [한국어](docs/README-kr.md) | [中文](docs/README-zh.md) | [日本語](docs/README-ja.md) | [Français](docs/README-fr.md) | [Deutsch](docs/README-de.md) | [Español](docs/README-es.md)
 
 ## Quick Start
 
 ```toml
 [dependencies]
-iced_modifier = "0.2"
+iced_modifier = "0.4"
 ```
 
 ```rust
@@ -213,7 +213,7 @@ Text::new("Layered")
 ## Feature Flags
 
 ```toml
-iced_modifier = { version = "0.2", features = ["icons", "drag-drop", "animation"] }
+iced_modifier = { version = "0.4", features = ["icons", "drag-drop", "animation"] }
 ```
 
 | Feature | Crate | Description |
