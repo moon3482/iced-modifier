@@ -37,8 +37,14 @@ column![
 .padding(12)
 .background_color(Color::WHITE)
 
+// Hex colors — no Color::from_rgb() needed
+Text::new("Alert")
+    .background_color("#FF5733")
+    .text_color("#FFF")
+    .border_color([1.0, 0.0, 0.0])
+
 // Button with styled content
-Button::new(Text::new("Submit").font_size(14).color(Color::WHITE))
+Button::new(Text::new("Submit").font_size(14).color("#FFFFFF"))
     .on_press(Message::Submit)
     .padding(12)
     .corner_radius(8)
@@ -92,11 +98,22 @@ All 12 major iced widgets have modifier-aware wrappers with direct chaining:
 
 | Method | Description | Compose | SwiftUI |
 |--------|-------------|---------|---------|
-| `.background_color()` | Background color | `.background()` | `.background()` |
+| `.background_color()` | Background color (Color, hex, array) | `.background()` | `.background()` |
 | `.border()` | Full border | `.border()` | `.border()` |
 | `.corner_radius()` | Corner rounding | `.clip(RoundedCornerShape())` | `.cornerRadius()` |
 | `.shadow()` | Drop shadow | `.shadow()` | `.shadow()` |
-| `.text_color()` | Text color | `color` param | `.foregroundColor()` |
+| `.text_color()` | Text color (Color, hex, array) | `color` param | `.foregroundColor()` |
+
+### Color Formats
+
+All color methods (`.background_color()`, `.text_color()`, `.border_color()`, `.color()`) accept:
+
+| Format | Example |
+|--------|---------|
+| `Color` | `Color::WHITE`, `Color::from_rgb(1.0, 0.5, 0.0)` |
+| Hex `&str` | `"#FF5733"`, `"#FFF"`, `"3388FF"`, `"#FF573380"` (RGBA) |
+| `[f32; 3]` | `[1.0, 0.5, 0.0]` (RGB, 0.0–1.0) |
+| `[f32; 4]` | `[1.0, 0.5, 0.0, 0.8]` (RGBA, 0.0–1.0) |
 
 ### Layout
 
