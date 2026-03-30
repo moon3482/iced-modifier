@@ -3,6 +3,15 @@
 //! This module provides [`Modifier`], [`Interactor`], and the [`Modify`] extension trait
 //! that enable SwiftUI/Compose-style chainable modifications on any iced widget.
 //!
+//! # Exports
+//!
+//! - [`Modifier`] -- pure styling/layout modifier (no `Message` generic).
+//! - [`Interactor`] -- modifier with interaction handlers (click, hover, scroll, etc.).
+//! - [`ModifyBase`] -- trait with all chainable style, layout, and extras methods.
+//! - [`Modify`] -- extension trait adding `.modify()` to any iced widget.
+//! - [`IntoModified`] -- conversion trait used internally by [`Modify`] and [`modify()`].
+//! - [`modify()`] -- free function alternative that works without importing traits.
+//!
 //! See the [crate-level documentation](crate) for usage examples.
 
 pub(crate) mod accumulator;

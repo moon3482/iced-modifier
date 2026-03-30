@@ -1,3 +1,8 @@
+//! Extension traits that connect modifiers to iced widgets.
+//!
+//! [`IntoModified`] decomposes a modifier into its parts, and [`Modify`]
+//! adds the `.modify()` method to any type that converts into an `Element`.
+
 use iced::Element;
 use iced::widget::{container, scrollable, text};
 
@@ -5,9 +10,10 @@ use super::accumulator::{Extras, Interactions, Layer};
 use super::build::build_element;
 use super::bundle::{Interactor, Modifier};
 
-/// Trait for types that can be materialized into an Element.
-/// Implemented by both `Modifier` (pure styling) and `Interactor<M>` (with interactions).
+/// Conversion trait that decomposes a [`Modifier`] or [`Interactor`] into
+/// its constituent parts (layers, extras, interactions) for the build pipeline.
 pub trait IntoModified<Message> {
+    /// Consume self and return the accumulated layers, extras, and interactions.
     fn into_parts(self) -> (Vec<Layer>, Extras, Interactions<Message>);
 }
 
@@ -33,10 +39,16 @@ impl<M> IntoModified<M> for Interactor<M> {
 
 /// Extension trait that adds `.modify(modifier)` to any iced widget.
 ///
-/// Returns `Element` directly — no `.into()` needed.
+/// A blanket implementation is provided for every type that implements
+/// `Into<Element>`, so all built-in iced widgets get `.modify()` for free.
+/// Widget wrappers in this crate shadow this trait with their own `modify()`
+/// method to apply widget-specific extras (e.g. `font_size`, `spacing`)
+/// before delegating to the generic build pipeline.
 ///
 /// Accepts both `Modifier` (pure styling) and `Interactor<Message>` (with interactions).
+/// Returns `Element` directly -- no `.into()` needed.
 pub trait Modify<'a, Message, Theme, Renderer>: Sized {
+    /// Apply the given modifier and return the resulting `Element`.
     fn modify(self, modifier: impl IntoModified<Message>) -> Element<'a, Message, Theme, Renderer>;
 }
 

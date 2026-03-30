@@ -1,9 +1,19 @@
+//! Internal data structures that accumulate modifier properties before building.
+//!
+//! These types collect style, layout, extras, and interaction settings as the
+//! user chains methods on [`Modifier`](super::bundle::Modifier) or
+//! [`Interactor`](super::bundle::Interactor). They are consumed by the
+//! [build pipeline](super::build) to produce the final `Element` tree.
+
 use std::fmt;
 use std::sync::Arc;
 
 use iced::widget::{container, scrollable, tooltip};
 use iced::{Background, Border, Color, Length, Padding, Point, Shadow, alignment, mouse, widget};
 
+/// Accumulated visual style properties (background, border, shadow, text color).
+///
+/// Converted to a [`container::Style`] at build time via [`to_container_style`](Self::to_container_style).
 #[derive(Debug, Clone, Copy, Default)]
 pub struct StyleAccumulator {
     pub background: Option<Background>,
@@ -13,6 +23,7 @@ pub struct StyleAccumulator {
 }
 
 impl StyleAccumulator {
+    /// Convert accumulated properties into an iced `container::Style`.
     pub fn to_container_style(&self) -> container::Style {
         let mut style = container::Style::default();
         if let Some(bg) = self.background {
@@ -30,6 +41,7 @@ impl StyleAccumulator {
         style
     }
 
+    /// Returns `true` if any style property has been set.
     pub fn has_content(&self) -> bool {
         self.background.is_some()
             || self.border.is_some()
@@ -37,6 +49,7 @@ impl StyleAccumulator {
             || self.text_color.is_some()
     }
 
+    /// Merge another accumulator into this one; `other`'s values take precedence.
     pub fn merge(&mut self, other: &StyleAccumulator) {
         if let Some(v) = other.background {
             self.background = Some(v);
@@ -53,6 +66,9 @@ impl StyleAccumulator {
     }
 }
 
+/// Accumulated layout properties (padding, margin, size, alignment, clip).
+///
+/// Applied to a `Container` wrapper at build time.
 #[derive(Debug, Clone, Copy, Default)]
 pub struct LayoutAccumulator {
     pub padding: Option<Padding>,
@@ -67,6 +83,7 @@ pub struct LayoutAccumulator {
 }
 
 impl LayoutAccumulator {
+    /// Returns `true` if any layout property (except margin) has been set.
     pub fn has_content(&self) -> bool {
         self.padding.is_some()
             || self.width.is_some()
@@ -78,10 +95,12 @@ impl LayoutAccumulator {
             || self.clip.is_some()
     }
 
+    /// Returns `true` if a margin has been set.
     pub fn has_margin(&self) -> bool {
         self.margin.is_some()
     }
 
+    /// Merge another accumulator into this one; `other`'s values take precedence.
     pub fn merge(&mut self, other: &LayoutAccumulator) {
         if let Some(v) = other.padding {
             self.padding = Some(v);
@@ -113,6 +132,10 @@ impl LayoutAccumulator {
     }
 }
 
+/// A single style + layout layer, mapped to one `Container` wrapper at build time.
+///
+/// Multiple layers are created by calling [`layer()`](super::bundle::ModifyBase::layer)
+/// to enable inner/outer ordering of visual properties.
 #[derive(Debug, Clone, Copy, Default)]
 pub struct Layer {
     pub style: StyleAccumulator,
@@ -120,6 +143,7 @@ pub struct Layer {
 }
 
 impl Layer {
+    /// Returns `true` if no style, layout, or margin properties have been set.
     pub fn is_empty(&self) -> bool {
         !self.style.has_content() && !self.layout.has_content() && !self.layout.has_margin()
     }
@@ -148,6 +172,7 @@ pub struct Extras {
     pub spacing: Option<iced::Pixels>,
 }
 
+/// Direction for the scrollable wrapper.
 #[derive(Debug, Clone, Copy, Default)]
 pub enum ScrollDirection {
     #[default]
@@ -167,6 +192,7 @@ pub struct ScrollConfig {
 }
 
 impl ScrollConfig {
+    /// Create a new scroll configuration with the given direction and all options unset.
     pub fn new(direction: ScrollDirection) -> Self {
         Self {
             direction,
@@ -233,6 +259,7 @@ impl<Message: fmt::Debug> fmt::Debug for Interactions<Message> {
 }
 
 impl<Message> Interactions<Message> {
+    /// Create an `Interactions` with all handlers set to `None`.
     pub fn empty() -> Self {
         Self {
             on_press: None,
@@ -250,6 +277,7 @@ impl<Message> Interactions<Message> {
         }
     }
 
+    /// Returns `true` if any interaction handler or cursor override is set.
     pub fn has_content(&self) -> bool {
         self.on_press.is_some()
             || self.on_release.is_some()

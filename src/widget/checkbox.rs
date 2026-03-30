@@ -9,6 +9,7 @@ use crate::modifier::bundle::{ModifierData, ModifyBase};
 
 use super::{impl_area_interactions, impl_from_element};
 
+/// Modifier-aware Checkbox widget.
 pub struct Checkbox<'a, Message, Theme = iced::Theme, Renderer = iced::Renderer>
 where
     Theme: iced_checkbox::Catalog + iced_text::Catalog,
@@ -19,6 +20,7 @@ where
     interactions: Interactions<Message>,
 }
 
+/// Create a new modifier-aware Checkbox.
 pub fn checkbox<'a, Message, Theme, Renderer>(
     is_checked: bool,
 ) -> Checkbox<'a, Message, Theme, Renderer>
@@ -45,6 +47,7 @@ where
     Theme: iced_checkbox::Catalog + iced_text::Catalog + 'a,
     Renderer: advanced_text::Renderer + 'a,
 {
+    /// Create a new Checkbox with the given checked state.
     pub fn new(is_checked: bool) -> Self {
         Self {
             inner: iced::widget::Checkbox::new(is_checked),

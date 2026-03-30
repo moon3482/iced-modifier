@@ -10,6 +10,7 @@ use crate::modifier::accumulator::Interactions;
 use crate::modifier::build::build_element;
 use crate::modifier::bundle::{ModifierData, ModifyBase};
 
+/// Modifier-aware PickList (dropdown select) widget.
 pub struct PickList<'a, T, L, V, Message, Theme = iced::Theme, Renderer = iced::Renderer>
 where
     T: ToString + PartialEq + Clone,
@@ -46,6 +47,7 @@ where
     Theme: iced_pick_list::Catalog + iced::overlay::menu::Catalog + iced_text::Catalog + 'a,
     Renderer: advanced_text::Renderer + 'a,
 {
+    /// Create a new PickList with options, selected value, and on_select callback.
     pub fn new(options: L, selected: Option<V>, on_select: impl Fn(T) -> Message + 'a) -> Self {
         Self {
             inner: iced::widget::PickList::new(options, selected, on_select),
@@ -54,44 +56,53 @@ where
         }
     }
 
+    /// Set placeholder text when no option is selected.
     pub fn placeholder(mut self, placeholder: impl Into<String>) -> Self {
         self.inner = self.inner.placeholder(placeholder);
         self
     }
+    /// Set text size for the displayed option.
     pub fn text_size(mut self, size: impl Into<Pixels>) -> Self {
         self.inner = self.inner.text_size(size);
         self
     }
+    /// Set the dropdown menu height.
     pub fn menu_height(mut self, height: impl Into<iced::Length>) -> Self {
         self.inner = self.inner.menu_height(height);
         self
     }
+    /// Set font.
     pub fn font(mut self, font: impl Into<Renderer::Font>) -> Self {
         self.inner = self.inner.font(font);
         self
     }
+    /// Set iced PickList native padding.
     pub fn list_padding(mut self, padding: impl Into<iced::Padding>) -> Self {
         self.inner = self.inner.padding(padding);
         self
     }
+    /// Set handler for when the dropdown opens.
     pub fn on_open(mut self, msg: Message) -> Self {
         self.inner = self.inner.on_open(msg);
         self
     }
+    /// Set handler for when the dropdown closes.
     pub fn on_close(mut self, msg: Message) -> Self {
         self.inner = self.inner.on_close(msg);
         self
     }
 
-    // Interactions
+    /// Mouse enter handler (MouseArea).
     pub fn on_enter(mut self, msg: Message) -> Self {
         self.interactions.on_enter = Some(msg);
         self
     }
+    /// Mouse exit handler (MouseArea).
     pub fn on_exit(mut self, msg: Message) -> Self {
         self.interactions.on_exit = Some(msg);
         self
     }
+    /// Cursor style (MouseArea).
     pub fn cursor(mut self, c: mouse::Interaction) -> Self {
         self.interactions.cursor = Some(c);
         self

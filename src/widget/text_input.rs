@@ -9,6 +9,7 @@ use crate::modifier::bundle::{ModifierData, ModifyBase};
 
 use super::{impl_area_interactions, impl_from_element};
 
+/// Modifier-aware TextInput widget with font_size support.
 pub struct TextInput<'a, Message, Theme = iced::Theme, Renderer = iced::Renderer>
 where
     Theme: iced_text_input::Catalog,
@@ -19,6 +20,7 @@ where
     interactions: Interactions<Message>,
 }
 
+/// Create a new modifier-aware TextInput.
 pub fn text_input<'a, Message, Theme, Renderer>(
     placeholder: &str,
     value: &str,
@@ -46,6 +48,7 @@ where
     Theme: iced_text_input::Catalog + 'a,
     Renderer: advanced_text::Renderer + 'a,
 {
+    /// Create a new TextInput with placeholder and initial value.
     pub fn new(placeholder: &str, value: &str) -> Self {
         Self {
             inner: iced::widget::TextInput::new(placeholder, value),

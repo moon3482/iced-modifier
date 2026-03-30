@@ -9,6 +9,7 @@ use crate::modifier::bundle::{ModifierData, ModifyBase};
 
 use super::{impl_area_interactions, impl_from_element};
 
+/// Modifier-aware Toggler (switch) widget.
 pub struct Toggler<'a, Message, Theme = iced::Theme, Renderer = iced::Renderer>
 where
     Theme: iced_toggler::Catalog + iced_text::Catalog,
@@ -19,6 +20,7 @@ where
     interactions: Interactions<Message>,
 }
 
+/// Create a new modifier-aware Toggler.
 pub fn toggler<'a, Message, Theme, Renderer>(
     is_toggled: bool,
 ) -> Toggler<'a, Message, Theme, Renderer>
@@ -45,6 +47,7 @@ where
     Theme: iced_toggler::Catalog + iced_text::Catalog + 'a,
     Renderer: advanced_text::Renderer + 'a,
 {
+    /// Create a new Toggler with the given toggle state.
     pub fn new(is_toggled: bool) -> Self {
         Self {
             inner: iced::widget::Toggler::new(is_toggled),

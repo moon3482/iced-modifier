@@ -29,23 +29,38 @@ pub struct ModifierData {
 /// Implemented by both [`Modifier`] (pure styling) and [`Interactor<M>`] (styling + interactions).
 /// All methods consume `self` and return `Self`, enabling method chaining.
 ///
-/// # Style Methods (스타일)
+/// # Style Methods
 /// [`background`](Self::background), [`background_color`](Self::background_color),
 /// [`border`](Self::border), [`corner_radius`](Self::corner_radius),
 /// [`border_color`](Self::border_color), [`border_width`](Self::border_width),
 /// [`shadow`](Self::shadow), [`text_color`](Self::text_color)
 ///
-/// # Layout Methods (레이아웃)
-/// [`padding`](Self::padding), [`margin`](Self::margin),
-/// [`width`](Self::width), [`height`](Self::height),
-/// [`fill_width`](Self::fill_width), [`fill_portion`](Self::fill_portion),
-/// [`center`](Self::center), [`align_x`](Self::align_x), [`clip`](Self::clip)
+/// # Layout Methods
+/// [`padding`](Self::padding), [`padding_x`](Self::padding_x), [`padding_y`](Self::padding_y),
+/// [`margin`](Self::margin), [`width`](Self::width), [`height`](Self::height),
+/// [`max_width`](Self::max_width), [`max_height`](Self::max_height),
+/// [`fill_width`](Self::fill_width), [`fill_height`](Self::fill_height), [`fill`](Self::fill),
+/// [`fill_portion`](Self::fill_portion),
+/// [`center`](Self::center), [`center_x`](Self::center_x), [`center_y`](Self::center_y),
+/// [`align_x`](Self::align_x), [`align_y`](Self::align_y),
+/// [`align_left`](Self::align_left), [`align_right`](Self::align_right),
+/// [`align_top`](Self::align_top), [`align_bottom`](Self::align_bottom),
+/// [`clip`](Self::clip)
 ///
-/// # Extras (추가 기능)
+/// # Extras
 /// [`hidden`](Self::hidden), [`id`](Self::id), [`tooltip_text`](Self::tooltip_text),
-/// [`scrollable`](Self::scrollable)
+/// [`tooltip_gap`](Self::tooltip_gap), [`tooltip_padding`](Self::tooltip_padding),
+/// [`tooltip_snap`](Self::tooltip_snap),
+/// [`scrollable`](Self::scrollable), [`scrollable_x`](Self::scrollable_x),
+/// [`scrollable_xy`](Self::scrollable_xy), [`scrollable_id`](Self::scrollable_id),
+/// [`scroll_anchor_bottom`](Self::scroll_anchor_bottom),
+/// [`scroll_anchor_right`](Self::scroll_anchor_right),
+/// [`scroll_spacing`](Self::scroll_spacing)
 ///
-/// # Layer & Conditional (레이어 & 조건부)
+/// # Widget-Specific
+/// [`font_size`](Self::font_size), [`spacing`](Self::spacing)
+///
+/// # Layer & Conditional
 /// [`layer`](Self::layer), [`modify_if`](Self::modify_if), [`modify_if_else`](Self::modify_if_else)
 pub trait ModifyBase: Sized {
     /// Returns a mutable reference to the internal modifier data.
@@ -58,9 +73,6 @@ pub trait ModifyBase: Sized {
     /// Enables order-dependent layering like Compose/SwiftUI.
     /// Properties set before `.layer()` become an inner Container;
     /// properties after become an outer Container wrapping it.
-    ///
-    /// 현재 레이어를 flush하고 새 레이어를 시작합니다.
-    /// `.layer()` 전에 설정된 속성은 내부 Container, 이후 속성은 외부 Container가 됩니다.
     fn layer(mut self) -> Self {
         let data = self.data_mut();
         if !data.current.is_empty() {
@@ -73,8 +85,6 @@ pub trait ModifyBase: Sized {
 
     /// Apply modifications only when `condition` is true.
     ///
-    /// 조건이 true일 때만 modifier를 적용합니다.
-    ///
     /// ```ignore
     /// Modifier::new()
     ///     .padding(10)
@@ -85,8 +95,6 @@ pub trait ModifyBase: Sized {
     }
 
     /// Apply one of two modifier branches based on `condition`.
-    ///
-    /// 조건에 따라 두 modifier 중 하나를 적용합니다.
     fn modify_if_else(
         self,
         condition: bool,
@@ -477,10 +485,7 @@ pub trait ModifyBase: Sized {
 /// A composable set of visual and layout modifications for iced widgets.
 ///
 /// `Modifier` has no generic parameters, making it easy to store, reuse, and compose.
-/// For interactions (click, hover), call `.on_press()` etc., which converts to [`Interactor<Message>`].
-///
-/// `Modifier`는 제네릭 파라미터가 없어 저장, 재사용, 합성이 쉽습니다.
-/// 인터랙션이 필요하면 `.on_press()` 등을 호출하여 [`Interactor`]로 전환됩니다.
+/// For interactions (click, hover), call `.on_press()` etc., which converts to `Interactor<Message>`.
 ///
 /// # Example
 /// ```ignore
@@ -523,8 +528,6 @@ impl Modifier {
 
     /// Compose two modifiers. Values in `other` override values in `self`.
     /// Flushed layers from `other` are appended after `self`'s layers.
-    ///
-    /// 두 modifier를 합성합니다. `other`의 값이 `self`의 값을 덮어씁니다.
     pub fn then(mut self, other: Modifier) -> Self {
         self.data.current.style.merge(&other.data.current.style);
         self.data.current.layout.merge(&other.data.current.layout);
@@ -642,9 +645,6 @@ impl Modifier {
 ///
 /// Created by calling `.on_press()`, `.on_enter()`, `.cursor()`, etc. on a [`Modifier`].
 /// All styling methods from [`ModifyBase`] remain available via method chaining.
-///
-/// [`Modifier`]에서 `.on_press()`, `.on_enter()` 등을 호출하면 생성됩니다.
-/// [`ModifyBase`]의 모든 스타일 메서드를 계속 체이닝할 수 있습니다.
 ///
 /// # Example
 /// ```ignore

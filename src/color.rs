@@ -7,7 +7,7 @@
 //!
 //! Text::new("Hello")
 //!     .background_color("#FF5733")     // hex string
-//!     .text_color(Color::WHITE)        // iced Color
+//!     .text_color("#FFF")              // 3-digit hex
 //!     .border_color([1.0, 0.0, 0.0])  // RGB array
 //! ```
 
@@ -20,6 +20,8 @@ use iced::Color;
 /// - [`&str`] — hex color parsing (`"#RGB"`, `"#RRGGBB"`, `"#RRGGBBAA"`, with or without `#`)
 /// - `[f32; 3]` — RGB values (0.0–1.0)
 /// - `[f32; 4]` — RGBA values (0.0–1.0)
+///
+/// Used by `background_color()`, `text_color()`, `border_color()`, and `Text::color()`.
 pub trait IntoColor {
     fn into_color(self) -> Color;
 }

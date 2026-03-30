@@ -24,7 +24,7 @@ use crate::modifier::bundle::{ModifierData, ModifyBase};
 
 /// Modifier-aware Column widget.
 ///
-/// Wraps [`iced::widget::Column`] with embedded [`ModifierData`] and [`Interactions`]
+/// Wraps `iced::widget::Column` with embedded modifier data and interactions
 /// so that style, layout, and interaction methods can be chained directly.
 ///
 /// Since Column's children carry `Message`, this type always has the `Message` generic.

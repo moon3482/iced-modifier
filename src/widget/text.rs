@@ -33,7 +33,7 @@ use crate::modifier::bundle::{ModifierData, ModifyBase};
 
 /// Modifier-aware Text widget.
 ///
-/// Wraps [`iced::widget::Text`] with an embedded [`ModifierData`] so that
+/// Wraps `iced::widget::Text` with embedded modifier data so that
 /// style/layout methods can be chained directly on the widget.
 ///
 /// Interaction methods (`.on_press()`, `.on_enter()`, etc.) transition to
@@ -86,7 +86,7 @@ where
 
     // ── Backward-compatible .modify() ──
 
-    /// Apply a [`Modifier`] or [`Interactor`] to this Text widget.
+    /// Apply a `Modifier` or `Interactor` to this Text widget.
     ///
     /// Merges the modifier's data with this widget's accumulated data.
     /// Prefer direct chaining (`.font_size().padding()`) for new code.
@@ -461,7 +461,7 @@ where
     build_element(element, &layers, data.extras, interactions)
 }
 
-/// Text (no Message) → Element<AnyMessage>
+/// Convert `Text` (no Message) into `Element` with any Message type.
 impl<'a, Message, Theme, Renderer> From<Text<'a, Theme, Renderer>>
     for Element<'a, Message, Theme, Renderer>
 where
@@ -475,7 +475,7 @@ where
     }
 }
 
-/// InteractiveText<Message> → Element<Message>
+/// Convert `InteractiveText` into `Element` with its Message type.
 impl<'a, Message, Theme, Renderer> From<InteractiveText<'a, Message, Theme, Renderer>>
     for Element<'a, Message, Theme, Renderer>
 where

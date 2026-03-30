@@ -9,6 +9,7 @@ use crate::modifier::bundle::{ModifierData, ModifyBase};
 
 use super::{impl_area_interactions, impl_from_element};
 
+/// Modifier-aware TextEditor widget with font_size support.
 pub struct TextEditor<'a, Message, Theme = iced::Theme, Renderer = iced::Renderer>
 where
     Theme: iced_text_editor::Catalog,
@@ -25,6 +26,7 @@ where
     interactions: Interactions<Message>,
 }
 
+/// Create a new modifier-aware TextEditor.
 pub fn text_editor<'a, Message, Theme, Renderer>(
     content: &'a iced_text_editor::Content<Renderer>,
 ) -> TextEditor<'a, Message, Theme, Renderer>
@@ -51,6 +53,7 @@ where
     Theme: iced_text_editor::Catalog + 'a,
     Renderer: advanced_text::Renderer + 'a,
 {
+    /// Create a new TextEditor with the given content.
     pub fn new(content: &'a iced_text_editor::Content<Renderer>) -> Self {
         Self {
             inner: iced::widget::TextEditor::new(content),
