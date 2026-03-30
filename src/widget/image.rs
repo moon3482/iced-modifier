@@ -13,11 +13,13 @@ use crate::modifier::bundle::{ModifierData, ModifyBase};
 // Image: pure styling (no Message)
 // ═══════════════════════════════════════════════════════════════
 
+/// Modifier-aware Image widget (Pattern A -- no Message generic).
 pub struct Image<Handle = iced_image::Handle> {
     inner: iced::widget::Image<Handle>,
     data: ModifierData,
 }
 
+/// Create a new modifier-aware Image.
 pub fn image<Handle>(handle: impl Into<Handle>) -> Image<Handle>
 where
     Handle: Clone,
@@ -32,6 +34,7 @@ impl<Handle: Clone> ModifyBase for Image<Handle> {
 }
 
 impl<Handle: Clone> Image<Handle> {
+    /// Create a new Image with the given handle.
     pub fn new(handle: impl Into<Handle>) -> Self {
         Self {
             inner: iced::widget::Image::new(handle),
@@ -39,36 +42,43 @@ impl<Handle: Clone> Image<Handle> {
         }
     }
 
+    /// Set iced Image native width.
     pub fn image_width(mut self, width: impl Into<iced::Length>) -> Self {
         self.inner = self.inner.width(width);
         self
     }
 
+    /// Set iced Image native height.
     pub fn image_height(mut self, height: impl Into<iced::Length>) -> Self {
         self.inner = self.inner.height(height);
         self
     }
 
+    /// Set image opacity (0.0 transparent, 1.0 opaque).
     pub fn opacity(mut self, opacity: impl Into<f32>) -> Self {
         self.inner = self.inner.opacity(opacity);
         self
     }
 
+    /// Set image rotation.
     pub fn rotation(mut self, rotation: impl Into<Rotation>) -> Self {
         self.inner = self.inner.rotation(rotation);
         self
     }
 
+    /// Set how the image content is fitted within its bounds.
     pub fn content_fit(mut self, content_fit: ContentFit) -> Self {
         self.inner = self.inner.content_fit(content_fit);
         self
     }
 
+    /// Set the image filter method (nearest or linear).
     pub fn filter_method(mut self, filter: iced_image::FilterMethod) -> Self {
         self.inner = self.inner.filter_method(filter);
         self
     }
 
+    /// Set image scale factor.
     pub fn scale(mut self, scale: impl Into<f32>) -> Self {
         self.inner = self.inner.scale(scale);
         self
@@ -76,6 +86,7 @@ impl<Handle: Clone> Image<Handle> {
 
     // ── Interaction transitions → InteractiveImage ──
 
+    /// Transition to InteractiveImage with a press handler.
     pub fn on_press<M: Clone>(self, msg: M) -> InteractiveImage<M, Handle> {
         let mut interactions = Interactions::empty();
         interactions.on_press = Some(msg);
@@ -86,6 +97,7 @@ impl<Handle: Clone> Image<Handle> {
         }
     }
 
+    /// Transition to InteractiveImage with an enter handler.
     pub fn on_enter<M: Clone>(self, msg: M) -> InteractiveImage<M, Handle> {
         let mut interactions = Interactions::empty();
         interactions.on_enter = Some(msg);
@@ -96,6 +108,7 @@ impl<Handle: Clone> Image<Handle> {
         }
     }
 
+    /// Transition to InteractiveImage with a custom cursor style.
     pub fn cursor<M: Clone>(self, cursor: mouse::Interaction) -> InteractiveImage<M, Handle> {
         let mut interactions = Interactions::empty();
         interactions.cursor = Some(cursor);
@@ -144,6 +157,7 @@ where
 // InteractiveImage (has Message)
 // ═══════════════════════════════════════════════════════════════
 
+/// Image widget with interaction handlers.
 pub struct InteractiveImage<Message, Handle = iced_image::Handle> {
     inner: iced::widget::Image<Handle>,
     data: ModifierData,
@@ -157,35 +171,43 @@ impl<M, Handle: Clone> ModifyBase for InteractiveImage<M, Handle> {
 }
 
 impl<M: Clone, Handle: Clone> InteractiveImage<M, Handle> {
+    /// Set press handler.
     pub fn on_press(mut self, msg: M) -> Self {
         self.interactions.on_press = Some(msg);
         self
     }
+    /// Mouse enter handler.
     pub fn on_enter(mut self, msg: M) -> Self {
         self.interactions.on_enter = Some(msg);
         self
     }
+    /// Mouse exit handler.
     pub fn on_exit(mut self, msg: M) -> Self {
         self.interactions.on_exit = Some(msg);
         self
     }
+    /// Cursor style.
     pub fn cursor(mut self, cursor: mouse::Interaction) -> Self {
         self.interactions.cursor = Some(cursor);
         self
     }
 
+    /// Set iced Image native width.
     pub fn image_width(mut self, width: impl Into<iced::Length>) -> Self {
         self.inner = self.inner.width(width);
         self
     }
+    /// Set iced Image native height.
     pub fn image_height(mut self, height: impl Into<iced::Length>) -> Self {
         self.inner = self.inner.height(height);
         self
     }
+    /// Set image opacity (0.0 transparent, 1.0 opaque).
     pub fn opacity(mut self, opacity: impl Into<f32>) -> Self {
         self.inner = self.inner.opacity(opacity);
         self
     }
+    /// Set how the image content is fitted within its bounds.
     pub fn content_fit(mut self, fit: ContentFit) -> Self {
         self.inner = self.inner.content_fit(fit);
         self

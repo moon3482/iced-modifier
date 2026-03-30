@@ -7,6 +7,7 @@ use crate::modifier::bundle::{ModifierData, ModifyBase};
 
 use super::{impl_area_interactions, impl_from_element};
 
+/// Modifier-aware Button widget wrapping `iced::widget::Button`.
 pub struct Button<'a, Message, Theme = iced::Theme, Renderer = iced::Renderer>
 where
     Theme: iced::widget::button::Catalog,
@@ -17,6 +18,7 @@ where
     interactions: Interactions<Message>,
 }
 
+/// Create a new modifier-aware Button.
 pub fn button<'a, Message, Theme, Renderer>(
     content: impl Into<Element<'a, Message, Theme, Renderer>>,
 ) -> Button<'a, Message, Theme, Renderer>
@@ -42,6 +44,7 @@ where
     Theme: iced::widget::button::Catalog + 'a,
     Renderer: iced::advanced::Renderer + 'a,
 {
+    /// Create a new Button with the given content.
     pub fn new(content: impl Into<Element<'a, Message, Theme, Renderer>>) -> Self {
         Self {
             inner: iced::widget::Button::new(content),

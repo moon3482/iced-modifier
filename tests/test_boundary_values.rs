@@ -109,3 +109,47 @@ fn padding_from_different_types() {
     let _: E = text("b").modify(Modifier::new().padding(10.0f32));
     let _: E = text("c").modify(Modifier::new().padding([10.0, 20.0]));
 }
+
+// ── IntoColor: hex string and array support ──
+
+#[test]
+fn hex_color_6_digit() {
+    let _: E = text("a").modify(Modifier::new().background_color("#FF5733"));
+}
+
+#[test]
+fn hex_color_3_digit() {
+    let _: E = text("a").modify(Modifier::new().text_color("#FFF"));
+}
+
+#[test]
+fn hex_color_8_digit_rgba() {
+    let _: E = text("a").modify(Modifier::new().background_color("#FF573380"));
+}
+
+#[test]
+fn hex_color_no_hash() {
+    let _: E = text("a").modify(Modifier::new().border_color("3388FF"));
+}
+
+#[test]
+fn color_as_rgb_array() {
+    let _: E = text("a").modify(Modifier::new().background_color([1.0, 0.5, 0.0]));
+}
+
+#[test]
+fn color_as_rgba_array() {
+    let _: E = text("a").modify(Modifier::new().background_color([1.0, 0.5, 0.0, 0.8]));
+}
+
+#[test]
+fn color_still_accepts_iced_color() {
+    let _: E = text("a").modify(Modifier::new().background_color(Color::WHITE));
+    let _: E = text("a").modify(Modifier::new().text_color(Color::BLACK));
+    let _: E = text("a").modify(Modifier::new().border_color(Color::TRANSPARENT));
+}
+
+#[test]
+fn hex_color_on_widget_text() {
+    let _: E = Text::new("hello").color("#FF5733").padding(10).into();
+}

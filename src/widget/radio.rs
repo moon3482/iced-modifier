@@ -9,6 +9,7 @@ use crate::modifier::bundle::{ModifierData, ModifyBase};
 
 use super::{impl_area_interactions, impl_from_element};
 
+/// Modifier-aware Radio button widget.
 pub struct Radio<'a, Message, Theme = iced::Theme, Renderer = iced::Renderer>
 where
     Theme: iced_radio::Catalog + iced_text::Catalog,
@@ -19,6 +20,7 @@ where
     interactions: Interactions<Message>,
 }
 
+/// Create a new modifier-aware Radio button.
 pub fn radio<'a, Message, Theme, Renderer, V>(
     label: impl Into<String>,
     value: V,
@@ -49,6 +51,7 @@ where
     Theme: iced_radio::Catalog + iced_text::Catalog + 'a,
     Renderer: advanced_text::Renderer + 'a,
 {
+    /// Create a new Radio button with label, value, and selection state.
     pub fn new<V: Copy + Eq>(
         label: impl Into<String>,
         value: V,

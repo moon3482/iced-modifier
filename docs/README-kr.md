@@ -37,8 +37,14 @@ column![
 .padding(12)
 .background_color(Color::WHITE)
 
+// Hex 색상 — Color::from_rgb() 불필요
+Text::new("알림")
+    .background_color("#FF5733")
+    .text_color("#FFF")
+    .border_color([1.0, 0.0, 0.0])
+
 // 스타일된 Button
-Button::new(Text::new("제출").font_size(14).color(Color::WHITE))
+Button::new(Text::new("제출").font_size(14).color("#FFFFFF"))
     .on_press(Message::Submit)
     .padding(12)
     .corner_radius(8)
@@ -101,11 +107,22 @@ Text::new("Hello")
 
 | 메서드 | 설명 | Compose 대응 | SwiftUI 대응 |
 |--------|------|-------------|-------------|
-| `.background_color()` | 배경색 | `.background()` | `.background()` |
+| `.background_color()` | 배경색 (Color, hex, 배열) | `.background()` | `.background()` |
 | `.border()` | 테두리 전체 설정 | `.border()` | `.border()` |
 | `.corner_radius()` | 모서리 둥글기 | `.clip(RoundedCornerShape())` | `.cornerRadius()` |
 | `.shadow()` | 그림자 | `.shadow()` | `.shadow()` |
-| `.text_color()` | 텍스트 색상 | `color` 파라미터 | `.foregroundColor()` |
+| `.text_color()` | 텍스트 색상 (Color, hex, 배열) | `color` 파라미터 | `.foregroundColor()` |
+
+### 색상 포맷
+
+모든 색상 메서드 (`.background_color()`, `.text_color()`, `.border_color()`, `.color()`)는 다음 포맷을 지원합니다:
+
+| 포맷 | 예시 |
+|------|------|
+| `Color` | `Color::WHITE`, `Color::from_rgb(1.0, 0.5, 0.0)` |
+| Hex `&str` | `"#FF5733"`, `"#FFF"`, `"3388FF"`, `"#FF573380"` (RGBA) |
+| `[f32; 3]` | `[1.0, 0.5, 0.0]` (RGB, 0.0–1.0) |
+| `[f32; 4]` | `[1.0, 0.5, 0.0, 0.8]` (RGBA, 0.0–1.0) |
 
 ### 레이아웃
 

@@ -10,6 +10,7 @@ use crate::modifier::accumulator::Interactions;
 use crate::modifier::build::build_element;
 use crate::modifier::bundle::{ModifierData, ModifyBase};
 
+/// Modifier-aware Slider widget.
 pub struct Slider<'a, T, Message, Theme = iced::Theme>
 where
     Theme: iced_slider::Catalog,
@@ -19,6 +20,7 @@ where
     interactions: Interactions<Message>,
 }
 
+/// Create a new modifier-aware Slider.
 pub fn slider<'a, T, Message, Theme, F>(
     range: RangeInclusive<T>,
     value: T,
@@ -47,6 +49,7 @@ where
     T: Copy + From<u8> + PartialOrd,
     Theme: iced_slider::Catalog + 'a,
 {
+    /// Create a new Slider with range, value, and on_change callback.
     pub fn new<F: 'a + Fn(T) -> Message>(range: RangeInclusive<T>, value: T, on_change: F) -> Self {
         Self {
             inner: iced::widget::Slider::new(range, value, on_change),
@@ -55,40 +58,48 @@ where
         }
     }
 
+    /// Set the step increment.
     pub fn step(mut self, step: impl Into<T>) -> Self {
         self.inner = self.inner.step(step);
         self
     }
+    /// Set the step increment when Shift is held.
     pub fn shift_step(mut self, step: impl Into<T>) -> Self {
         self.inner = self.inner.shift_step(step);
         self
     }
+    /// Set the message emitted when the slider is released.
     pub fn on_release(mut self, msg: Message) -> Self {
         self.inner = self.inner.on_release(msg);
         self
     }
+    /// Set the default (double-click reset) value.
     pub fn default(mut self, default: impl Into<T>) -> Self {
         self.inner = self.inner.default(default);
         self
     }
+    /// Set iced Slider native width.
     pub fn slider_width(mut self, width: impl Into<Length>) -> Self {
         self.inner = self.inner.width(width);
         self
     }
+    /// Set iced Slider native height.
     pub fn slider_height(mut self, height: impl Into<Pixels>) -> Self {
         self.inner = self.inner.height(height);
         self
     }
 
-    // Interactions
+    /// Mouse enter handler (MouseArea).
     pub fn on_enter(mut self, msg: Message) -> Self {
         self.interactions.on_enter = Some(msg);
         self
     }
+    /// Mouse exit handler (MouseArea).
     pub fn on_exit(mut self, msg: Message) -> Self {
         self.interactions.on_exit = Some(msg);
         self
     }
+    /// Cursor style (MouseArea).
     pub fn cursor(mut self, c: mouse::Interaction) -> Self {
         self.interactions.cursor = Some(c);
         self

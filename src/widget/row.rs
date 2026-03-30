@@ -24,7 +24,7 @@ use crate::modifier::bundle::{ModifierData, ModifyBase};
 
 /// Modifier-aware Row widget.
 ///
-/// Wraps [`iced::widget::Row`] with embedded [`ModifierData`] and [`Interactions`]
+/// Wraps `iced::widget::Row` with embedded modifier data and interactions
 /// so that style, layout, and interaction methods can be chained directly.
 pub struct Row<'a, Message, Theme = iced::Theme, Renderer = iced::Renderer> {
     inner: iced::widget::Row<'a, Message, Theme, Renderer>,

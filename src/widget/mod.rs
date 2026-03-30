@@ -2,6 +2,44 @@
 //!
 //! These types wrap iced's native widgets to support widget-specific properties
 //! (like `font_size`, `spacing`) through the modifier chain.
+//!
+//! # Exported widgets
+//!
+//! | Widget | Helper function |
+//! |--------|----------------|
+//! | [`Button`] | [`button()`] |
+//! | [`Checkbox`] | [`checkbox()`] |
+//! | [`Column`] | *(constructed directly)* |
+//! | `Image` / `InteractiveImage` | `image()` *(feature = "image")* |
+//! | [`PickList`] | *(constructed via `PickList::new`)* |
+//! | [`Radio`] | [`radio()`] |
+//! | [`Row`] | *(constructed directly)* |
+//! | [`Slider`] | [`slider()`] |
+//! | [`Text`] / [`InteractiveText`] | [`text()`] |
+//! | [`TextEditor`] | [`text_editor()`] |
+//! | [`TextInput`] | [`text_input()`] |
+//! | [`Toggler`] | [`toggler()`] |
+//!
+//! # Widget patterns
+//!
+//! **Pattern A** -- No `Message` generic (e.g. `Image`, [`Text`]).
+//! The widget carries only styling data. Adding an interaction handler
+//! (`.on_press()`, `.on_enter()`, etc.) transitions into a companion
+//! interactive type (e.g. `InteractiveImage`, [`InteractiveText`]).
+//!
+//! **Pattern B** -- Has `Message` generic from construction (e.g. [`Button`],
+//! [`TextInput`], [`Slider`]). Interaction methods live directly on the
+//! widget struct alongside the native iced methods.
+//!
+//! ```ignore
+//! use iced_modifier::widget::{button, text};
+//!
+//! // Pattern B: Message generic from the start
+//! let btn = button(text("Click me")).on_press(MyMessage::Clicked);
+//!
+//! // Pattern A: no Message until interaction is added
+//! let txt = text("Hello").on_press(MyMessage::Tapped);
+//! ```
 
 mod button;
 mod checkbox;

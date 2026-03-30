@@ -1,8 +1,24 @@
+//! Build pipeline that converts accumulated modifier data into iced `Element` trees.
+//!
+//! This module is internal to the crate and handles the final assembly step:
+//! taking style/layout layers, extras (tooltip, scrollable, hidden, id), and
+//! interaction handlers and producing a wrapped `Element`.
+
 use iced::Element;
 use iced::widget::{Container, Space, container, mouse_area, scrollable, text, tooltip};
 
 use super::accumulator::{Extras, Interactions, Layer, ScrollConfig, ScrollDirection};
 
+/// Build a fully wrapped `Element` from layers, extras, and interactions.
+///
+/// **Wrapping order** (inside-out):
+/// 1. **Container layers** -- each [`Layer`] becomes a `Container` applying style and layout.
+///    Margin, if present, adds an extra outer `Container` with padding.
+/// 2. **MouseArea** -- wraps the result if any interaction handler is set.
+/// 3. **Tooltip** -- wraps the result if [`Extras::tooltip`] is configured.
+/// 4. **Scrollable** -- wraps the result if [`Extras::scrollable`] is configured.
+///
+/// If `extras.hidden` is `true`, the entire widget is replaced with an empty [`Space`].
 pub(crate) fn build_element<'a, Message, Theme, Renderer>(
     element: Element<'a, Message, Theme, Renderer>,
     layers: &[Layer],
@@ -135,6 +151,11 @@ where
     current
 }
 
+/// Wrap content in a `Scrollable` widget based on [`ScrollConfig`].
+///
+/// Handles direction (vertical, horizontal, or both), optional widget ID,
+/// anchor overrides (bottom/right for starting at the end), and spacing
+/// between scrollbar and content.
 fn build_scrollable<'a, Message, Theme, Renderer>(
     content: Element<'a, Message, Theme, Renderer>,
     config: ScrollConfig,

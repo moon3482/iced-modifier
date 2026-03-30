@@ -2,59 +2,66 @@
 //!
 //! SwiftUI/Jetpack Compose-style modifier API for [iced](https://github.com/iced-rs/iced).
 //!
-//! iced_modifier는 iced 위젯에 체이닝 방식으로 스타일, 레이아웃, 인터랙션을 적용할 수 있는
-//! modifier API를 제공합니다.
+//! Provides modifier-aware widget wrappers with direct chaining for styling,
+//! layout, and interaction — no generics, no `.modify()` needed.
 //!
 //! ## Quick Start
 //!
 //! ```ignore
-//! use iced::widget::text;
-//! use iced::Color;
 //! use iced_modifier::prelude::*;
 //!
-//! // Pure styling — returns Element directly, no .into() needed
-//! let card = text("Hello").modify(
-//!     Modifier::new()
-//!         .padding(16)
-//!         .background_color(Color::WHITE)
-//!         .corner_radius(12)
-//! );
-//!
-//! // With interactions
-//! let clickable = text("Click me").modify(
-//!     Modifier::new()
-//!         .padding(12)
-//!         .on_press(Message::Clicked)
-//!         .cursor(mouse::Interaction::Pointer)
-//! );
+//! // Direct chaining — SwiftUI/Compose style
+//! Text::new("Hello")
+//!     .font_size(16)
+//!     .padding(12)
+//!     .background_color("#FF5733")
+//!     .corner_radius(8)
 //! ```
 //!
 //! ## Core Types
 //!
-//! - [`Modifier`] — Composable styling and layout specification (no generics needed).
+//! - [`widget::Text`], [`widget::Column`], [`widget::Row`], [`widget::Button`],
+//!   [`widget::Checkbox`], [`widget::Radio`], [`widget::Slider`],
+//!   [`widget::TextInput`], [`widget::TextEditor`], [`widget::Toggler`],
+//!   [`widget::PickList`] — Modifier-aware widget wrappers with direct chaining.
+//! - [`Modifier`] — Reusable style/layout specification (no generics).
 //! - [`Interactor`] — Modifier with interaction handlers. Created by calling
 //!   `.on_press()`, `.on_enter()`, etc. on a `Modifier`.
-//! - [`Modify`] — Extension trait adding `.modify()` to all iced widgets.
-//! - [`ModifyBase`] — Trait providing all style/layout/extras methods.
-//!   Implemented by both `Modifier` and `Interactor`.
+//! - [`ModifyBase`] — Trait providing 40+ chainable methods.
+//!   Implemented by `Modifier`, `Interactor`, and all widget wrappers.
+//! - [`IntoColor`] — Trait for hex string and array color values.
 //!
 //! ## Feature Flags
 //!
 //! | Feature | Crate | Provides |
 //! |---------|-------|----------|
 //! | `icons` | `iced_fonts` | Bootstrap icon fonts, `icon_label()` helper |
+//! | `image` | `iced` (image) | `Image` widget wrapper |
 //! | `drag-drop` | `iced_drop` | `DragExt` trait — `.on_drag()` / `.on_drop()` on Element |
 //! | `animation` | `iced_anim` | Re-exports `iced_anim` |
 
+pub mod color;
 pub mod modifier;
 pub mod widget;
 
+pub use color::IntoColor;
 pub use modifier::{Interactor, IntoModified, Modifier, Modify, ModifyBase, modify};
 
 /// Prelude module — import everything needed with `use iced_modifier::prelude::*`.
 ///
-/// Includes [`Modifier`], [`Interactor`], [`Modify`], [`ModifyBase`], and [`modify`].
+/// Re-exports:
+/// - **Widget wrappers**: `Text`, `Button`, `Column`, `Row`, `Checkbox`,
+///   `Radio`, `Slider`, `TextInput`, `TextEditor`, `Toggler`, `PickList`
+///   (and `Image` with the `image` feature).
+/// - **Convenience constructors**: `text()`, `button()`, `checkbox()`, `radio()`,
+///   `slider()`, `text_input()`, `text_editor()`, `toggler()`
+///   (and `image()` with the `image` feature).
+/// - **Modifier types**: `Modifier`, `Interactor`, `Modify`, `ModifyBase`,
+///   `IntoModified`, `modify()`.
+/// - **Color**: `IntoColor`.
+/// - **Macros**: `column!`, `row!`.
 pub mod prelude {
+    pub use crate::color::IntoColor;
     pub use crate::modifier::{Interactor, IntoModified, Modifier, Modify, ModifyBase, modify};
     pub use crate::widget::{
         Button, Checkbox, Column, PickList, Radio, Row, Slider, Text, TextEditor, TextInput,
