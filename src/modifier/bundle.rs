@@ -111,8 +111,8 @@ pub trait ModifyBase: Sized {
 
     /// Set a solid background color.
     /// Compose: `.background(Color.Blue)` / SwiftUI: `.background(Color.blue)`
-    fn background_color(mut self, color: impl Into<Color>) -> Self {
-        self.data_mut().current.style.background = Some(Background::Color(color.into()));
+    fn background_color(mut self, color: impl crate::IntoColor) -> Self {
+        self.data_mut().current.style.background = Some(Background::Color(color.into_color()));
         self
     }
 
@@ -135,8 +135,8 @@ pub trait ModifyBase: Sized {
     }
 
     /// Set border color without affecting width or radius.
-    fn border_color(mut self, color: impl Into<Color>) -> Self {
-        let color = color.into();
+    fn border_color(mut self, color: impl crate::IntoColor) -> Self {
+        let color = color.into_color();
         let d = self.data_mut();
         let mut b = d.current.style.border.unwrap_or_default();
         b.color = color;
@@ -163,8 +163,8 @@ pub trait ModifyBase: Sized {
 
     /// Set text color for child text widgets.
     /// Compose: `color` parameter / SwiftUI: `.foregroundColor()`
-    fn text_color(mut self, color: impl Into<Color>) -> Self {
-        self.data_mut().current.style.text_color = Some(color.into());
+    fn text_color(mut self, color: impl crate::IntoColor) -> Self {
+        self.data_mut().current.style.text_color = Some(color.into_color());
         self
     }
 

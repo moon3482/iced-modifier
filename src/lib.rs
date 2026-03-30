@@ -46,15 +46,18 @@
 //! | `drag-drop` | `iced_drop` | `DragExt` trait — `.on_drag()` / `.on_drop()` on Element |
 //! | `animation` | `iced_anim` | Re-exports `iced_anim` |
 
+pub mod color;
 pub mod modifier;
 pub mod widget;
 
+pub use color::IntoColor;
 pub use modifier::{Interactor, IntoModified, Modifier, Modify, ModifyBase, modify};
 
 /// Prelude module — import everything needed with `use iced_modifier::prelude::*`.
 ///
 /// Includes [`Modifier`], [`Interactor`], [`Modify`], [`ModifyBase`], and [`modify`].
 pub mod prelude {
+    pub use crate::color::IntoColor;
     pub use crate::modifier::{Interactor, IntoModified, Modifier, Modify, ModifyBase, modify};
     pub use crate::widget::{
         Button, Checkbox, Column, PickList, Radio, Row, Slider, Text, TextEditor, TextInput,

@@ -395,13 +395,13 @@ macro_rules! impl_text_widget_methods {
             }
 
             /// Set the text color.
-            pub fn color(self, color: impl Into<Color>) -> Self
+            pub fn color(self, color: impl crate::IntoColor) -> Self
             where
                 <Theme as iced_text::Catalog>::Class<'a>:
                     From<iced_text::StyleFn<'a, Theme>>,
             {
                 Self {
-                    inner: self.inner.color(color),
+                    inner: self.inner.color(color.into_color()),
                     ..self
                 }
             }
