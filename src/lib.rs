@@ -30,6 +30,8 @@
 //! - [`ModifyBase`] — Trait providing 40+ chainable methods.
 //!   Implemented by `Modifier`, `Interactor`, and all widget wrappers.
 //! - [`IntoColor`] — Trait for hex string and array color values.
+//! - [`IntoBorder`] — Trait for tuple shortcuts in border styling.
+//! - [`IntoShadow`] — Trait for tuple shortcuts in shadow styling.
 //!
 //! ## Feature Flags
 //!
@@ -43,11 +45,13 @@
 pub mod border;
 pub mod color;
 pub mod modifier;
+pub mod shadow;
 pub mod widget;
 
 pub use border::IntoBorder;
 pub use color::IntoColor;
 pub use modifier::{Interactor, IntoModified, Modifier, Modify, ModifyBase, modify};
+pub use shadow::IntoShadow;
 
 /// Prelude module — import everything needed with `use iced_modifier::prelude::*`.
 ///
@@ -62,11 +66,13 @@ pub use modifier::{Interactor, IntoModified, Modifier, Modify, ModifyBase, modif
 ///   `IntoModified`, `modify()`.
 /// - **Color**: `IntoColor`.
 /// - **Border**: `IntoBorder`.
+/// - **Shadow**: `IntoShadow`.
 /// - **Macros**: `column!`, `row!`.
 pub mod prelude {
     pub use crate::border::IntoBorder;
     pub use crate::color::IntoColor;
     pub use crate::modifier::{Interactor, IntoModified, Modifier, Modify, ModifyBase, modify};
+    pub use crate::shadow::IntoShadow;
     pub use crate::widget::{
         Button, Checkbox, Column, PickList, Radio, Row, Slider, Text, TextEditor, TextInput,
         Toggler, button, checkbox, radio, slider, text, text_editor, text_input, toggler,

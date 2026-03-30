@@ -189,3 +189,34 @@ fn border_from_struct_still_works() {
         radius: 4.0.into(),
     }));
 }
+
+// ── IntoShadow: tuple shortcuts for shadow styling ──
+
+#[test]
+fn shadow_from_blur_only() {
+    let _: E = text("a").modify(Modifier::new().shadow(8.0));
+}
+
+#[test]
+fn shadow_from_offset_blur_tuple() {
+    let _: E = text("a").modify(Modifier::new().shadow((0.0, 4.0, 8.0)));
+}
+
+#[test]
+fn shadow_from_full_tuple_color() {
+    let _: E = text("a").modify(Modifier::new().shadow((0.0, 4.0, 8.0, Color::BLACK)));
+}
+
+#[test]
+fn shadow_from_full_tuple_hex() {
+    let _: E = text("a").modify(Modifier::new().shadow((0.0, 4.0, 8.0, "#00000040")));
+}
+
+#[test]
+fn shadow_from_struct_still_works() {
+    let _: E = text("a").modify(Modifier::new().shadow(Shadow {
+        color: Color::BLACK,
+        offset: Vector::new(0.0, 2.0),
+        blur_radius: 4.0,
+    }));
+}

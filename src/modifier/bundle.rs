@@ -8,7 +8,7 @@ use std::sync::Arc;
 use iced::border;
 use iced::widget::tooltip;
 use iced::{
-    Background, Color, Length, Padding, Pixels, Point, Shadow, alignment, mouse, widget,
+    Background, Length, Padding, Pixels, Point, alignment, mouse, widget,
 };
 
 use super::accumulator::{
@@ -170,8 +170,8 @@ pub trait ModifyBase: Sized {
 
     /// Set drop shadow.
     /// Compose: `.shadow()` / SwiftUI: `.shadow()`
-    fn shadow(mut self, shadow: impl Into<Shadow>) -> Self {
-        self.data_mut().current.style.shadow = Some(shadow.into());
+    fn shadow(mut self, shadow: impl crate::IntoShadow) -> Self {
+        self.data_mut().current.style.shadow = Some(shadow.into_shadow());
         self
     }
 
