@@ -170,6 +170,12 @@ pub trait ModifyBase: Sized {
 
     /// Set drop shadow.
     /// Compose: `.shadow()` / SwiftUI: `.shadow()`
+    ///
+    /// Accepts:
+    /// - `Shadow` — iced Shadow struct directly
+    /// - `f32` — blur radius only (black, no offset)
+    /// - `(f32, f32, f32)` — (offset_x, offset_y, blur_radius)
+    /// - `(f32, f32, f32, Color)` or `(f32, f32, f32, &str)` — full specification
     fn shadow(mut self, shadow: impl crate::IntoShadow) -> Self {
         self.data_mut().current.style.shadow = Some(shadow.into_shadow());
         self

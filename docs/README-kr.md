@@ -108,9 +108,9 @@ Text::new("Hello")
 | 메서드 | 설명 | Compose 대응 | SwiftUI 대응 |
 |--------|------|-------------|-------------|
 | `.background_color()` | 배경색 (Color, hex, 배열) | `.background()` | `.background()` |
-| `.border()` | 테두리 전체 설정 | `.border()` | `.border()` |
+| `.border()` | 테두리 (Border, 튜플, 반경) | `.border()` | `.border()` |
 | `.corner_radius()` | 모서리 둥글기 | `.clip(RoundedCornerShape())` | `.cornerRadius()` |
-| `.shadow()` | 그림자 | `.shadow()` | `.shadow()` |
+| `.shadow()` | 그림자 (Shadow, 튜플, blur) | `.shadow()` | `.shadow()` |
 | `.text_color()` | 텍스트 색상 (Color, hex, 배열) | `color` 파라미터 | `.foregroundColor()` |
 
 ### 색상 포맷
@@ -123,6 +123,31 @@ Text::new("Hello")
 | Hex `&str` | `"#FF5733"`, `"#FFF"`, `"3388FF"`, `"#FF573380"` (RGBA) |
 | `[f32; 3]` | `[1.0, 0.5, 0.0]` (RGB, 0.0–1.0) |
 | `[f32; 4]` | `[1.0, 0.5, 0.0, 0.8]` (RGBA, 0.0–1.0) |
+
+### 테두리 포맷
+
+`.border()` 지원 포맷:
+
+| 포맷 | 예시 |
+|------|------|
+| `Border` | `Border { color: Color::RED, width: 1.0, radius: 8.0.into() }` |
+| `f32` | `8.0` (모서리 반경만) |
+| `(Color, f32)` | `(Color::BLACK, 1.0)` (색상 + 너비) |
+| `(&str, f32)` | `("#000", 1.0)` (hex 색상 + 너비) |
+| `(Color, f32, f32)` | `(Color::BLACK, 1.0, 8.0)` (색상 + 너비 + 반경) |
+| `(&str, f32, f32)` | `("#CCC", 1.0, 8.0)` (hex + 너비 + 반경) |
+
+### 그림자 포맷
+
+`.shadow()` 지원 포맷:
+
+| 포맷 | 예시 |
+|------|------|
+| `Shadow` | `Shadow { color: Color::BLACK, offset: Vector::new(0.0, 4.0), blur_radius: 8.0 }` |
+| `f32` | `8.0` (blur만, 검정, 오프셋 없음) |
+| `(f32, f32, f32)` | `(0.0, 4.0, 8.0)` (x, y, blur) |
+| `(f32, f32, f32, Color)` | `(0.0, 4.0, 8.0, Color::BLACK)` |
+| `(f32, f32, f32, &str)` | `(0.0, 4.0, 8.0, "#00000040")` (hex 색상) |
 
 ### 레이아웃
 
