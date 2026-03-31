@@ -22,6 +22,7 @@ use iced_modifier::prelude::*;
 // 直接チェーン -- SwiftUI スタイル
 Text::new("Hello")
     .font_size(16)
+    .text_align(TextAlign::Center)
     .padding(12)
     .background_color(Color::WHITE)
     .corner_radius(8)
@@ -112,6 +113,7 @@ Text::new("Hello")
 | `.corner_radius()` | 角丸 | `.clip(RoundedCornerShape())` | `.cornerRadius()` |
 | `.shadow()` | シャドウ (Shadow, タプル, ブラー) | `.shadow()` | `.shadow()` |
 | `.text_color()` | テキスト色 (Color, hex, 配列) | `color` パラメータ | `.foregroundColor()` |
+| `.text_align()` | テキスト配置 (Start, Center, End, Justify) | `textAlign` | `.multilineTextAlignment()` |
 
 ### カラーフォーマット
 

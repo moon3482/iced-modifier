@@ -22,6 +22,7 @@ use iced_modifier::prelude::*;
 // Direkte Verkettung -- SwiftUI-Stil
 Text::new("Hello")
     .font_size(16)
+    .text_align(TextAlign::Center)
     .padding(12)
     .background_color(Color::WHITE)
     .corner_radius(8)
@@ -112,6 +113,7 @@ Alle 12 wichtigen iced-Widgets werden mit direkter Modifier-Verkettung unterstue
 | `.corner_radius()` | Eckenrundung | `.clip(RoundedCornerShape())` | `.cornerRadius()` |
 | `.shadow()` | Schatten (Shadow, Tupel, Unschaerfe) | `.shadow()` | `.shadow()` |
 | `.text_color()` | Textfarbe (Color, Hex, Array) | `color`-Parameter | `.foregroundColor()` |
+| `.text_align()` | Textausrichtung (Start, Center, End, Justify) | `textAlign` | `.multilineTextAlignment()` |
 
 ### Farbformate
 

@@ -22,6 +22,7 @@ use iced_modifier::prelude::*;
 // 직접 체이닝 — SwiftUI 스타일
 Text::new("Hello")
     .font_size(16)
+    .text_align(TextAlign::Center)
     .padding(12)
     .background_color(Color::WHITE)
     .corner_radius(8)
@@ -112,6 +113,7 @@ Text::new("Hello")
 | `.corner_radius()` | 모서리 둥글기 | `.clip(RoundedCornerShape())` | `.cornerRadius()` |
 | `.shadow()` | 그림자 (Shadow, 튜플, blur) | `.shadow()` | `.shadow()` |
 | `.text_color()` | 텍스트 색상 (Color, hex, 배열) | `color` 파라미터 | `.foregroundColor()` |
+| `.text_align()` | 텍스트 정렬 (Start, Center, End, Justify) | `textAlign` | `.multilineTextAlignment()` |
 
 ### 색상 포맷
 

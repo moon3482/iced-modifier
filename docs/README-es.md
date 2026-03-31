@@ -22,6 +22,7 @@ use iced_modifier::prelude::*;
 // Encadenamiento directo -- estilo SwiftUI
 Text::new("Hello")
     .font_size(16)
+    .text_align(TextAlign::Center)
     .padding(12)
     .background_color(Color::WHITE)
     .corner_radius(8)
@@ -112,6 +113,7 @@ Los 12 principales widgets de iced tienen soporte de encadenamiento directo de m
 | `.corner_radius()` | Redondeo de esquinas | `.clip(RoundedCornerShape())` | `.cornerRadius()` |
 | `.shadow()` | Sombra (Shadow, tupla, desenfoque) | `.shadow()` | `.shadow()` |
 | `.text_color()` | Color del texto (Color, hex, array) | `color` param | `.foregroundColor()` |
+| `.text_align()` | Alineacion de texto (Start, Center, End, Justify) | `textAlign` | `.multilineTextAlignment()` |
 
 ### Formatos de color
 

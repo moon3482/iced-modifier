@@ -22,6 +22,7 @@ use iced_modifier::prelude::*;
 // Direct chaining — SwiftUI style
 Text::new("Hello")
     .font_size(16)
+    .text_align(TextAlign::Center)
     .padding(12)
     .background_color(Color::WHITE)
     .corner_radius(8)
@@ -103,6 +104,7 @@ All 12 major iced widgets have modifier-aware wrappers with direct chaining:
 | `.corner_radius()` | Corner rounding | `.clip(RoundedCornerShape())` | `.cornerRadius()` |
 | `.shadow()` | Drop shadow (Shadow, tuple, blur) | `.shadow()` | `.shadow()` |
 | `.text_color()` | Text color (Color, hex, array) | `color` param | `.foregroundColor()` |
+| `.text_align()` | Text alignment (Start, Center, End, Justify) | `textAlign` | `.multilineTextAlignment()` |
 
 ### Color Formats
 

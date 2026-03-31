@@ -364,6 +364,17 @@ macro_rules! impl_text_widget_methods {
                 self
             }
 
+            /// Set horizontal text alignment using [`TextAlign`](crate::TextAlign).
+            ///
+            /// Controls how lines of text align within the text widget's width.
+            /// For positioning the widget in its parent, use [`align_x`](crate::ModifyBase::align_x).
+            ///
+            /// Compose: `textAlign = TextAlign.Center`
+            /// SwiftUI: `.multilineTextAlignment(.center)`
+            pub fn text_align(self, align: crate::TextAlign) -> Self {
+                self.text_align_x(align)
+            }
+
             /// Center the text horizontally and vertically.
             pub fn text_center(self) -> Self {
                 self.text_align_x(alignment::Horizontal::Center)
@@ -371,6 +382,8 @@ macro_rules! impl_text_widget_methods {
             }
 
             /// Set horizontal text alignment within the text boundaries.
+            /// Accepts [`TextAlign`](crate::TextAlign), `iced::widget::text::Alignment`,
+            /// or `iced::alignment::Horizontal`.
             pub fn text_align_x(mut self, a: impl Into<iced_text::Alignment>) -> Self {
                 self.inner = self.inner.align_x(a);
                 self

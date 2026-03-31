@@ -22,6 +22,7 @@ use iced_modifier::prelude::*;
 // 直接链式调用 -- SwiftUI 风格
 Text::new("Hello")
     .font_size(16)
+    .text_align(TextAlign::Center)
     .padding(12)
     .background_color(Color::WHITE)
     .corner_radius(8)
@@ -112,6 +113,7 @@ Text::new("Hello")
 | `.corner_radius()` | 圆角 | `.clip(RoundedCornerShape())` | `.cornerRadius()` |
 | `.shadow()` | 阴影 (Shadow, 元组, 模糊) | `.shadow()` | `.shadow()` |
 | `.text_color()` | 文字颜色 (Color, hex, 数组) | `color` 参数 | `.foregroundColor()` |
+| `.text_align()` | 文本对齐 (Start, Center, End, Justify) | `textAlign` | `.multilineTextAlignment()` |
 
 ### 颜色格式
 
