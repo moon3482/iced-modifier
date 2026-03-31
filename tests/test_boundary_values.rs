@@ -1,7 +1,7 @@
 mod common;
 
 use iced::widget::{text, tooltip};
-use iced::{Color, Length, Shadow, Vector};
+use iced::{Border, Color, Length, Shadow, Vector};
 use iced_modifier::prelude::*;
 
 use common::E;
@@ -152,4 +152,71 @@ fn color_still_accepts_iced_color() {
 #[test]
 fn hex_color_on_widget_text() {
     let _: E = Text::new("hello").color("#FF5733").padding(10).into();
+}
+
+// ── IntoBorder: tuple shortcuts for border styling ──
+
+#[test]
+fn border_from_radius_only() {
+    let _: E = text("a").modify(Modifier::new().border(8.0));
+}
+
+#[test]
+fn border_from_color_width_tuple() {
+    let _: E = text("a").modify(Modifier::new().border((Color::BLACK, 1.0)));
+}
+
+#[test]
+fn border_from_hex_width_tuple() {
+    let _: E = text("a").modify(Modifier::new().border(("#000", 1.0)));
+}
+
+#[test]
+fn border_from_color_width_radius_tuple() {
+    let _: E = text("a").modify(Modifier::new().border((Color::BLACK, 1.0, 8.0)));
+}
+
+#[test]
+fn border_from_hex_width_radius_tuple() {
+    let _: E = text("a").modify(Modifier::new().border(("#CCC", 1.0, 8.0)));
+}
+
+#[test]
+fn border_from_struct_still_works() {
+    let _: E = text("a").modify(Modifier::new().border(Border {
+        color: Color::from_rgb(1.0, 0.0, 0.0),
+        width: 2.0,
+        radius: 4.0.into(),
+    }));
+}
+
+// ── IntoShadow: tuple shortcuts for shadow styling ──
+
+#[test]
+fn shadow_from_blur_only() {
+    let _: E = text("a").modify(Modifier::new().shadow(8.0));
+}
+
+#[test]
+fn shadow_from_offset_blur_tuple() {
+    let _: E = text("a").modify(Modifier::new().shadow((0.0, 4.0, 8.0)));
+}
+
+#[test]
+fn shadow_from_full_tuple_color() {
+    let _: E = text("a").modify(Modifier::new().shadow((0.0, 4.0, 8.0, Color::BLACK)));
+}
+
+#[test]
+fn shadow_from_full_tuple_hex() {
+    let _: E = text("a").modify(Modifier::new().shadow((0.0, 4.0, 8.0, "#00000040")));
+}
+
+#[test]
+fn shadow_from_struct_still_works() {
+    let _: E = text("a").modify(Modifier::new().shadow(Shadow {
+        color: Color::BLACK,
+        offset: Vector::new(0.0, 2.0),
+        blur_radius: 4.0,
+    }));
 }

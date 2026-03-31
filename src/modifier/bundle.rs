@@ -8,7 +8,7 @@ use std::sync::Arc;
 use iced::border;
 use iced::widget::tooltip;
 use iced::{
-    Background, Border, Color, Length, Padding, Pixels, Point, Shadow, alignment, mouse, widget,
+    Background, Length, Padding, Pixels, Point, alignment, mouse, widget,
 };
 
 use super::accumulator::{
@@ -126,8 +126,14 @@ pub trait ModifyBase: Sized {
 
     /// Set the full border (color, width, radius).
     /// Compose: `.border()` / SwiftUI: `.border()`
-    fn border(mut self, border: impl Into<Border>) -> Self {
-        self.data_mut().current.style.border = Some(border.into());
+    ///
+    /// Accepts:
+    /// - `Border` — iced Border struct directly
+    /// - `f32` — uniform corner radius only
+    /// - `(Color, f32)` or `(&str, f32)` — color + width
+    /// - `(Color, f32, f32)` or `(&str, f32, f32)` — color + width + radius
+    fn border(mut self, border: impl crate::IntoBorder) -> Self {
+        self.data_mut().current.style.border = Some(border.into_border());
         self
     }
 
@@ -164,8 +170,14 @@ pub trait ModifyBase: Sized {
 
     /// Set drop shadow.
     /// Compose: `.shadow()` / SwiftUI: `.shadow()`
-    fn shadow(mut self, shadow: impl Into<Shadow>) -> Self {
-        self.data_mut().current.style.shadow = Some(shadow.into());
+    ///
+    /// Accepts:
+    /// - `Shadow` — iced Shadow struct directly
+    /// - `f32` — blur radius only (black, no offset)
+    /// - `(f32, f32, f32)` — (offset_x, offset_y, blur_radius)
+    /// - `(f32, f32, f32, Color)` or `(f32, f32, f32, &str)` — full specification
+    fn shadow(mut self, shadow: impl crate::IntoShadow) -> Self {
+        self.data_mut().current.style.shadow = Some(shadow.into_shadow());
         self
     }
 

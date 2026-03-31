@@ -7,13 +7,13 @@
 
 Chainable styling, layout, interactions, and widget-specific properties — all in one fluent API.
 
-> [한국어 문서 (Korean)](docs/README-kr.md)
+> [한국어](docs/README-kr.md) | [中文](docs/README-zh.md) | [日本語](docs/README-ja.md) | [Français](docs/README-fr.md) | [Deutsch](docs/README-de.md) | [Español](docs/README-es.md)
 
 ## Quick Start
 
 ```toml
 [dependencies]
-iced_modifier = "0.2"
+iced_modifier = "0.4"
 ```
 
 ```rust
@@ -99,9 +99,9 @@ All 12 major iced widgets have modifier-aware wrappers with direct chaining:
 | Method | Description | Compose | SwiftUI |
 |--------|-------------|---------|---------|
 | `.background_color()` | Background color (Color, hex, array) | `.background()` | `.background()` |
-| `.border()` | Full border | `.border()` | `.border()` |
+| `.border()` | Full border (Border, tuple, radius) | `.border()` | `.border()` |
 | `.corner_radius()` | Corner rounding | `.clip(RoundedCornerShape())` | `.cornerRadius()` |
-| `.shadow()` | Drop shadow | `.shadow()` | `.shadow()` |
+| `.shadow()` | Drop shadow (Shadow, tuple, blur) | `.shadow()` | `.shadow()` |
 | `.text_color()` | Text color (Color, hex, array) | `color` param | `.foregroundColor()` |
 
 ### Color Formats
@@ -114,6 +114,31 @@ All color methods (`.background_color()`, `.text_color()`, `.border_color()`, `.
 | Hex `&str` | `"#FF5733"`, `"#FFF"`, `"3388FF"`, `"#FF573380"` (RGBA) |
 | `[f32; 3]` | `[1.0, 0.5, 0.0]` (RGB, 0.0–1.0) |
 | `[f32; 4]` | `[1.0, 0.5, 0.0, 0.8]` (RGBA, 0.0–1.0) |
+
+### Border Formats
+
+`.border()` accepts:
+
+| Format | Example |
+|--------|---------|
+| `Border` | `Border { color: Color::RED, width: 1.0, radius: 8.0.into() }` |
+| `f32` | `8.0` (corner radius only) |
+| `(Color, f32)` | `(Color::BLACK, 1.0)` (color + width) |
+| `(&str, f32)` | `("#000", 1.0)` (hex color + width) |
+| `(Color, f32, f32)` | `(Color::BLACK, 1.0, 8.0)` (color + width + radius) |
+| `(&str, f32, f32)` | `("#CCC", 1.0, 8.0)` (hex + width + radius) |
+
+### Shadow Formats
+
+`.shadow()` accepts:
+
+| Format | Example |
+|--------|---------|
+| `Shadow` | `Shadow { color: Color::BLACK, offset: Vector::new(0.0, 4.0), blur_radius: 8.0 }` |
+| `f32` | `8.0` (blur radius only, black, no offset) |
+| `(f32, f32, f32)` | `(0.0, 4.0, 8.0)` (x, y, blur) |
+| `(f32, f32, f32, Color)` | `(0.0, 4.0, 8.0, Color::BLACK)` |
+| `(f32, f32, f32, &str)` | `(0.0, 4.0, 8.0, "#00000040")` (with hex color) |
 
 ### Layout
 
@@ -188,7 +213,7 @@ Text::new("Layered")
 ## Feature Flags
 
 ```toml
-iced_modifier = { version = "0.2", features = ["icons", "drag-drop", "animation"] }
+iced_modifier = { version = "0.4", features = ["icons", "drag-drop", "animation"] }
 ```
 
 | Feature | Crate | Description |
