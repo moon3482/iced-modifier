@@ -16,6 +16,7 @@ enum Tab {
     BordersShadows,
     Interactions,
     ScrollableExtras,
+    Patterns,
 }
 
 impl Tab {
@@ -27,6 +28,7 @@ impl Tab {
         Tab::BordersShadows,
         Tab::Interactions,
         Tab::ScrollableExtras,
+        Tab::Patterns,
     ];
 
     fn label(self) -> &'static str {
@@ -38,6 +40,7 @@ impl Tab {
             Tab::BordersShadows => "Borders & Shadows",
             Tab::Interactions => "Interactions",
             Tab::ScrollableExtras => "Scrollable & Extras",
+            Tab::Patterns => "Patterns",
         }
     }
 }
@@ -188,6 +191,7 @@ fn view(state: &App) -> Element<'_, Message> {
         Tab::BordersShadows => tab_borders_shadows(state),
         Tab::Interactions => tab_interactions(state),
         Tab::ScrollableExtras => tab_scrollable_extras(state),
+        Tab::Patterns => tab_patterns(state),
     };
 
     let page = column![
@@ -544,6 +548,39 @@ fn tab_layout(_state: &App) -> Element<'_, Message> {
         section("center_x with Fixed Width"),
         code_label(".center_x(Length::Fixed(200.0))"),
         center_x_demo,
+
+        section("Direct width / height"),
+        code_label(".width(200).height(50)"),
+        Text::new("Fixed 200x50").font_size(14).padding(8).background_color("#E8EAF6")
+            .width(200).height(50),
+
+        section("fill_height / fill"),
+        code_label(".fill_height()  |  .fill()"),
+        row![
+            Text::new("fill_height").font_size(12).padding(8).background_color("#F3E5F5").fill_height(),
+            Text::new("normal").font_size(12).padding(8).background_color("#E8F5E9"),
+        ].spacing(4).height(60),
+
+        section("center (both axes)"),
+        code_label(".center(Length::Fixed(120.0))"),
+        Text::new("centered").font_size(14).padding(8).background_color("#FFF9C4")
+            .center(Length::Fixed(120.0)),
+
+        section("align_left / align_right"),
+        code_label(".align_left(Length::Fill)  |  .align_right(Length::Fill)"),
+        column![
+            Text::new("Left").font_size(14).padding(4).background_color("#FFCCBC").align_left(Length::Fill),
+            Text::new("Right").font_size(14).padding(4).background_color("#B2DFDB").align_right(Length::Fill),
+        ].spacing(4),
+
+        section("clip (overflow hidden)"),
+        code_label(".width(100).clip(true)"),
+        Text::new("This text is very long and will be clipped because clip is enabled")
+            .font_size(14).padding(8).background_color("#F5F5F5").width(100).clip(true),
+
+        section("max_height"),
+        code_label(".max_height(40)"),
+        Text::new("Max height 40").font_size(14).padding(20).background_color("#E0F2F1").max_height(40),
     ]
     .spacing(6)
     .into()
@@ -928,6 +965,31 @@ fn tab_interactions(state: &App) -> Element<'_, Message> {
         ]
         .spacing(4).padding(10).background_color("#F1F8E9").corner_radius(4)
         .on_press(Message::TextClicked),
+
+        section("Release Events"),
+        code_label(".on_release(Msg) / .on_right_release(Msg)"),
+        Text::new("Press and release me (check console)")
+            .padding(10).background_color("#F1F8E9").corner_radius(4)
+            .on_press(Message::TextClicked).on_release(Message::TextClicked),
+
+        section("Middle Mouse"),
+        code_label(".on_middle_press(Msg) / .on_middle_release(Msg)"),
+        Text::new("Middle-click me (check console)")
+            .padding(10).background_color("#FFF8E1").corner_radius(4)
+            .on_middle_press(Message::TextClicked),
+
+        section("Cursor Variations"),
+        code_label(".cursor(Interaction::*)"),
+        row![
+            Text::new("Pointer").padding(8).background_color("#E3F2FD").corner_radius(4)
+                .on_press(Message::TextClicked).cursor(mouse::Interaction::Pointer),
+            Text::new("Grab").padding(8).background_color("#F3E5F5").corner_radius(4)
+                .on_press(Message::TextClicked).cursor(mouse::Interaction::Grab),
+            Text::new("Text").padding(8).background_color("#E8F5E9").corner_radius(4)
+                .on_press(Message::TextClicked).cursor(mouse::Interaction::Text),
+            Text::new("Crosshair").padding(8).background_color("#FFF3E0").corner_radius(4)
+                .on_press(Message::TextClicked).cursor(mouse::Interaction::Crosshair),
+        ].spacing(8),
     ]
     .spacing(8)
     .padding(16)
@@ -960,6 +1022,29 @@ fn tab_scrollable_extras(state: &App) -> Element<'_, Message> {
         ]
         .spacing(4).padding(8).background_color("#EEEEEE").corner_radius(4)
         .height(80).scrollable().scroll_anchor_bottom().scroll_spacing(4),
+
+        section("Horizontal Scrollable"),
+        code_label(".scrollable_x()"),
+        row![
+            text("Item 1  "), text("Item 2  "), text("Item 3  "), text("Item 4  "),
+            text("Item 5  "), text("Item 6  "), text("Item 7  "), text("Item 8  "),
+        ].spacing(8).padding(8).background_color("#F5F5F5").corner_radius(4)
+        .width(200).scrollable_x(),
+
+        section("Both Axes Scrollable"),
+        code_label(".scrollable_xy()"),
+        column![
+            row![text("A1"), text("A2"), text("A3"), text("A4"), text("A5"), text("A6")].spacing(16),
+            row![text("B1"), text("B2"), text("B3"), text("B4"), text("B5"), text("B6")].spacing(16),
+            row![text("C1"), text("C2"), text("C3"), text("C4"), text("C5"), text("C6")].spacing(16),
+            row![text("D1"), text("D2"), text("D3"), text("D4"), text("D5"), text("D6")].spacing(16),
+        ].spacing(4).padding(8).background_color("#ECEFF1").corner_radius(4)
+        .width(150).height(60).scrollable_xy(),
+
+        section("Widget ID"),
+        code_label(".id(\"my-widget\")"),
+        Text::new("This widget has id=\"my-widget\"").padding(10)
+            .background_color("#E0F7FA").corner_radius(4).id("my-widget"),
 
         section("Hidden Toggle"),
         code_label(".hidden(bool)"),
@@ -995,6 +1080,233 @@ fn tab_scrollable_extras(state: &App) -> Element<'_, Message> {
         ),
     ]
     .spacing(8)
+    .padding(16)
+    .into()
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Tab 8: Real-World Patterns
+// ═══════════════════════════════════════════════════════════════
+
+fn tab_patterns(state: &App) -> Element<'_, Message> {
+    // ── A. Login Form ──────────────────────────────────────────
+    let login_form = column![
+        Text::new("Sign In").font_size(24).color("#1A237E").padding(iced::Padding { top: 0.0, right: 0.0, bottom: 8.0, left: 0.0 }),
+        TextInput::new("Email", &state.input_value)
+            .on_input(Message::InputChanged)
+            .font_size(14).input_padding(12).padding(4)
+            .corner_radius(8).border(("#DDD", 1.0, 8.0)),
+        TextInput::new("Password", &state.secure_value)
+            .on_input(Message::SecureInputChanged)
+            .secure(true)
+            .font_size(14).input_padding(12).padding(4)
+            .corner_radius(8).border(("#DDD", 1.0, 8.0)),
+        Button::new(Text::new("Sign In").font_size(14).color("#FFF").text_center())
+            .on_press(Message::PrimaryClicked)
+            .button_padding(12)
+            .fill_width()
+            .background_color("#1976D2")
+            .corner_radius(8),
+        Text::new("Forgot password?").font_size(12).color("#1976D2"),
+    ]
+    .spacing(12)
+    .padding(24)
+    .background_color("#FFF")
+    .corner_radius(12)
+    .shadow((0.0, 4.0, 16.0, "#00000015"))
+    .max_width(360);
+
+    // ── B. Card Grid ───────────────────────────────────────────
+    let card1 = column![
+        Text::new("Starter Plan").font_size(16).color("#1A237E"),
+        Text::new("Perfect for individuals getting started with basic features.")
+            .font_size(12).color("#666"),
+        Button::new(Text::new("Get Started").font_size(12).color("#FFF").text_center())
+            .on_press(Message::PrimaryClicked)
+            .button_padding(8)
+            .fill_width()
+            .background_color("#43A047")
+            .corner_radius(6),
+    ]
+    .spacing(10)
+    .padding(20)
+    .fill_portion(1)
+    .background_color("#FFF")
+    .corner_radius(10)
+    .border(("#E0E0E0", 1.0, 10.0))
+    .shadow((0.0, 2.0, 8.0, "#00000010"));
+
+    let card2 = column![
+        Text::new("Pro Plan").font_size(16).color("#1A237E"),
+        Text::new("For teams that need advanced collaboration and analytics.")
+            .font_size(12).color("#666"),
+        Button::new(Text::new("Upgrade").font_size(12).color("#FFF").text_center())
+            .on_press(Message::PrimaryClicked)
+            .button_padding(8)
+            .fill_width()
+            .background_color("#1976D2")
+            .corner_radius(6),
+    ]
+    .spacing(10)
+    .padding(20)
+    .fill_portion(1)
+    .background_color("#FFF")
+    .corner_radius(10)
+    .border(("#1976D2", 2.0, 10.0))
+    .shadow((0.0, 4.0, 12.0, "#00000020"));
+
+    let card3 = column![
+        Text::new("Enterprise").font_size(16).color("#1A237E"),
+        Text::new("Custom solutions with dedicated support and SLA guarantees.")
+            .font_size(12).color("#666"),
+        Button::new(Text::new("Contact Us").font_size(12).color("#FFF").text_center())
+            .on_press(Message::PrimaryClicked)
+            .button_padding(8)
+            .fill_width()
+            .background_color("#6A1B9A")
+            .corner_radius(6),
+    ]
+    .spacing(10)
+    .padding(20)
+    .fill_portion(1)
+    .background_color("#FFF")
+    .corner_radius(10)
+    .border(("#E0E0E0", 1.0, 10.0))
+    .shadow((0.0, 2.0, 8.0, "#00000010"));
+
+    // ── C. Navigation Bar ──────────────────────────────────────
+    let nav_items = ["Home", "Products", "About", "Contact", "Settings"];
+    let active_nav = 0usize; // "Home" is active
+    let mut nav_bar = Row::new().spacing(0).padding(0)
+        .background_color("#FFF")
+        .shadow((0.0, 1.0, 4.0, "#00000015"));
+    for (i, &label) in nav_items.iter().enumerate() {
+        let is_active = i == active_nav;
+        let item = Text::new(label)
+            .font_size(14)
+            .padding(iced::Padding { top: 12.0, right: 20.0, bottom: 12.0, left: 20.0 })
+            .modify_if_else(
+                is_active,
+                |t| t.color("#1976D2").border(("#1976D2", 2.0, 0.0)),
+                |t| t.color("#757575"),
+            )
+            .cursor(mouse::Interaction::Pointer)
+            .on_press(Message::PrimaryClicked);
+        nav_bar = nav_bar.push(item);
+    }
+
+    // ── D. Alert Cards ─────────────────────────────────────────
+    let alert_success = row![
+        Text::new("\u{2713}").font_size(18).color("#2E7D32").padding_x(4),
+        Text::new("Operation completed successfully.").font_size(13).color("#2E7D32"),
+    ]
+    .spacing(8)
+    .padding(12)
+    .background_color("#E8F5E9")
+    .border(("#4CAF50", 1.0, 8.0))
+    .corner_radius(8);
+
+    let alert_warning = row![
+        Text::new("\u{26A0}").font_size(18).color("#F57F17").padding_x(4),
+        Text::new("Your session will expire in 5 minutes.").font_size(13).color("#F57F17"),
+    ]
+    .spacing(8)
+    .padding(12)
+    .background_color("#FFFDE7")
+    .border(("#FFC107", 1.0, 8.0))
+    .corner_radius(8);
+
+    let alert_error = row![
+        Text::new("\u{2715}").font_size(18).color("#C62828").padding_x(4),
+        Text::new("Failed to save changes. Please try again.").font_size(13).color("#C62828"),
+    ]
+    .spacing(8)
+    .padding(12)
+    .background_color("#FFEBEE")
+    .border(("#EF5350", 1.0, 8.0))
+    .corner_radius(8);
+
+    // ── E. Data List Items ─────────────────────────────────────
+    let item1 = row![
+        Text::new("  ").font_size(12).padding(14).background_color("#42A5F5").corner_radius(20),
+        column![
+            Text::new("Alice Johnson").font_size(14).color("#212121"),
+            Text::new("alice@example.com").font_size(12).color("#9E9E9E"),
+        ].spacing(2),
+        Button::new(Text::new("View").font_size(12).color("#1976D2"))
+            .on_press(Message::PrimaryClicked)
+            .button_padding(iced::Padding { top: 6.0, right: 14.0, bottom: 6.0, left: 14.0 })
+            .background_color(Color::TRANSPARENT)
+            .border(("#1976D2", 1.0, 6.0))
+            .cursor(mouse::Interaction::Pointer),
+    ]
+    .spacing(12)
+    .padding(iced::Padding { top: 10.0, right: 12.0, bottom: 10.0, left: 12.0 })
+    .background_color("#FFF")
+    .border(("#EEEEEE", 1.0, 0.0));
+
+    let item2 = row![
+        Text::new("  ").font_size(12).padding(14).background_color("#66BB6A").corner_radius(20),
+        column![
+            Text::new("Bob Smith").font_size(14).color("#212121"),
+            Text::new("bob@example.com").font_size(12).color("#9E9E9E"),
+        ].spacing(2),
+        Button::new(Text::new("View").font_size(12).color("#1976D2"))
+            .on_press(Message::PrimaryClicked)
+            .button_padding(iced::Padding { top: 6.0, right: 14.0, bottom: 6.0, left: 14.0 })
+            .background_color(Color::TRANSPARENT)
+            .border(("#1976D2", 1.0, 6.0))
+            .cursor(mouse::Interaction::Pointer),
+    ]
+    .spacing(12)
+    .padding(iced::Padding { top: 10.0, right: 12.0, bottom: 10.0, left: 12.0 })
+    .background_color("#FFF")
+    .border(("#EEEEEE", 1.0, 0.0));
+
+    let item3 = row![
+        Text::new("  ").font_size(12).padding(14).background_color("#EF5350").corner_radius(20),
+        column![
+            Text::new("Carol Lee").font_size(14).color("#212121"),
+            Text::new("carol@example.com").font_size(12).color("#9E9E9E"),
+        ].spacing(2),
+        Button::new(Text::new("View").font_size(12).color("#1976D2"))
+            .on_press(Message::PrimaryClicked)
+            .button_padding(iced::Padding { top: 6.0, right: 14.0, bottom: 6.0, left: 14.0 })
+            .background_color(Color::TRANSPARENT)
+            .border(("#1976D2", 1.0, 6.0))
+            .cursor(mouse::Interaction::Pointer),
+    ]
+    .spacing(12)
+    .padding(iced::Padding { top: 10.0, right: 12.0, bottom: 10.0, left: 12.0 })
+    .background_color("#FFF");
+
+    let list = column![item1, item2, item3]
+        .spacing(0)
+        .background_color("#FFF")
+        .corner_radius(8)
+        .border(("#E0E0E0", 1.0, 8.0))
+        .shadow((0.0, 2.0, 8.0, "#00000010"));
+
+    // ── Assemble ───────────────────────────────────────────────
+    column![
+        section("Login Form"),
+        login_form,
+
+        section("Card Grid"),
+        row![card1, card2, card3].spacing(12),
+
+        section("Navigation Bar"),
+        nav_bar,
+
+        section("Alert Cards"),
+        alert_success,
+        alert_warning,
+        alert_error,
+
+        section("Data List Items"),
+        list,
+    ]
+    .spacing(12)
     .padding(16)
     .into()
 }
