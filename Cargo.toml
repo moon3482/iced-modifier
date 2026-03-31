@@ -14,6 +14,10 @@ name = "basic"
 path = "examples/basic.rs"
 
 [[example]]
+name = "showcase"
+path = "examples/showcase.rs"
+
+[[example]]
 name = "icons"
 path = "examples/icons.rs"
 required-features = ["icons"]
