@@ -13,7 +13,7 @@
 
 ```toml
 [dependencies]
-iced_modifier = "0.2"
+iced_modifier = "0.4"
 ```
 
 ```rust
@@ -244,6 +244,7 @@ iced_modifier = { version = "0.2", features = ["icons", "drag-drop", "animation"
 
 ```bash
 cargo run --example basic
+cargo run --example showcase
 cargo run --example icons --features icons
 cargo run --example drag_drop --features drag-drop
 ```

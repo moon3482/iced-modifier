@@ -102,46 +102,57 @@ impl<'a, Message: Clone, Theme, Renderer> Row<'a, Message, Theme, Renderer>
 where
     Renderer: iced::advanced::Renderer,
 {
+    /// Set click (press) handler via MouseArea.
     pub fn on_press(mut self, msg: Message) -> Self {
         self.interactions.on_press = Some(msg);
         self
     }
+    /// Set release handler via MouseArea.
     pub fn on_release(mut self, msg: Message) -> Self {
         self.interactions.on_release = Some(msg);
         self
     }
+    /// Set double-click handler via MouseArea.
     pub fn on_double_click(mut self, msg: Message) -> Self {
         self.interactions.on_double_click = Some(msg);
         self
     }
+    /// Set right-click handler via MouseArea.
     pub fn on_right_press(mut self, msg: Message) -> Self {
         self.interactions.on_right_press = Some(msg);
         self
     }
+    /// Set right-click release handler via MouseArea.
     pub fn on_right_release(mut self, msg: Message) -> Self {
         self.interactions.on_right_release = Some(msg);
         self
     }
+    /// Set middle-click handler via MouseArea.
     pub fn on_middle_press(mut self, msg: Message) -> Self {
         self.interactions.on_middle_press = Some(msg);
         self
     }
+    /// Set middle-click release handler via MouseArea.
     pub fn on_middle_release(mut self, msg: Message) -> Self {
         self.interactions.on_middle_release = Some(msg);
         self
     }
+    /// Set hover-enter handler via MouseArea.
     pub fn on_enter(mut self, msg: Message) -> Self {
         self.interactions.on_enter = Some(msg);
         self
     }
+    /// Set hover-exit handler via MouseArea.
     pub fn on_exit(mut self, msg: Message) -> Self {
         self.interactions.on_exit = Some(msg);
         self
     }
+    /// Set cursor style when hovering.
     pub fn cursor(mut self, cursor: mouse::Interaction) -> Self {
         self.interactions.cursor = Some(cursor);
         self
     }
+    /// Set scroll-wheel event handler via MouseArea.
     pub fn on_scroll(
         mut self,
         f: impl Fn(mouse::ScrollDelta) -> Message + Send + Sync + 'static,
@@ -149,6 +160,7 @@ where
         self.interactions.on_scroll = Some(Arc::new(f));
         self
     }
+    /// Set mouse-move tracking handler via MouseArea.
     pub fn on_move(mut self, f: impl Fn(Point) -> Message + Send + Sync + 'static) -> Self {
         self.interactions.on_move = Some(Arc::new(f));
         self
