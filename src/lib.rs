@@ -46,12 +46,14 @@ pub mod border;
 pub mod color;
 pub mod modifier;
 pub mod shadow;
+pub mod text_align;
 pub mod widget;
 
 pub use border::IntoBorder;
 pub use color::IntoColor;
 pub use modifier::{Interactor, IntoModified, Modifier, Modify, ModifyBase, modify};
 pub use shadow::IntoShadow;
+pub use text_align::{TextAlign, TextAlignY};
 
 /// Prelude module — import everything needed with `use iced_modifier::prelude::*`.
 ///
@@ -73,6 +75,7 @@ pub mod prelude {
     pub use crate::color::IntoColor;
     pub use crate::modifier::{Interactor, IntoModified, Modifier, Modify, ModifyBase, modify};
     pub use crate::shadow::IntoShadow;
+    pub use crate::text_align::{TextAlign, TextAlignY};
     pub use crate::widget::{
         Button, Checkbox, Column, PickList, Radio, Row, Slider, Text, TextEditor, TextInput,
         Toggler, button, checkbox, radio, slider, text, text_editor, text_input, toggler,

@@ -369,3 +369,75 @@ fn modify_if_on_interactive() {
         .modify_if(false, |t| t.padding(999))
         .into();
 }
+
+// ═══════════════════════════════════════════════════════════════
+// TextAlign enum
+// ═══════════════════════════════════════════════════════════════
+
+#[test]
+fn text_align_start() {
+    let _: E = Text::new("hello").text_align(TextAlign::Start).into();
+}
+
+#[test]
+fn text_align_center() {
+    let _: E = Text::new("hello").text_align(TextAlign::Center).into();
+}
+
+#[test]
+fn text_align_end() {
+    let _: E = Text::new("hello").text_align(TextAlign::End).into();
+}
+
+#[test]
+fn text_align_justify() {
+    let _: E = Text::new("hello world long text").text_align(TextAlign::Justify).into();
+}
+
+#[test]
+fn text_align_left_legacy() {
+    let _: E = Text::new("hello").text_align(TextAlign::Left).into();
+}
+
+#[test]
+fn text_align_right_legacy() {
+    let _: E = Text::new("hello").text_align(TextAlign::Right).into();
+}
+
+#[test]
+fn text_align_y_top() {
+    let _: E = Text::new("hello").text_align_y(TextAlignY::Top).text_height(100).into();
+}
+
+#[test]
+fn text_align_y_bottom() {
+    let _: E = Text::new("hello").text_align_y(TextAlignY::Bottom).text_height(100).into();
+}
+
+#[test]
+fn text_align_with_container_align() {
+    let _: E = Text::new("hello")
+        .text_align(TextAlign::Center)
+        .align_left(iced::Length::Fill)
+        .into();
+}
+
+#[test]
+fn text_align_on_interactive() {
+    let _: E = Text::new("hello")
+        .on_press(Msg::A)
+        .text_align(TextAlign::End)
+        .into();
+}
+
+#[test]
+fn text_center_still_works() {
+    let _: E = Text::new("hello").text_center().into();
+}
+
+#[test]
+fn text_align_x_still_works() {
+    let _: E = Text::new("hello")
+        .text_align_x(iced::alignment::Horizontal::Center)
+        .into();
+}
