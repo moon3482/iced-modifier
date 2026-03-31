@@ -69,6 +69,7 @@ pub use text_align::{TextAlign, TextAlignY};
 /// - **Color**: `IntoColor`.
 /// - **Border**: `IntoBorder`.
 /// - **Shadow**: `IntoShadow`.
+/// - **Text alignment**: `TextAlign`, `TextAlignY`.
 /// - **Macros**: `column!`, `row!`.
 pub mod prelude {
     pub use crate::border::IntoBorder;
