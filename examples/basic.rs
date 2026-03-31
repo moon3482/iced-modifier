@@ -1,5 +1,5 @@
 use iced::widget::{container, text_editor, tooltip};
-use iced::{Border, Color, Element, Length, Point, Shadow, Theme, Vector, mouse};
+use iced::{Color, Element, Length, Shadow, Theme, Vector, mouse};
 use iced_modifier::prelude::*;
 use iced_modifier::{column, row};
 
@@ -14,9 +14,8 @@ fn main() -> iced::Result {
 enum Message {
     CardClicked,
     Hovered(bool),
-    RightClicked,
     Scrolled(String),
-    MouseMoved(Point),
+    MouseMoved(iced::Point),
     TextChanged(String),
     EditorAction(text_editor::Action),
     CheckToggled(bool),
@@ -29,7 +28,7 @@ enum Message {
 struct App {
     hover_count: u32,
     last_scroll: String,
-    last_mouse_pos: Option<Point>,
+    last_mouse_pos: Option<iced::Point>,
     input_value: String,
     editor_content: text_editor::Content,
     is_checked: bool,
@@ -64,7 +63,6 @@ fn update(state: &mut App, message: Message) -> iced::Task<Message> {
                 state.hover_count += 1;
             }
         }
-        Message::RightClicked => println!("Right clicked!"),
         Message::Scrolled(info) => state.last_scroll = info,
         Message::MouseMoved(pos) => state.last_mouse_pos = Some(pos),
         Message::TextChanged(val) => state.input_value = val,
@@ -80,101 +78,150 @@ fn update(state: &mut App, message: Message) -> iced::Task<Message> {
 
 fn view(state: &App) -> Element<'_, Message> {
     // ═══════════════════════════════════════════════════
-    // 1. Direct Chaining — Text
+    // 1. IntoColor — hex strings and arrays
     // ═══════════════════════════════════════════════════
 
-    let direct_card = Text::new("Direct Chaining Card")
-        .font_size(16)
-        .padding(20)
-        .background_color(Color::from_rgb(0.93, 0.94, 0.98))
-        .corner_radius(12);
+    let hex_card = Text::new("Hex Color: #FF5733")
+        .font_size(14)
+        .padding(16)
+        .background_color("#FF5733")
+        .text_color("#FFF")
+        .corner_radius(8);
 
-    let direct_shadow = Text::new("Shadow + Border")
-        .font_size(16)
-        .padding(20)
-        .background_color(Color::WHITE)
+    let array_card = Text::new("Array Color: [0.2, 0.6, 1.0]")
+        .font_size(14)
+        .padding(16)
+        .background_color([0.2, 0.6, 1.0])
+        .text_color([1.0, 1.0, 1.0])
+        .corner_radius(8);
+
+    let rgba_card = Text::new("RGBA: [0.0, 0.8, 0.4, 0.7]")
+        .font_size(14)
+        .padding(16)
+        .background_color([0.0, 0.8, 0.4, 0.7])
+        .text_color("#FFFFFF")
+        .corner_radius(8);
+
+    // ═══════════════════════════════════════════════════
+    // 2. IntoBorder — tuple shortcuts
+    // ═══════════════════════════════════════════════════
+
+    let border_radius = Text::new("border(8.0) — radius only")
+        .font_size(14)
+        .padding(12)
+        .border(8.0)
+        .background_color("#F0F0F5");
+
+    let border_color_width = Text::new("border((\"#3388FF\", 2.0))")
+        .font_size(14)
+        .padding(12)
+        .border(("#3388FF", 2.0));
+
+    let border_full = Text::new("border((\"#E74C3C\", 2.0, 12.0))")
+        .font_size(14)
+        .padding(12)
+        .border(("#E74C3C", 2.0, 12.0));
+
+    // ═══════════════════════════════════════════════════
+    // 3. IntoShadow — tuple shortcuts
+    // ═══════════════════════════════════════════════════
+
+    let shadow_blur = Text::new("shadow(8.0) — blur only")
+        .font_size(14)
+        .padding(16)
+        .background_color("#FFF")
+        .shadow(8.0);
+
+    let shadow_offset = Text::new("shadow((0.0, 4.0, 12.0))")
+        .font_size(14)
+        .padding(16)
+        .background_color("#FFF")
         .corner_radius(8)
-        .border(Border {
-            color: Color::from_rgb(0.8, 0.8, 0.85),
-            width: 1.0,
-            ..Border::default()
-        })
-        .shadow(Shadow {
-            color: Color::from_rgba(0.0, 0.0, 0.0, 0.15),
-            offset: Vector::new(0.0, 2.0),
-            blur_radius: 8.0,
-        });
+        .shadow((0.0, 4.0, 12.0));
 
-    let direct_clickable = Text::new("Click me!")
+    let shadow_full = Text::new("shadow with hex color")
+        .font_size(14)
+        .padding(16)
+        .background_color("#FFF")
+        .corner_radius(8)
+        .shadow((0.0, 4.0, 12.0, "#00000040"));
+
+    // ═══════════════════════════════════════════════════
+    // 4. Text — direct chaining + font_size
+    // ═══════════════════════════════════════════════════
+
+    let font_sizes = row![
+        Text::new("12px").font_size(12).padding(8).background_color("#E8EAF6").corner_radius(4),
+        Text::new("18px").font_size(18).padding(8).background_color("#C5CAE9").corner_radius(4),
+        Text::new("28px").font_size(28).padding(8).background_color("#9FA8DA").corner_radius(4),
+    ]
+    .spacing(8);
+
+    let clickable_text = Text::new("Click me!")
         .font_size(16)
-        .padding(20)
-        .background_color(Color::from_rgb(0.9, 0.95, 1.0))
+        .padding(16)
+        .background_color("#E3F2FD")
         .corner_radius(8)
         .on_press(Message::CardClicked)
         .cursor(mouse::Interaction::Pointer);
 
     // ═══════════════════════════════════════════════════
-    // 2. Column / Row
+    // 5. Column / Row
     // ═══════════════════════════════════════════════════
 
     let styled_column = column![
-        Text::new("Item A")
-            .font_size(14)
-            .padding(8)
-            .background_color(Color::from_rgb(1.0, 0.95, 0.95)),
-        Text::new("Item B")
-            .font_size(14)
-            .padding(8)
-            .background_color(Color::from_rgb(0.95, 1.0, 0.95)),
-        Text::new("Item C")
-            .font_size(14)
-            .padding(8)
-            .background_color(Color::from_rgb(0.95, 0.95, 1.0)),
+        Text::new("Item A").font_size(14).padding(8).background_color("#FFEBEE"),
+        Text::new("Item B").font_size(14).padding(8).background_color("#E8F5E9"),
+        Text::new("Item C").font_size(14).padding(8).background_color("#E3F2FD"),
     ]
     .spacing(4)
     .padding(12)
-    .background_color(Color::WHITE)
-    .corner_radius(8);
+    .background_color("#FFF")
+    .corner_radius(8)
+    .border(("#DDD", 1.0, 8.0));
 
-    let styled_row = row![
-        Text::new("Left (1/3)")
-            .font_size(14)
-            .fill_portion(1)
-            .padding(8)
-            .background_color(Color::from_rgb(1.0, 0.9, 0.9)),
-        Text::new("Right (2/3)")
-            .font_size(14)
-            .fill_portion(2)
-            .padding(8)
-            .background_color(Color::from_rgb(0.9, 0.9, 1.0)),
+    let portions_row = row![
+        Text::new("1/3").font_size(14).fill_portion(1).padding(8).background_color("#FFCDD2"),
+        Text::new("2/3").font_size(14).fill_portion(2).padding(8).background_color("#BBDEFB"),
     ]
     .spacing(4);
 
+    // Interactive column (whole area clickable)
+    let interactive_column = column![
+        Text::new("Clickable Column").font_size(16).color("#1A237E"),
+        Text::new("The whole area is clickable").font_size(12).color("#5C6BC0"),
+    ]
+    .spacing(4)
+    .padding(16)
+    .background_color("#FFF")
+    .corner_radius(8)
+    .shadow((0.0, 2.0, 8.0, "#00000020"))
+    .on_press(Message::CardClicked)
+    .cursor(mouse::Interaction::Pointer);
+
     // ═══════════════════════════════════════════════════
-    // 3. Button
+    // 6. Button
     // ═══════════════════════════════════════════════════
 
-    let styled_button = Button::new(Text::new("Styled Button").font_size(14).color(Color::WHITE))
+    let styled_button = Button::new(Text::new("Styled Button").font_size(14).color("#FFF"))
         .on_press(Message::CardClicked)
         .button_padding(12)
         .padding(4)
-        .background_color(Color::from_rgb(0.2, 0.5, 0.9))
+        .background_color("#1976D2")
         .corner_radius(8)
         .on_enter(Message::Hovered(true))
         .on_exit(Message::Hovered(false))
         .cursor(mouse::Interaction::Pointer);
 
-    let disabled_button = Button::new(
-        Text::new("Disabled")
-            .font_size(14)
-            .color(Color::from_rgb(0.6, 0.6, 0.6)),
-    )
-    .on_press_maybe(None::<Message>)
-    .button_padding(12)
-    .padding(4);
+    let disabled_button = Button::new(Text::new("Disabled").font_size(14).color("#999"))
+        .on_press_maybe(None::<Message>)
+        .button_padding(12)
+        .padding(4)
+        .background_color("#EEEEEE")
+        .corner_radius(8);
 
     // ═══════════════════════════════════════════════════
-    // 4. Form Controls — TextInput / TextEditor
+    // 7. TextInput / TextEditor
     // ═══════════════════════════════════════════════════
 
     let input = TextInput::new("Type something...", &state.input_value)
@@ -182,7 +229,8 @@ fn view(state: &App) -> Element<'_, Message> {
         .font_size(14)
         .input_padding(10)
         .padding(4)
-        .corner_radius(6);
+        .corner_radius(6)
+        .border(("#CCC", 1.0, 6.0));
 
     let editor = TextEditor::new(&state.editor_content)
         .on_action(Message::EditorAction)
@@ -190,10 +238,11 @@ fn view(state: &App) -> Element<'_, Message> {
         .editor_height(60)
         .editor_padding(8)
         .padding(4)
-        .corner_radius(6);
+        .corner_radius(6)
+        .border(("#CCC", 1.0, 6.0));
 
     // ═══════════════════════════════════════════════════
-    // 5. Toggle Controls — Checkbox / Toggler / Radio
+    // 8. Checkbox / Toggler / Radio
     // ═══════════════════════════════════════════════════
 
     let check = Checkbox::new(state.is_checked)
@@ -222,7 +271,7 @@ fn view(state: &App) -> Element<'_, Message> {
     .spacing(2);
 
     // ═══════════════════════════════════════════════════
-    // 6. Slider
+    // 9. Slider
     // ═══════════════════════════════════════════════════
 
     let slider_label = format!("Value: {:.0}", state.slider_value);
@@ -236,7 +285,7 @@ fn view(state: &App) -> Element<'_, Message> {
     .spacing(4);
 
     // ═══════════════════════════════════════════════════
-    // 7. PickList
+    // 10. PickList
     // ═══════════════════════════════════════════════════
 
     let options = vec!["Rust", "Kotlin", "Swift", "Dart"];
@@ -258,84 +307,135 @@ fn view(state: &App) -> Element<'_, Message> {
     .spacing(4);
 
     // ═══════════════════════════════════════════════════
-    // 8. Hover / Tooltip / Visibility / Layering
+    // 11. Tooltip with config (gap, padding, snap)
+    // ═══════════════════════════════════════════════════
+
+    let tooltip_basic = Text::new("Basic tooltip")
+        .font_size(14)
+        .padding(12)
+        .background_color("#E8F5E9")
+        .corner_radius(6)
+        .tooltip_text("Simple tooltip", tooltip::Position::Top);
+
+    let tooltip_config = Text::new("Configured tooltip")
+        .font_size(14)
+        .padding(12)
+        .background_color("#FFF3E0")
+        .corner_radius(6)
+        .tooltip_text("gap=12, padding=8, snap=true", tooltip::Position::Bottom)
+        .tooltip_gap(12.0)
+        .tooltip_padding(8)
+        .tooltip_snap(true);
+
+    // ═══════════════════════════════════════════════════
+    // 12. Scrollable with anchor
+    // ═══════════════════════════════════════════════════
+
+    let scroll_basic = column![
+        Text::new("Scroll me").font_size(14),
+        text("Line 1"), text("Line 2"), text("Line 3"),
+        text("Line 4"), text("Line 5"), text("Line 6"),
+    ]
+    .spacing(4)
+    .height(80)
+    .padding(8)
+    .background_color("#FAFAFA")
+    .corner_radius(6)
+    .scrollable();
+
+    // Chat-style: anchored to bottom
+    let scroll_anchored = column![
+        text("Msg 1"), text("Msg 2"), text("Msg 3"), text("Msg 4"),
+        text("Msg 5"), text("Msg 6"), text("Msg 7"),
+        Text::new("Msg 8 (latest)").font_size(13).color("#1976D2"),
+    ]
+    .spacing(4)
+    .height(80)
+    .padding(8)
+    .background_color("#E8EAF6")
+    .corner_radius(6)
+    .scrollable()
+    .scroll_anchor_bottom()
+    .scroll_spacing(4);
+
+    // ═══════════════════════════════════════════════════
+    // 13. Hover + on_scroll + on_move
     // ═══════════════════════════════════════════════════
 
     let hover_text = format!("Hover me! (count: {})", state.hover_count);
     let hover_card = Text::new(hover_text)
         .font_size(14)
         .padding(16)
-        .background_color(Color::from_rgb(1.0, 0.95, 0.9))
+        .background_color("#FFF8E1")
         .corner_radius(8)
         .on_enter(Message::Hovered(true))
         .on_exit(Message::Hovered(false));
-
-    let with_tooltip = Text::new("Hover for tooltip")
-        .font_size(14)
-        .padding(12)
-        .background_color(Color::from_rgb(0.85, 0.92, 0.85))
-        .corner_radius(6)
-        .tooltip_text("gap=12, snap=true", tooltip::Position::Top)
-        .tooltip_gap(12.0)
-        .tooltip_snap(true);
-
-    let layered = Text::new("Layered (padding then bg)")
-        .font_size(14)
-        .padding(20)
-        .layer()
-        .background_color(Color::from_rgb(1.0, 0.9, 0.8))
-        .corner_radius(8);
-
-    // ═══════════════════════════════════════════════════
-    // 9. Scrollable
-    // ═══════════════════════════════════════════════════
-
-    let scrollable_content = column![
-        Text::new("Scroll me").font_size(14),
-        text("Line 1"),
-        text("Line 2"),
-        text("Line 3"),
-        text("Line 4"),
-        text("Line 5"),
-        text("Line 6"),
-    ]
-    .spacing(4)
-    .height(80)
-    .padding(8)
-    .background_color(Color::from_rgb(0.97, 0.97, 0.97))
-    .corner_radius(6)
-    .scrollable();
-
-    // ═══════════════════════════════════════════════════
-    // 10. Mouse Callbacks
-    // ═══════════════════════════════════════════════════
 
     let scroll_label = if state.last_scroll.is_empty() {
         "Scroll wheel here".to_string()
     } else {
         format!("Scrolled: {}", state.last_scroll)
     };
+    let scroll_area = Text::new(scroll_label)
+        .font_size(14)
+        .padding(14)
+        .background_color("#E8F5E9")
+        .corner_radius(8)
+        .on_scroll(|delta| Message::Scrolled(format!("{:?}", delta)));
+
     let mouse_label = match state.last_mouse_pos {
         Some(p) => format!("Mouse: ({:.0}, {:.0})", p.x, p.y),
         None => "Move mouse here".to_string(),
     };
-    let scroll_area = Text::new(scroll_label)
-        .font_size(14)
-        .padding(14)
-        .background_color(Color::from_rgb(0.9, 1.0, 0.95))
-        .corner_radius(8)
-        .on_scroll(|delta| Message::Scrolled(format!("{:?}", delta)));
-
     let move_area = Text::new(mouse_label)
         .font_size(14)
         .padding(14)
         .fill_width()
-        .background_color(Color::from_rgb(1.0, 0.97, 0.88))
+        .background_color("#FFF3E0")
         .corner_radius(8)
         .on_move(Message::MouseMoved);
 
     // ═══════════════════════════════════════════════════
-    // 11. Composition (.modify — backward compat)
+    // 14. Alignment (align_top, align_bottom, center_y)
+    // ═══════════════════════════════════════════════════
+
+    let alignment_demo = row![
+        Text::new("Top").font_size(14).padding(8)
+            .background_color("#E3F2FD").corner_radius(4)
+            .align_top(Length::Fixed(80.0)),
+        Text::new("Bottom").font_size(14).padding(8)
+            .background_color("#FCE4EC").corner_radius(4)
+            .align_bottom(Length::Fixed(80.0)),
+        Text::new("Center").font_size(14).padding(8)
+            .background_color("#E8F5E9").corner_radius(4)
+            .center_y(Length::Fixed(80.0)),
+    ]
+    .spacing(8);
+
+    // ═══════════════════════════════════════════════════
+    // 15. Hidden
+    // ═══════════════════════════════════════════════════
+
+    let hidden_item = Text::new("You can't see me").padding(10).hidden(true);
+    let visible_item = Text::new("I'm visible (hidden item above)")
+        .font_size(14)
+        .padding(10)
+        .background_color("#E8F5E9")
+        .corner_radius(4);
+
+    // ═══════════════════════════════════════════════════
+    // 16. Layer (order-dependent wrapping)
+    // ═══════════════════════════════════════════════════
+
+    let layered = Text::new("Layered (padding then bg)")
+        .font_size(14)
+        .padding(20)
+        .layer()
+        .background_color("#FFE0B2")
+        .corner_radius(8);
+
+    // ═══════════════════════════════════════════════════
+    // 17. Composition (.modify — backward compat)
     // ═══════════════════════════════════════════════════
 
     fn card_base() -> Modifier {
@@ -344,22 +444,22 @@ fn view(state: &App) -> Element<'_, Message> {
             .corner_radius(8)
             .padding(16)
     }
-    let composed = text("Composed (base + shadow)")
-        .size(14)
-        .modify(card_base().then(Modifier::new().shadow(Shadow {
+    let composed = text("Composed (base + shadow)").size(14).modify(
+        card_base().then(Modifier::new().shadow(Shadow {
             color: Color::from_rgba(0.0, 0.0, 0.0, 0.2),
             offset: Vector::new(0.0, 4.0),
             blur_radius: 12.0,
-        })));
+        })),
+    );
 
+    // Conditional modifier
     let is_error = true;
     let status = Text::new("Error status")
         .font_size(14)
         .padding(10)
         .corner_radius(4)
         .modify_if(is_error, |t| {
-            t.background_color(Color::from_rgb(1.0, 0.9, 0.9))
-                .text_color(Color::from_rgb(0.8, 0.0, 0.0))
+            t.background_color("#FFCDD2").text_color("#B71C1C")
         });
 
     // ═══════════════════════════════════════════════════
@@ -370,14 +470,20 @@ fn view(state: &App) -> Element<'_, Message> {
         Text::new("iced_modifier Demo").font_size(28),
         Text::new("SwiftUI/Compose-style direct chaining for iced")
             .font_size(14)
-            .color(Color::from_rgb(0.4, 0.4, 0.5)),
-        section("Text — Direct Chaining"),
-        direct_card,
-        direct_shadow,
-        direct_clickable,
+            .color("#616161"),
+        section("IntoColor — hex & array"),
+        row![hex_card, array_card, rgba_card].spacing(8),
+        section("IntoBorder — tuple shortcuts"),
+        row![border_radius, border_color_width, border_full].spacing(8),
+        section("IntoShadow — tuple shortcuts"),
+        row![shadow_blur, shadow_offset, shadow_full].spacing(8),
+        section("Text — font_size & interactions"),
+        font_sizes,
+        clickable_text,
         section("Column & Row"),
         styled_column,
-        styled_row,
+        portions_row,
+        interactive_column,
         section("Button"),
         row![styled_button, disabled_button].spacing(8),
         section("TextInput & TextEditor"),
@@ -391,17 +497,22 @@ fn view(state: &App) -> Element<'_, Message> {
         slider_demo,
         section("PickList"),
         pick_demo,
-        section("Hover & Tooltip"),
+        section("Tooltip (basic + configured)"),
+        row![tooltip_basic, tooltip_config].spacing(8),
+        section("Scrollable (basic + anchored)"),
+        row![scroll_basic, scroll_anchored].spacing(8),
+        section("Hover / on_scroll / on_move"),
         hover_card,
-        with_tooltip,
-        section("Layering"),
-        layered,
-        section("Scrollable"),
-        scrollable_content,
-        section("Mouse Callbacks"),
         scroll_area,
         move_area,
-        section("Composition (.modify)"),
+        section("Alignment (top / bottom / center)"),
+        alignment_demo,
+        section("Hidden"),
+        hidden_item,
+        visible_item,
+        section("Layering"),
+        layered,
+        section("Composition & Conditional (.modify)"),
         composed,
         status,
     ]
@@ -415,10 +526,12 @@ fn view(state: &App) -> Element<'_, Message> {
 }
 
 fn section<'a>(title: &'a str) -> Text<'a> {
-    Text::new(title).font_size(18).padding(iced::Padding {
-        top: 16.0,
-        right: 0.0,
-        bottom: 0.0,
-        left: 0.0,
-    })
+    Text::new(title)
+        .font_size(18)
+        .padding(iced::Padding {
+            top: 16.0,
+            right: 0.0,
+            bottom: 0.0,
+            left: 0.0,
+        })
 }
