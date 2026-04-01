@@ -13,7 +13,7 @@
 
 ```toml
 [dependencies]
-iced_modifier = "0.4"
+iced_modifier = "0.5"
 ```
 
 ```rust
@@ -230,7 +230,7 @@ Text::new("分层")
 ## Feature Flags
 
 ```toml
-iced_modifier = { version = "0.2", features = ["icons", "drag-drop", "animation"] }
+iced_modifier = { version = "0.5", features = ["icons", "drag-drop", "animation"] }
 ```
 
 | Feature | Crate | 说明 |
@@ -250,13 +250,10 @@ cargo run --example icons --features icons
 cargo run --example drag_drop --features drag-drop
 ```
 
-## 从 v0.1 迁移
+## 迁移指南
 
-- `use iced::widget::text` -> 移除, 使用 prelude 中的 `text` (组件包装器)
-- `use iced::widget::{column, row}` -> 使用 `use iced_modifier::{column, row}` 宏
-- `.modify(Modifier::new()...)` -> 仍然有效, 但推荐直接链式调用
-- `Extras::tooltip_text` 字段 -> 更名为 `Extras::tooltip` (类型变为 `TooltipConfig`)
-- `Extras::scrollable` 字段 -> 类型从 `ScrollDirection` 变为 `ScrollConfig`
+- [v0.4 → v0.5](migration/v0.4-to-v0.5.md) — TextAlign, Button 直接样式
+- [v0.1 → v0.2](migration/v0.1-to-v0.2.md) — 组件包装器, 直接链式调用
 
 ## 兼容性
 

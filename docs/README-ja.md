@@ -13,7 +13,7 @@
 
 ```toml
 [dependencies]
-iced_modifier = "0.4"
+iced_modifier = "0.5"
 ```
 
 ```rust
@@ -230,7 +230,7 @@ Text::new("レイヤー")
 ## Feature Flags
 
 ```toml
-iced_modifier = { version = "0.2", features = ["icons", "drag-drop", "animation"] }
+iced_modifier = { version = "0.5", features = ["icons", "drag-drop", "animation"] }
 ```
 
 | Feature | クレート | 説明 |
@@ -250,13 +250,10 @@ cargo run --example icons --features icons
 cargo run --example drag_drop --features drag-drop
 ```
 
-## v0.1 からの移行
+## マイグレーション
 
-- `use iced::widget::text` -> 削除、prelude の `text` を使用(ウィジェットラッパー)
-- `use iced::widget::{column, row}` -> `use iced_modifier::{column, row}` マクロを使用
-- `.modify(Modifier::new()...)` -> 引き続き動作しますが、直接チェーン推奨
-- `Extras::tooltip_text` フィールド -> `Extras::tooltip` に名前変更(型: `TooltipConfig`)
-- `Extras::scrollable` フィールド -> 型が `ScrollDirection` から `ScrollConfig` に変更
+- [v0.4 → v0.5](migration/v0.4-to-v0.5.md) — TextAlign、Button ダイレクトスタイル
+- [v0.1 → v0.2](migration/v0.1-to-v0.2.md) — ウィジェットラッパー、直接チェーン
 
 ## 互換性
 
