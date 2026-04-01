@@ -75,20 +75,20 @@ Text::new("Hello")
 
 All 12 major iced widgets have modifier-aware wrappers with direct chaining:
 
-| Widget | Pattern | Widget-Specific Methods |
-|--------|---------|----------------------|
-| `Text` | A (→ InteractiveText) | `font_size`, `size`, `font`, `color`, `text_width`, `text_height` |
-| `Image` | A (→ InteractiveImage) | `opacity`, `rotation`, `content_fit`, `scale` |
-| `Column` | B | `spacing`, `push`, `extend`, `column![]` |
-| `Row` | B | `spacing`, `push`, `extend`, `row![]` |
-| `Button` | B\* | `on_press`, `on_press_maybe`, `button_padding` |
-| `TextInput` | B | `font_size`, `on_input`, `on_submit`, `on_paste`, `secure` |
-| `TextEditor` | B | `font_size`, `on_action`, `wrapping`, `editor_padding` |
-| `Checkbox` | B | `on_toggle`, `label`, `check_size`, `check_spacing`, `text_size` |
-| `Radio` | B | `radio_size`, `radio_spacing`, `text_size` |
-| `Toggler` | B | `on_toggle`, `label`, `toggler_size`, `toggler_spacing`, `text_size` |
-| `Slider` | B | `step`, `shift_step`, `on_release`, `slider_width`, `slider_height` |
-| `PickList` | B | `placeholder`, `text_size`, `menu_height`, `on_open`, `on_close` |
+| Widget       | Pattern                | Widget-Specific Methods                                              |
+| ------------ | ---------------------- | -------------------------------------------------------------------- |
+| `Text`       | A (→ InteractiveText)  | `font_size`, `size`, `font`, `color`, `text_width`, `text_height`    |
+| `Image`      | A (→ InteractiveImage) | `opacity`, `rotation`, `content_fit`, `scale`                        |
+| `Column`     | B                      | `spacing`, `push`, `extend`, `column![]`                             |
+| `Row`        | B                      | `spacing`, `push`, `extend`, `row![]`                                |
+| `Button`     | B\*                    | `on_press`, `on_press_maybe`, `button_padding`                       |
+| `TextInput`  | B                      | `font_size`, `on_input`, `on_submit`, `on_paste`, `secure`           |
+| `TextEditor` | B                      | `font_size`, `on_action`, `wrapping`, `editor_padding`               |
+| `Checkbox`   | B                      | `on_toggle`, `label`, `check_size`, `check_spacing`, `text_size`     |
+| `Radio`      | B                      | `radio_size`, `radio_spacing`, `text_size`                           |
+| `Toggler`    | B                      | `on_toggle`, `label`, `toggler_size`, `toggler_spacing`, `text_size` |
+| `Slider`     | B                      | `step`, `shift_step`, `on_release`, `slider_width`, `slider_height`  |
+| `PickList`   | B                      | `placeholder`, `text_size`, `menu_height`, `on_open`, `on_close`     |
 
 **Pattern A**: No Message generic. Interaction methods (`.on_press()`) transition to interactive type.
 **Pattern B**: Has Message generic from children/callbacks. Interactions available directly.
@@ -96,122 +96,113 @@ All 12 major iced widgets have modifier-aware wrappers with direct chaining:
 
 ## Core Types
 
-| Type | Description |
-|------|-------------|
-| `Text`, `Column`, `Row`, ... | Modifier-aware widget wrappers. Style, layout, and interactions via direct chaining |
-| `Modifier` | Reusable styling/layout specification. No generic — can be stored and composed freely |
-| `Interactor<M>` | Modifier + interaction handlers |
-| `ModifyBase` trait | Provides 40+ chainable methods (implemented by widget wrappers, Modifier, and Interactor) |
-
-## Core Types
-
-| Type | Description |
-|------|-------------|
-| `Text`, `Column`, `Row`, ... | Modifier-aware widget wrappers. Style, layout, and interactions via direct chaining |
-| `Modifier` | Reusable styling/layout specification. No generic — can be stored and composed freely |
-| `Interactor<M>` | Modifier + interaction handlers |
-| `ModifyBase` trait | Provides 40+ chainable methods (implemented by widget wrappers, Modifier, and Interactor) |
+| Type                         | Description                                                                               |
+| ---------------------------- | ----------------------------------------------------------------------------------------- |
+| `Text`, `Column`, `Row`, ... | Modifier-aware widget wrappers. Style, layout, and interactions via direct chaining       |
+| `Modifier`                   | Reusable styling/layout specification. No generic — can be stored and composed freely     |
+| `Interactor<M>`              | Modifier + interaction handlers                                                           |
+| `ModifyBase` trait           | Provides 40+ chainable methods (implemented by widget wrappers, Modifier, and Interactor) |
 
 ## Features
 
 ### Styling
 
-| Method | Description | Compose | SwiftUI |
-|--------|-------------|---------|---------|
-| `.background_color()` | Background color (Color, hex, array) | `.background()` | `.background()` |
-| `.border()` | Full border (Border, tuple, radius) | `.border()` | `.border()` |
-| `.corner_radius()` | Corner rounding | `.clip(RoundedCornerShape())` | `.cornerRadius()` |
-| `.shadow()` | Drop shadow (Shadow, tuple, blur) | `.shadow()` | `.shadow()` |
-| `.text_color()` | Text color (Color, hex, array) | `color` param | `.foregroundColor()` |
-| `.text_align()` | Text alignment (Start, Center, End, Justify) | `textAlign` | `.multilineTextAlignment()` |
+| Method                | Description                                  | Compose                       | SwiftUI                     |
+| --------------------- | -------------------------------------------- | ----------------------------- | --------------------------- |
+| `.background_color()` | Background color (Color, hex, array)         | `.background()`               | `.background()`             |
+| `.border()`           | Full border (Border, tuple, radius)          | `.border()`                   | `.border()`                 |
+| `.corner_radius()`    | Corner rounding                              | `.clip(RoundedCornerShape())` | `.cornerRadius()`           |
+| `.shadow()`           | Drop shadow (Shadow, tuple, blur)            | `.shadow()`                   | `.shadow()`                 |
+| `.text_color()`       | Text color (Color, hex, array)               | `color` param                 | `.foregroundColor()`        |
+| `.text_align()`       | Text alignment (Start, Center, End, Justify) | `textAlign`                   | `.multilineTextAlignment()` |
 
 ### Color Formats
 
 All color methods (`.background_color()`, `.text_color()`, `.border_color()`, `.color()`) accept:
 
-| Format | Example |
-|--------|---------|
-| `Color` | `Color::WHITE`, `Color::from_rgb(1.0, 0.5, 0.0)` |
+| Format     | Example                                                 |
+| ---------- | ------------------------------------------------------- |
+| `Color`    | `Color::WHITE`, `Color::from_rgb(1.0, 0.5, 0.0)`        |
 | Hex `&str` | `"#FF5733"`, `"#FFF"`, `"3388FF"`, `"#FF573380"` (RGBA) |
-| `[f32; 3]` | `[1.0, 0.5, 0.0]` (RGB, 0.0–1.0) |
-| `[f32; 4]` | `[1.0, 0.5, 0.0, 0.8]` (RGBA, 0.0–1.0) |
+| `[f32; 3]` | `[1.0, 0.5, 0.0]` (RGB, 0.0–1.0)                        |
+| `[f32; 4]` | `[1.0, 0.5, 0.0, 0.8]` (RGBA, 0.0–1.0)                  |
 
 ### Border Formats
 
 `.border()` accepts:
 
-| Format | Example |
-|--------|---------|
-| `Border` | `Border { color: Color::RED, width: 1.0, radius: 8.0.into() }` |
-| `f32` | `8.0` (corner radius only) |
-| `(Color, f32)` | `(Color::BLACK, 1.0)` (color + width) |
-| `(&str, f32)` | `("#000", 1.0)` (hex color + width) |
-| `(Color, f32, f32)` | `(Color::BLACK, 1.0, 8.0)` (color + width + radius) |
-| `(&str, f32, f32)` | `("#CCC", 1.0, 8.0)` (hex + width + radius) |
+| Format              | Example                                                        |
+| ------------------- | -------------------------------------------------------------- |
+| `Border`            | `Border { color: Color::RED, width: 1.0, radius: 8.0.into() }` |
+| `f32`               | `8.0` (corner radius only)                                     |
+| `(Color, f32)`      | `(Color::BLACK, 1.0)` (color + width)                          |
+| `(&str, f32)`       | `("#000", 1.0)` (hex color + width)                            |
+| `(Color, f32, f32)` | `(Color::BLACK, 1.0, 8.0)` (color + width + radius)            |
+| `(&str, f32, f32)`  | `("#CCC", 1.0, 8.0)` (hex + width + radius)                    |
 
 ### Shadow Formats
 
 `.shadow()` accepts:
 
-| Format | Example |
-|--------|---------|
-| `Shadow` | `Shadow { color: Color::BLACK, offset: Vector::new(0.0, 4.0), blur_radius: 8.0 }` |
-| `f32` | `8.0` (blur radius only, black, no offset) |
-| `(f32, f32, f32)` | `(0.0, 4.0, 8.0)` (x, y, blur) |
-| `(f32, f32, f32, Color)` | `(0.0, 4.0, 8.0, Color::BLACK)` |
-| `(f32, f32, f32, &str)` | `(0.0, 4.0, 8.0, "#00000040")` (with hex color) |
+| Format                   | Example                                                                           |
+| ------------------------ | --------------------------------------------------------------------------------- |
+| `Shadow`                 | `Shadow { color: Color::BLACK, offset: Vector::new(0.0, 4.0), blur_radius: 8.0 }` |
+| `f32`                    | `8.0` (blur radius only, black, no offset)                                        |
+| `(f32, f32, f32)`        | `(0.0, 4.0, 8.0)` (x, y, blur)                                                    |
+| `(f32, f32, f32, Color)` | `(0.0, 4.0, 8.0, Color::BLACK)`                                                   |
+| `(f32, f32, f32, &str)`  | `(0.0, 4.0, 8.0, "#00000040")` (with hex color)                                   |
 
 ### Layout
 
-| Method | Description | Compose | SwiftUI |
-|--------|-------------|---------|---------|
-| `.padding()` | Inner padding | `.padding()` | `.padding()` |
-| `.margin()` | Outer spacing | N/A | N/A |
-| `.width()` / `.height()` | Dimensions | `.size()` | `.frame()` |
-| `.fill_width()` | Fill available width | `.fillMaxWidth()` | `.frame(maxWidth: .infinity)` |
-| `.fill_portion(n)` | Proportional fill | `.weight()` | N/A |
-| `.center()` | Center both axes | `.align(Alignment.Center)` | `.center()` |
-| `.align_top()` | Align top + set height | `Alignment.Top` | `.frame(alignment: .top)` |
-| `.align_bottom()` | Align bottom + set height | `Alignment.Bottom` | `.frame(alignment: .bottom)` |
-| `.max_width()` / `.max_height()` | Maximum dimensions | `.requiredSize()` | `.frame(maxWidth:)` |
-| `.clip(bool)` | Overflow clipping | `.clip()` | `.clipped()` |
+| Method                           | Description               | Compose                    | SwiftUI                       |
+| -------------------------------- | ------------------------- | -------------------------- | ----------------------------- |
+| `.padding()`                     | Inner padding             | `.padding()`               | `.padding()`                  |
+| `.margin()`                      | Outer spacing             | N/A                        | N/A                           |
+| `.width()` / `.height()`         | Dimensions                | `.size()`                  | `.frame()`                    |
+| `.fill_width()`                  | Fill available width      | `.fillMaxWidth()`          | `.frame(maxWidth: .infinity)` |
+| `.fill_portion(n)`               | Proportional fill         | `.weight()`                | N/A                           |
+| `.center()`                      | Center both axes          | `.align(Alignment.Center)` | `.center()`                   |
+| `.align_top()`                   | Align top + set height    | `Alignment.Top`            | `.frame(alignment: .top)`     |
+| `.align_bottom()`                | Align bottom + set height | `Alignment.Bottom`         | `.frame(alignment: .bottom)`  |
+| `.max_width()` / `.max_height()` | Maximum dimensions        | `.requiredSize()`          | `.frame(maxWidth:)`           |
+| `.clip(bool)`                    | Overflow clipping         | `.clip()`                  | `.clipped()`                  |
 
 ### Interactions
 
-| Method | Description | Compose | SwiftUI |
-|--------|-------------|---------|---------|
-| `.on_press(msg)` | Click handler | `.clickable {}` | `.onTapGesture {}` |
-| `.on_release(msg)` | Release handler | — | — |
-| `.on_double_click(msg)` | Double-click | `.combinedClickable()` | `.onTapGesture(count: 2)` |
-| `.on_right_press(msg)` | Right-click | — | `.contextMenu {}` |
-| `.on_right_release(msg)` | Right-click release | — | — |
-| `.on_middle_press(msg)` | Middle-click | — | — |
-| `.on_middle_release(msg)` | Middle-click release | — | — |
-| `.on_enter(msg)` | Hover enter | `.hoverable()` | `.onHover {}` |
-| `.on_exit(msg)` | Hover exit | `.hoverable()` | `.onHover {}` |
-| `.on_scroll(fn)` | Scroll wheel event | `.pointerInput()` | `.onScrollGesture {}` |
-| `.on_move(fn)` | Mouse move tracking | `.pointerInput()` | `.onContinuousHover {}` |
-| `.cursor()` | Cursor style | `.pointerInput()` | `.cursor()` |
+| Method                    | Description          | Compose                | SwiftUI                   |
+| ------------------------- | -------------------- | ---------------------- | ------------------------- |
+| `.on_press(msg)`          | Click handler        | `.clickable {}`        | `.onTapGesture {}`        |
+| `.on_release(msg)`        | Release handler      | —                      | —                         |
+| `.on_double_click(msg)`   | Double-click         | `.combinedClickable()` | `.onTapGesture(count: 2)` |
+| `.on_right_press(msg)`    | Right-click          | —                      | `.contextMenu {}`         |
+| `.on_right_release(msg)`  | Right-click release  | —                      | —                         |
+| `.on_middle_press(msg)`   | Middle-click         | —                      | —                         |
+| `.on_middle_release(msg)` | Middle-click release | —                      | —                         |
+| `.on_enter(msg)`          | Hover enter          | `.hoverable()`         | `.onHover {}`             |
+| `.on_exit(msg)`           | Hover exit           | `.hoverable()`         | `.onHover {}`             |
+| `.on_scroll(fn)`          | Scroll wheel event   | `.pointerInput()`      | `.onScrollGesture {}`     |
+| `.on_move(fn)`            | Mouse move tracking  | `.pointerInput()`      | `.onContinuousHover {}`   |
+| `.cursor()`               | Cursor style         | `.pointerInput()`      | `.cursor()`               |
 
 ### Extras
 
-| Method | Description | Compose | SwiftUI |
-|--------|-------------|---------|---------|
-| `.tooltip_text()` | Tooltip | `TooltipBox` | `.help()` |
-| `.tooltip_gap()` | Tooltip-content gap | — | — |
-| `.tooltip_padding()` | Tooltip inner padding | — | — |
-| `.tooltip_snap()` | Snap tooltip in viewport | — | — |
-| `.scrollable()` | Vertical scroll | `.verticalScroll()` | `ScrollView` |
-| `.scrollable_x()` | Horizontal scroll | `.horizontalScroll()` | `ScrollView(.horizontal)` |
-| `.scrollable_xy()` | Both-axis scroll | — | — |
-| `.scroll_anchor_bottom()` | Start scrolled to bottom | `reverseLayout` | `.defaultScrollAnchor(.bottom)` |
-| `.scroll_anchor_right()` | Start scrolled to right | — | `.defaultScrollAnchor(.trailing)` |
-| `.scroll_spacing()` | Scrollbar-content spacing | — | — |
-| `.scrollable_id()` | Scrollable widget ID | — | — |
-| `.hidden(bool)` | Visibility toggle | `AnimatedVisibility` | `.hidden()` |
-| `.id()` | Widget ID | `.testTag()` | `.id()` |
-| `.font_size()` | Font size (widget wrappers) | `fontSize` | `.font(.system(size:))` |
-| `.spacing()` | Child spacing (widget wrappers) | `Arrangement.spacedBy()` | `VStack(spacing:)` |
+| Method                    | Description                     | Compose                  | SwiftUI                           |
+| ------------------------- | ------------------------------- | ------------------------ | --------------------------------- |
+| `.tooltip_text()`         | Tooltip                         | `TooltipBox`             | `.help()`                         |
+| `.tooltip_gap()`          | Tooltip-content gap             | —                        | —                                 |
+| `.tooltip_padding()`      | Tooltip inner padding           | —                        | —                                 |
+| `.tooltip_snap()`         | Snap tooltip in viewport        | —                        | —                                 |
+| `.scrollable()`           | Vertical scroll                 | `.verticalScroll()`      | `ScrollView`                      |
+| `.scrollable_x()`         | Horizontal scroll               | `.horizontalScroll()`    | `ScrollView(.horizontal)`         |
+| `.scrollable_xy()`        | Both-axis scroll                | —                        | —                                 |
+| `.scroll_anchor_bottom()` | Start scrolled to bottom        | `reverseLayout`          | `.defaultScrollAnchor(.bottom)`   |
+| `.scroll_anchor_right()`  | Start scrolled to right         | —                        | `.defaultScrollAnchor(.trailing)` |
+| `.scroll_spacing()`       | Scrollbar-content spacing       | —                        | —                                 |
+| `.scrollable_id()`        | Scrollable widget ID            | —                        | —                                 |
+| `.hidden(bool)`           | Visibility toggle               | `AnimatedVisibility`     | `.hidden()`                       |
+| `.id()`                   | Widget ID                       | `.testTag()`             | `.id()`                           |
+| `.font_size()`            | Font size (widget wrappers)     | `fontSize`               | `.font(.system(size:))`           |
+| `.spacing()`              | Child spacing (widget wrappers) | `Arrangement.spacedBy()` | `VStack(spacing:)`                |
 
 ### Composition
 
@@ -245,13 +236,13 @@ Text::new("Layered")
 iced_modifier = { version = "0.4", features = ["icons", "drag-drop", "animation"] }
 ```
 
-| Feature | Crate | Description |
-|---------|-------|-------------|
-| `icons` | [iced_fonts](https://crates.io/crates/iced_fonts) | Bootstrap icon fonts, `icon_label()` helper |
-| `drag-drop` | [iced_drop](https://crates.io/crates/iced_drop) | `.on_drag()` / `.on_drop()` / `.draggable()` on Element |
-| `animation` | [iced_anim](https://crates.io/crates/iced_anim) | Re-exports `iced_anim` for animation support |
-| `image` | iced (image feature) | `Image` / `InteractiveImage` widget wrapper |
-| `all` | All above | Enable everything |
+| Feature     | Crate                                             | Description                                             |
+| ----------- | ------------------------------------------------- | ------------------------------------------------------- |
+| `icons`     | [iced_fonts](https://crates.io/crates/iced_fonts) | Bootstrap icon fonts, `icon_label()` helper             |
+| `drag-drop` | [iced_drop](https://crates.io/crates/iced_drop)   | `.on_drag()` / `.on_drop()` / `.draggable()` on Element |
+| `animation` | [iced_anim](https://crates.io/crates/iced_anim)   | Re-exports `iced_anim` for animation support            |
+| `image`     | iced (image feature)                              | `Image` / `InteractiveImage` widget wrapper             |
+| `all`       | All above                                         | Enable everything                                       |
 
 ## Examples
 
