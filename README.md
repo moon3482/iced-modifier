@@ -93,6 +93,15 @@ All 12 major iced widgets have modifier-aware wrappers with direct chaining:
 **Pattern A**: No Message generic. Interaction methods (`.on_press()`) transition to interactive type.
 **Pattern B**: Has Message generic from children/callbacks. Interactions available directly.
 
+## Core Types
+
+| Type | Description |
+|------|-------------|
+| `Text`, `Column`, `Row`, ... | Modifier-aware widget wrappers. Style, layout, and interactions via direct chaining |
+| `Modifier` | Reusable styling/layout specification. No generic — can be stored and composed freely |
+| `Interactor<M>` | Modifier + interaction handlers |
+| `ModifyBase` trait | Provides 40+ chainable methods (implemented by widget wrappers, Modifier, and Interactor) |
+
 ## Features
 
 ### Styling
@@ -154,13 +163,20 @@ All color methods (`.background_color()`, `.text_color()`, `.border_color()`, `.
 | `.center()` | Center both axes | `.align(Alignment.Center)` | `.center()` |
 | `.align_top()` | Align top + set height | `Alignment.Top` | `.frame(alignment: .top)` |
 | `.align_bottom()` | Align bottom + set height | `Alignment.Bottom` | `.frame(alignment: .bottom)` |
+| `.max_width()` / `.max_height()` | Maximum dimensions | `.requiredSize()` | `.frame(maxWidth:)` |
+| `.clip(bool)` | Overflow clipping | `.clip()` | `.clipped()` |
 
 ### Interactions
 
 | Method | Description | Compose | SwiftUI |
 |--------|-------------|---------|---------|
 | `.on_press(msg)` | Click handler | `.clickable {}` | `.onTapGesture {}` |
+| `.on_release(msg)` | Release handler | — | — |
 | `.on_double_click(msg)` | Double-click | `.combinedClickable()` | `.onTapGesture(count: 2)` |
+| `.on_right_press(msg)` | Right-click | — | `.contextMenu {}` |
+| `.on_right_release(msg)` | Right-click release | — | — |
+| `.on_middle_press(msg)` | Middle-click | — | — |
+| `.on_middle_release(msg)` | Middle-click release | — | — |
 | `.on_enter(msg)` | Hover enter | `.hoverable()` | `.onHover {}` |
 | `.on_exit(msg)` | Hover exit | `.hoverable()` | `.onHover {}` |
 | `.on_scroll(fn)` | Scroll wheel event | `.pointerInput()` | `.onScrollGesture {}` |
@@ -177,6 +193,7 @@ All color methods (`.background_color()`, `.text_color()`, `.border_color()`, `.
 | `.tooltip_snap()` | Snap tooltip in viewport | — | — |
 | `.scrollable()` | Vertical scroll | `.verticalScroll()` | `ScrollView` |
 | `.scrollable_x()` | Horizontal scroll | `.horizontalScroll()` | `ScrollView(.horizontal)` |
+| `.scrollable_xy()` | Both-axis scroll | — | — |
 | `.scroll_anchor_bottom()` | Start scrolled to bottom | `reverseLayout` | `.defaultScrollAnchor(.bottom)` |
 | `.scroll_anchor_right()` | Start scrolled to right | — | `.defaultScrollAnchor(.trailing)` |
 | `.scroll_spacing()` | Scrollbar-content spacing | — | — |
@@ -230,6 +247,7 @@ iced_modifier = { version = "0.4", features = ["icons", "drag-drop", "animation"
 
 ```bash
 cargo run --example basic
+cargo run --example showcase
 cargo run --example icons --features icons
 cargo run --example drag_drop --features drag-drop
 ```
