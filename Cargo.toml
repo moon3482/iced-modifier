@@ -1,6 +1,6 @@
 [package]
 name = "iced_modifier"
-version = "0.5.0"
+version = "0.5.1"
 edition = "2024"
 description = "SwiftUI/Jetpack Compose-style modifier API for iced — chainable styling, layout, interactions, tooltips, and scrolling"
 readme = "README.md"
@@ -8,7 +8,7 @@ repository = "https://github.com/moon3482/iced-modifier"
 license = "MIT"
 keywords = ["gui", "iced", "modifier", "swiftui", "ui"]
 categories = ["gui"]
-exclude = ["examples/**"]
+exclude = ["examples/**", "Cargo.lock"]
 
 [[example]]
 name = "basic"
