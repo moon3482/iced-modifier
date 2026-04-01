@@ -8,6 +8,7 @@ repository = "https://github.com/moon3482/iced-modifier"
 license = "MIT"
 keywords = ["gui", "iced", "modifier", "swiftui", "ui"]
 categories = ["gui"]
+exclude = ["examples/**"]
 
 [[example]]
 name = "basic"
