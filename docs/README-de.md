@@ -13,7 +13,7 @@ Styling, Layout, Interaktionen und Widget-spezifische Eigenschaften -- alles in 
 
 ```toml
 [dependencies]
-iced_modifier = "0.4"
+iced_modifier = "0.5"
 ```
 
 ```rust
@@ -230,7 +230,7 @@ Text::new("Ebene")
 ## Feature Flags
 
 ```toml
-iced_modifier = { version = "0.2", features = ["icons", "drag-drop", "animation"] }
+iced_modifier = { version = "0.5", features = ["icons", "drag-drop", "animation"] }
 ```
 
 | Feature | Crate | Beschreibung |
@@ -250,13 +250,10 @@ cargo run --example icons --features icons
 cargo run --example drag_drop --features drag-drop
 ```
 
-## Migration von v0.1
+## Migration
 
-- `use iced::widget::text` -> Entfernen, `text` aus dem Prelude verwenden (Wrapper)
-- `use iced::widget::{column, row}` -> `use iced_modifier::{column, row}` Makros verwenden
-- `.modify(Modifier::new()...)` -> Funktioniert weiterhin, direkte Verkettung bevorzugt
-- Feld `Extras::tooltip_text` -> Umbenannt zu `Extras::tooltip` (Typ: `TooltipConfig`)
-- Feld `Extras::scrollable` -> Typ geaendert von `ScrollDirection` zu `ScrollConfig`
+- [v0.4 → v0.5](migration/v0.4-to-v0.5.md) — TextAlign, Button-Direktstil
+- [v0.1 → v0.2](migration/v0.1-to-v0.2.md) — Widget-Wrapper, direkte Verkettung
 
 ## Kompatibilitaet
 

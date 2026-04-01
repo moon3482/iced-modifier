@@ -13,7 +13,7 @@
 
 ```toml
 [dependencies]
-iced_modifier = "0.4"
+iced_modifier = "0.5"
 ```
 
 ```rust
@@ -230,7 +230,7 @@ Text::new("레이어")
 ## Feature Flags
 
 ```toml
-iced_modifier = { version = "0.2", features = ["icons", "drag-drop", "animation"] }
+iced_modifier = { version = "0.5", features = ["icons", "drag-drop", "animation"] }
 ```
 
 | Feature | 크레이트 | 설명 |
@@ -250,13 +250,10 @@ cargo run --example icons --features icons
 cargo run --example drag_drop --features drag-drop
 ```
 
-## v0.1에서 마이그레이션
+## 마이그레이션
 
-- `use iced::widget::text` → 제거, prelude의 `text` 사용 (위젯 래퍼)
-- `use iced::widget::{column, row}` → `use iced_modifier::{column, row}` 매크로 사용
-- `.modify(Modifier::new()...)` → 여전히 동작하지만 직접 체이닝 권장
-- `Extras::tooltip_text` 필드 → `Extras::tooltip`으로 변경 (타입: `TooltipConfig`)
-- `Extras::scrollable` 필드 → 타입 `ScrollDirection` → `ScrollConfig`으로 변경
+- [v0.4 → v0.5](migration/v0.4-to-v0.5.md) — TextAlign, Button 직접 스타일
+- [v0.1 → v0.2](migration/v0.1-to-v0.2.md) — 위젯 래퍼, 직접 체이닝
 
 ## 호환성
 

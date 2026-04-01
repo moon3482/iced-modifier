@@ -13,7 +13,7 @@ Estilos, disposicion, interacciones y propiedades especificas de widgets -- todo
 
 ```toml
 [dependencies]
-iced_modifier = "0.4"
+iced_modifier = "0.5"
 ```
 
 ```rust
@@ -230,7 +230,7 @@ Text::new("Capa")
 ## Feature Flags
 
 ```toml
-iced_modifier = { version = "0.2", features = ["icons", "drag-drop", "animation"] }
+iced_modifier = { version = "0.5", features = ["icons", "drag-drop", "animation"] }
 ```
 
 | Feature | Crate | Descripcion |
@@ -250,13 +250,10 @@ cargo run --example icons --features icons
 cargo run --example drag_drop --features drag-drop
 ```
 
-## Migracion desde v0.1
+## Migracion
 
-- `use iced::widget::text` -> Eliminar, usar `text` del prelude (wrapper)
-- `use iced::widget::{column, row}` -> Usar macros `use iced_modifier::{column, row}`
-- `.modify(Modifier::new()...)` -> Sigue funcionando, pero se prefiere encadenamiento directo
-- Campo `Extras::tooltip_text` -> Renombrado a `Extras::tooltip` (tipo: `TooltipConfig`)
-- Campo `Extras::scrollable` -> Tipo cambiado de `ScrollDirection` a `ScrollConfig`
+- [v0.4 → v0.5](migration/v0.4-to-v0.5.md) — TextAlign, estilo directo de Button
+- [v0.1 → v0.2](migration/v0.1-to-v0.2.md) — Wrappers de widgets, encadenamiento directo
 
 ## Compatibilidad
 

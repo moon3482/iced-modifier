@@ -13,7 +13,7 @@ Style, mise en page, interactions et proprietes specifiques aux widgets -- le to
 
 ```toml
 [dependencies]
-iced_modifier = "0.4"
+iced_modifier = "0.5"
 ```
 
 ```rust
@@ -230,7 +230,7 @@ Text::new("Couche")
 ## Feature Flags
 
 ```toml
-iced_modifier = { version = "0.2", features = ["icons", "drag-drop", "animation"] }
+iced_modifier = { version = "0.5", features = ["icons", "drag-drop", "animation"] }
 ```
 
 | Feature | Crate | Description |
@@ -250,13 +250,10 @@ cargo run --example icons --features icons
 cargo run --example drag_drop --features drag-drop
 ```
 
-## Migration depuis v0.1
+## Migration
 
-- `use iced::widget::text` -> Supprimer, utiliser `text` du prelude (wrapper)
-- `use iced::widget::{column, row}` -> Utiliser les macros `use iced_modifier::{column, row}`
-- `.modify(Modifier::new()...)` -> Fonctionne toujours, mais chainage direct prefere
-- Champ `Extras::tooltip_text` -> Renomme en `Extras::tooltip` (type : `TooltipConfig`)
-- Champ `Extras::scrollable` -> Type change de `ScrollDirection` a `ScrollConfig`
+- [v0.4 → v0.5](migration/v0.4-to-v0.5.md) — TextAlign, style direct du Button
+- [v0.1 → v0.2](migration/v0.1-to-v0.2.md) — Wrappers de widgets, chainage direct
 
 ## Compatibilite
 
