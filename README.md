@@ -103,6 +103,15 @@ All 12 major iced widgets have modifier-aware wrappers with direct chaining:
 | `Interactor<M>` | Modifier + interaction handlers |
 | `ModifyBase` trait | Provides 40+ chainable methods (implemented by widget wrappers, Modifier, and Interactor) |
 
+## Core Types
+
+| Type | Description |
+|------|-------------|
+| `Text`, `Column`, `Row`, ... | Modifier-aware widget wrappers. Style, layout, and interactions via direct chaining |
+| `Modifier` | Reusable styling/layout specification. No generic — can be stored and composed freely |
+| `Interactor<M>` | Modifier + interaction handlers |
+| `ModifyBase` trait | Provides 40+ chainable methods (implemented by widget wrappers, Modifier, and Interactor) |
+
 ## Features
 
 ### Styling
