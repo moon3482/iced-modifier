@@ -20,7 +20,7 @@ use std::sync::Arc;
 
 use iced::advanced::text as advanced_text;
 use iced::widget::{container, scrollable, text as iced_text};
-use iced::{Color, Element, Pixels, Point, alignment, mouse};
+use iced::{Element, Pixels, Point, alignment, mouse};
 
 use crate::IntoModified;
 use crate::modifier::accumulator::Interactions;
