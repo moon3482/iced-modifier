@@ -13,7 +13,7 @@
 
 ```toml
 [dependencies]
-iced_modifier = "0.2"
+iced_modifier = "0.4"
 ```
 
 ```rust
@@ -81,7 +81,7 @@ Text::new("Hello")
 | `Image` | A (-> InteractiveImage) | `opacity`, `rotation`, `content_fit`, `scale` |
 | `Column` | B | `spacing`, `push`, `extend`, `column![]` |
 | `Row` | B | `spacing`, `push`, `extend`, `row![]` |
-| `Button` | B | `on_press`, `on_press_maybe`, `button_padding` |
+| `Button` | B\* | `on_press`, `on_press_maybe`, `button_padding` |
 | `TextInput` | B | `font_size`, `on_input`, `on_submit`, `on_paste`, `secure` |
 | `TextEditor` | B | `font_size`, `on_action`, `wrapping`, `editor_padding` |
 | `Checkbox` | B | `on_toggle`, `label`, `check_size`, `check_spacing`, `text_size` |
@@ -92,6 +92,7 @@ Text::new("Hello")
 
 **パターン A**: Message ジェネリックなし。インタラクションメソッド(`.on_press()`)呼び出し時にインタラクティブ型へ遷移。
 **パターン B**: 子要素/コールバックにより Message ジェネリック保持。インタラクションを直接使用可能。
+**B\***: Button はスタイル属性（`background_color`, `corner_radius`, `border`, `shadow`, `text_color`）を Container ラッピングではなく iced Button に直接適用します。
 
 ## コア型
 
@@ -244,6 +245,7 @@ iced_modifier = { version = "0.2", features = ["icons", "drag-drop", "animation"
 
 ```bash
 cargo run --example basic
+cargo run --example showcase
 cargo run --example icons --features icons
 cargo run --example drag_drop --features drag-drop
 ```

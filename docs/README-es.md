@@ -13,7 +13,7 @@ Estilos, disposicion, interacciones y propiedades especificas de widgets -- todo
 
 ```toml
 [dependencies]
-iced_modifier = "0.2"
+iced_modifier = "0.4"
 ```
 
 ```rust
@@ -81,7 +81,7 @@ Los 12 principales widgets de iced tienen soporte de encadenamiento directo de m
 | `Image` | A (-> InteractiveImage) | `opacity`, `rotation`, `content_fit`, `scale` |
 | `Column` | B | `spacing`, `push`, `extend`, `column![]` |
 | `Row` | B | `spacing`, `push`, `extend`, `row![]` |
-| `Button` | B | `on_press`, `on_press_maybe`, `button_padding` |
+| `Button` | B\* | `on_press`, `on_press_maybe`, `button_padding` |
 | `TextInput` | B | `font_size`, `on_input`, `on_submit`, `on_paste`, `secure` |
 | `TextEditor` | B | `font_size`, `on_action`, `wrapping`, `editor_padding` |
 | `Checkbox` | B | `on_toggle`, `label`, `check_size`, `check_spacing`, `text_size` |
@@ -92,6 +92,7 @@ Los 12 principales widgets de iced tienen soporte de encadenamiento directo de m
 
 **Patron A**: Sin generico Message. Los metodos de interaccion (`.on_press()`) transicionan al tipo interactivo.
 **Patron B**: Generico Message por hijos/callbacks. Interacciones disponibles directamente.
+**B\***: Button aplica propiedades de estilo (`background_color`, `corner_radius`, `border`, `shadow`, `text_color`) directamente al Button de iced, no mediante Container wrapping.
 
 ## Tipos principales
 
@@ -244,6 +245,7 @@ iced_modifier = { version = "0.2", features = ["icons", "drag-drop", "animation"
 
 ```bash
 cargo run --example basic
+cargo run --example showcase
 cargo run --example icons --features icons
 cargo run --example drag_drop --features drag-drop
 ```
