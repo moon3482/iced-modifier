@@ -17,6 +17,13 @@ enum Tab {
     Interactions,
     ScrollableExtras,
     Patterns,
+    Applied,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum AppliedSubTab {
+    ColumnLayout,
+    RowLayout,
 }
 
 impl Tab {
@@ -29,6 +36,7 @@ impl Tab {
         Tab::Interactions,
         Tab::ScrollableExtras,
         Tab::Patterns,
+        Tab::Applied,
     ];
 
     fn label(self) -> &'static str {
@@ -41,6 +49,7 @@ impl Tab {
             Tab::Interactions => "Interactions",
             Tab::ScrollableExtras => "Scrollable & Extras",
             Tab::Patterns => "Patterns",
+            Tab::Applied => "Applied",
         }
     }
 }
@@ -71,6 +80,9 @@ enum Message {
     MouseMoved(iced::Point),
     ToggleHidden(bool),
     ToggleError(bool),
+    AppliedSubTabSelected(AppliedSubTab),
+    AddToCart(usize),
+    ToggleCategory(usize),
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -103,6 +115,10 @@ struct App {
     // Tab 7: Extras
     show_hidden: bool,
     is_error: bool,
+    // Tab 9: Applied
+    applied_sub_tab: AppliedSubTab,
+    active_category: usize,
+    cart_count: u32,
 }
 
 impl App {
@@ -127,6 +143,9 @@ impl App {
             last_mouse_pos: None,
             show_hidden: false,
             is_error: false,
+            applied_sub_tab: AppliedSubTab::ColumnLayout,
+            active_category: 0,
+            cart_count: 0,
         }
     }
 }
@@ -172,6 +191,9 @@ fn update(state: &mut App, message: Message) -> iced::Task<Message> {
         Message::MouseMoved(pos) => state.last_mouse_pos = Some(pos),
         Message::ToggleHidden(val) => state.show_hidden = val,
         Message::ToggleError(val) => state.is_error = val,
+        Message::AppliedSubTabSelected(sub) => state.applied_sub_tab = sub,
+        Message::AddToCart(_idx) => state.cart_count += 1,
+        Message::ToggleCategory(idx) => state.active_category = idx,
     }
     iced::Task::none()
 }
@@ -192,6 +214,7 @@ fn view(state: &App) -> Element<'_, Message> {
         Tab::Interactions => tab_interactions(state),
         Tab::ScrollableExtras => tab_scrollable_extras(state),
         Tab::Patterns => tab_patterns(state),
+        Tab::Applied => tab_applied(state),
     };
 
     let page = column![
@@ -1308,5 +1331,478 @@ fn tab_patterns(state: &App) -> Element<'_, Message> {
     ]
     .spacing(12)
     .padding(16)
+    .into()
+}
+
+// ═══════════════════════════════════════════════════════════════
+// Tab 9: Applied — Shopping Mall Layout (Column / Row sub-tabs)
+// ═══════════════════════════════════════════════════════════════
+
+struct Product {
+    name: &'static str,
+    price: f32,
+    original_price: Option<f32>,
+    rating: f32,
+    reviews: u32,
+    category: usize,
+    color: &'static str,
+}
+
+const PRODUCTS: &[Product] = &[
+    Product { name: "Classic Cotton T-Shirt", price: 29.99, original_price: None, rating: 4.5, reviews: 128, category: 1, color: "#42A5F5" },
+    Product { name: "Running Sneakers Pro", price: 89.99, original_price: Some(119.99), rating: 4.8, reviews: 256, category: 2, color: "#66BB6A" },
+    Product { name: "Leather Crossbody Bag", price: 65.00, original_price: Some(85.00), rating: 4.2, reviews: 87, category: 3, color: "#AB47BC" },
+    Product { name: "Slim Fit Denim Jeans", price: 59.99, original_price: None, rating: 4.6, reviews: 342, category: 1, color: "#5C6BC0" },
+    Product { name: "Canvas Tote Bag", price: 24.99, original_price: Some(39.99), rating: 4.0, reviews: 64, category: 3, color: "#FF7043" },
+    Product { name: "Sport Running Shoes", price: 109.99, original_price: Some(139.99), rating: 4.9, reviews: 512, category: 2, color: "#26A69A" },
+];
+
+const CATEGORIES: &[&str] = &["All", "Clothing", "Shoes", "Bags"];
+
+fn star_text(rating: f32) -> String {
+    let full = rating as usize;
+    let half = if rating - full as f32 >= 0.5 { 1 } else { 0 };
+    let empty = 5 - full - half;
+    format!(
+        "{}{}{} ({:.1})",
+        "\u{2605}".repeat(full),
+        if half > 0 { "\u{2BEA}" } else { "" },
+        "\u{2606}".repeat(empty),
+        rating,
+    )
+}
+
+fn tab_applied(state: &App) -> Element<'_, Message> {
+    // ── Sub-tab bar ──
+    let sub_tabs = [
+        (AppliedSubTab::ColumnLayout, "Column Layout (Mobile)"),
+        (AppliedSubTab::RowLayout, "Row Layout (Desktop)"),
+    ];
+    let mut sub_bar = Row::new().spacing(4);
+    for &(sub, label) in &sub_tabs {
+        let is_active = sub == state.applied_sub_tab;
+        let btn = Button::new(
+            Text::new(label)
+                .font_size(12)
+                .modify_if(is_active, |t| t.color("#FFF"))
+                .modify_if(!is_active, |t| t.color("#555")),
+        )
+        .on_press(Message::AppliedSubTabSelected(sub))
+        .button_padding(iced::Padding { top: 8.0, right: 14.0, bottom: 8.0, left: 14.0 })
+        .corner_radius(6)
+        .modify_if(is_active, |b| b.background_color("#1976D2"))
+        .modify_if(!is_active, |b| b.background_color("#E0E0E0"))
+        .cursor(mouse::Interaction::Pointer);
+        sub_bar = sub_bar.push(btn);
+    }
+
+    let content = match state.applied_sub_tab {
+        AppliedSubTab::ColumnLayout => shop_column_layout(state),
+        AppliedSubTab::RowLayout => shop_row_layout(state),
+    };
+
+    column![
+        section("Shopping Mall — Complex Layout Demo"),
+        code_label("Column/Row deep nesting, Modifier reuse, modify_if, fill_portion, scrollable"),
+        sub_bar,
+        content,
+    ]
+    .spacing(8)
+    .padding(16)
+    .into()
+}
+
+// ── Column Layout: Mobile-style vertical product list ──
+
+fn shop_column_layout(state: &App) -> Element<'_, Message> {
+    let cart_label = format!("\u{1F6D2} Cart ({})", state.cart_count);
+
+    // Header
+    let header = row![
+        Text::new("MODI SHOP").font_size(20).color("#1A237E"),
+        Text::new(cart_label)
+            .font_size(13)
+            .color("#FFF")
+            .padding(iced::Padding { top: 6.0, right: 12.0, bottom: 6.0, left: 12.0 })
+            .background_color("#1976D2")
+            .corner_radius(16),
+    ]
+    .spacing(8)
+    .padding(iced::Padding { top: 12.0, right: 16.0, bottom: 12.0, left: 16.0 })
+    .background_color("#FFF")
+    .shadow((0.0, 1.0, 4.0, "#00000015"));
+
+    // Search bar
+    let search = TextInput::new("\u{1F50D} Search products...", &state.input_value)
+        .on_input(Message::InputChanged)
+        .font_size(14)
+        .input_padding(iced::Padding { top: 10.0, right: 12.0, bottom: 10.0, left: 12.0 })
+        .padding(4)
+        .corner_radius(8)
+        .border(("#E0E0E0", 1.0, 8.0));
+
+    // Category filter bar (horizontal scrollable)
+    let mut cat_row = Row::new().spacing(6);
+    for (i, &cat) in CATEGORIES.iter().enumerate() {
+        let is_active = i == state.active_category;
+        let chip = Text::new(cat)
+            .font_size(12)
+            .padding(iced::Padding { top: 6.0, right: 14.0, bottom: 6.0, left: 14.0 })
+            .corner_radius(16)
+            .modify_if_else(
+                is_active,
+                |t| t.background_color("#1976D2").color("#FFF"),
+                |t| t.background_color("#F5F5F5").color("#616161"),
+            )
+            .cursor(mouse::Interaction::Pointer)
+            .on_press(Message::ToggleCategory(i));
+        cat_row = cat_row.push(chip);
+    }
+    let categories = cat_row
+        .padding_y(4)
+        .scrollable_x();
+
+    // Product cards
+    let filtered: Vec<(usize, &Product)> = PRODUCTS
+        .iter()
+        .enumerate()
+        .filter(|(_, p)| state.active_category == 0 || p.category == state.active_category)
+        .collect();
+
+    let card_style = Modifier::new()
+        .padding(12)
+        .background_color("#FFF")
+        .corner_radius(10)
+        .border(("#EEEEEE", 1.0, 10.0))
+        .shadow((0.0, 1.0, 6.0, "#00000010"));
+
+    let mut product_list = Column::new().spacing(10);
+    for (idx, product) in &filtered {
+        // Product image placeholder
+        let img_placeholder = Text::new("\u{1F455}")
+            .font_size(32)
+            .text_center()
+            .text_width(Length::Fill)
+            .text_height(Length::Fixed(60.0))
+            .padding(12)
+            .background_color(product.color)
+            .corner_radius(8);
+
+        // Rating
+        let stars = Text::new(star_text(product.rating))
+            .font_size(12)
+            .color("#FF8F00");
+        let review_count = Text::new(format!("{} reviews", product.reviews))
+            .font_size(11)
+            .color("#9E9E9E");
+
+        // Price
+        let mut price_row = Row::new().spacing(6);
+        price_row = price_row.push(
+            Text::new(format!("${:.2}", product.price))
+                .font_size(18)
+                .color("#1B5E20"),
+        );
+        if let Some(orig) = product.original_price {
+            price_row = price_row.push(
+                Text::new(format!("${:.2}", orig))
+                    .font_size(13)
+                    .color("#BDBDBD"),
+            );
+            let discount = ((1.0 - product.price / orig) * 100.0) as i32;
+            price_row = price_row.push(
+                Text::new(format!("-{}%", discount))
+                    .font_size(12)
+                    .color("#FFF")
+                    .padding(iced::Padding { top: 2.0, right: 6.0, bottom: 2.0, left: 6.0 })
+                    .background_color("#E53935")
+                    .corner_radius(4),
+            );
+        }
+
+        // Add to cart button — modifier styles apply directly to iced Button
+        let cart_btn = Button::new(
+            Text::new("Add to Cart").font_size(12).color("#FFF").text_center(),
+        )
+        .on_press(Message::AddToCart(*idx))
+        .button_padding(iced::Padding { top: 8.0, right: 16.0, bottom: 8.0, left: 16.0 })
+        .fill_width()
+        .background_color("#1976D2")
+        .corner_radius(6)
+        .cursor(mouse::Interaction::Pointer);
+
+        // Product info column
+        let info = column![
+            Text::new(product.name).font_size(15).color("#212121"),
+            row![stars, review_count].spacing(6),
+            price_row,
+            cart_btn,
+        ]
+        .spacing(6)
+        .fill_portion(2);
+
+        // Card: image + info side by side
+        let card = row![
+            img_placeholder.fill_portion(1),
+            info,
+        ]
+        .spacing(12)
+        .modify(card_style.clone());
+
+        product_list = product_list.push(card);
+    }
+
+    // Footer
+    let footer = row![
+        Text::new("\u{1F69A}").font_size(16),
+        Text::new("Free shipping on orders over $50").font_size(12).color("#616161"),
+    ]
+    .spacing(8)
+    .padding(12)
+    .fill_width()
+    .background_color("#E8F5E9")
+    .corner_radius(8);
+
+    // Result count
+    let result_info = Text::new(format!("Showing {} products", filtered.len()))
+        .font_size(12)
+        .color("#9E9E9E");
+
+    column![
+        header,
+        search,
+        categories,
+        result_info,
+        product_list,
+        footer,
+    ]
+    .spacing(10)
+    .into()
+}
+
+// ── Row Layout: Desktop-style grid with sidebar ──
+
+fn shop_row_layout(state: &App) -> Element<'_, Message> {
+    let cart_label = format!("\u{1F6D2} Cart ({})", state.cart_count);
+
+    // ── Header: logo + nav + cart ──
+    let nav_items = ["New Arrivals", "Best Sellers", "Sale"];
+    let mut nav = Row::new().spacing(16);
+    for &item in &nav_items {
+        nav = nav.push(
+            Text::new(item)
+                .font_size(13)
+                .color("#555")
+                .cursor(mouse::Interaction::Pointer)
+                .on_press(Message::PrimaryClicked),
+        );
+    }
+
+    let header = row![
+        Text::new("MODI SHOP").font_size(18).color("#1A237E"),
+        nav,
+        Text::new(cart_label)
+            .font_size(12)
+            .color("#FFF")
+            .padding(iced::Padding { top: 5.0, right: 10.0, bottom: 5.0, left: 10.0 })
+            .background_color("#1976D2")
+            .corner_radius(14),
+    ]
+    .spacing(16)
+    .padding(iced::Padding { top: 10.0, right: 16.0, bottom: 10.0, left: 16.0 })
+    .background_color("#FFF")
+    .shadow((0.0, 1.0, 4.0, "#00000015"));
+
+    // ── Sidebar: filters ──
+    let mut cat_list = Column::new().spacing(4);
+    for (i, &cat) in CATEGORIES.iter().enumerate() {
+        let is_active = i == state.active_category;
+        let item = Text::new(cat)
+            .font_size(13)
+            .padding(iced::Padding { top: 6.0, right: 10.0, bottom: 6.0, left: 10.0 })
+            .corner_radius(4)
+            .fill_width()
+            .modify_if_else(
+                is_active,
+                |t| t.background_color("#E3F2FD").color("#1976D2"),
+                |t| t.color("#424242"),
+            )
+            .cursor(mouse::Interaction::Pointer)
+            .on_press(Message::ToggleCategory(i));
+        cat_list = cat_list.push(item);
+    }
+
+    let price_filter = column![
+        Text::new("Price Range").font_size(12).color("#9E9E9E"),
+        Slider::new(0.0..=200.0, state.slider_value, Message::SliderChanged)
+            .step(10.0)
+            .slider_width(Length::Fill),
+        Text::new(format!("Up to ${:.0}", state.slider_value))
+            .font_size(12).color("#616161"),
+    ]
+    .spacing(4);
+
+    let sidebar = column![
+        Text::new("Categories").font_size(14).color("#1A237E"),
+        cat_list,
+        Text::new("Filters").font_size(14).color("#1A237E")
+            .padding(iced::Padding { top: 12.0, right: 0.0, bottom: 0.0, left: 0.0 }),
+        price_filter,
+        // Sort
+        Text::new("Sort By").font_size(14).color("#1A237E")
+            .padding(iced::Padding { top: 12.0, right: 0.0, bottom: 0.0, left: 0.0 }),
+        PickList::new(
+            vec!["Price: Low to High", "Price: High to Low", "Rating", "Newest"],
+            state.picked.as_deref(),
+            |v: &str| Message::PickSelected(v.to_string()),
+        )
+        .placeholder("Select...")
+        .text_size(12),
+    ]
+    .spacing(6)
+    .padding(12)
+    .fill_portion(1)
+    .background_color("#FAFAFA")
+    .corner_radius(8)
+    .border(("#EEEEEE", 1.0, 8.0));
+
+    // ── Main: product grid ──
+    let filtered: Vec<(usize, &Product)> = PRODUCTS
+        .iter()
+        .enumerate()
+        .filter(|(_, p)| state.active_category == 0 || p.category == state.active_category)
+        .collect();
+
+    let card_style = Modifier::new()
+        .background_color("#FFF")
+        .corner_radius(8)
+        .border(("#EEEEEE", 1.0, 8.0))
+        .shadow((0.0, 1.0, 4.0, "#00000008"))
+        .fill_portion(1);
+
+    fn make_grid_card<'a>(
+        idx: usize,
+        product: &Product,
+        card_style: &Modifier,
+    ) -> Element<'a, Message> {
+        let img = Text::new("\u{1F455}")
+            .font_size(28)
+            .text_center()
+            .text_width(Length::Fill)
+            .text_height(Length::Fixed(50.0))
+            .padding(8)
+            .background_color(product.color)
+            .corner_radius(iced::border::Radius {
+                top_left: 8.0,
+                top_right: 8.0,
+                bottom_left: 0.0,
+                bottom_right: 0.0,
+            });
+
+        let mut price_row: Row<'_, Message> = Row::new().spacing(4);
+        price_row = price_row.push(
+            Text::new(format!("${:.2}", product.price))
+                .font_size(15)
+                .color("#1B5E20"),
+        );
+        if let Some(orig) = product.original_price {
+            price_row = price_row.push(
+                Text::new(format!("${:.2}", orig))
+                    .font_size(11)
+                    .color("#BDBDBD"),
+            );
+        }
+
+        let card_body = column![
+            Text::new(product.name).font_size(13).color("#212121"),
+            Text::new(star_text(product.rating)).font_size(11).color("#FF8F00"),
+            price_row,
+            Button::new(Text::new("Add to Cart").font_size(11).color("#FFF").text_center())
+                .on_press(Message::AddToCart(idx))
+                .button_padding(iced::Padding { top: 6.0, right: 10.0, bottom: 6.0, left: 10.0 })
+                .fill_width()
+                .background_color("#1976D2")
+                .corner_radius(4)
+                .cursor(mouse::Interaction::Pointer),
+        ]
+        .spacing(4)
+        .padding(8);
+
+        column![img, card_body]
+            .spacing(0)
+            .modify(card_style.clone())
+    }
+
+    // Build grid rows (3 per row)
+    let mut grid = Column::new().spacing(10);
+    let mut chunks = filtered.chunks(3);
+    while let Some(chunk) = chunks.next() {
+        let mut grid_row = Row::new().spacing(10);
+        for &(idx, product) in chunk {
+            grid_row = grid_row.push(make_grid_card(idx, product, &card_style));
+        }
+        // Fill remaining slots with empty space to keep alignment
+        for _ in chunk.len()..3 {
+            grid_row = grid_row.push(
+                Column::new().fill_portion(1),
+            );
+        }
+        grid = grid.push(grid_row);
+    }
+
+    let result_info = Text::new(format!("{} products found", filtered.len()))
+        .font_size(12)
+        .color("#9E9E9E")
+        .padding(iced::Padding { top: 0.0, right: 0.0, bottom: 4.0, left: 0.0 });
+
+    let main_content = column![
+        result_info,
+        grid,
+    ]
+    .spacing(8)
+    .fill_portion(3);
+
+    // ── Sidebar + Main (Row layout) ──
+    let body = row![
+        sidebar,
+        main_content,
+    ]
+    .spacing(12);
+
+    // ── Footer: pagination ──
+    let pagination = row![
+        Text::new("\u{25C0}").font_size(14).padding(iced::Padding { top: 6.0, right: 10.0, bottom: 6.0, left: 10.0 })
+            .background_color("#F5F5F5").corner_radius(4)
+            .cursor(mouse::Interaction::Pointer).on_press(Message::PrimaryClicked),
+        Text::new("1").font_size(13).padding(iced::Padding { top: 6.0, right: 10.0, bottom: 6.0, left: 10.0 })
+            .background_color("#1976D2").color("#FFF").corner_radius(4),
+        Text::new("2").font_size(13).padding(iced::Padding { top: 6.0, right: 10.0, bottom: 6.0, left: 10.0 })
+            .background_color("#F5F5F5").corner_radius(4)
+            .cursor(mouse::Interaction::Pointer).on_press(Message::PrimaryClicked),
+        Text::new("3").font_size(13).padding(iced::Padding { top: 6.0, right: 10.0, bottom: 6.0, left: 10.0 })
+            .background_color("#F5F5F5").corner_radius(4)
+            .cursor(mouse::Interaction::Pointer).on_press(Message::PrimaryClicked),
+        Text::new("\u{25B6}").font_size(14).padding(iced::Padding { top: 6.0, right: 10.0, bottom: 6.0, left: 10.0 })
+            .background_color("#F5F5F5").corner_radius(4)
+            .cursor(mouse::Interaction::Pointer).on_press(Message::PrimaryClicked),
+    ]
+    .spacing(4)
+    .padding(iced::Padding { top: 12.0, right: 0.0, bottom: 0.0, left: 0.0 });
+
+    let footer = row![
+        Text::new("\u{1F69A} Free shipping over $50").font_size(11).color("#616161"),
+        pagination,
+    ]
+    .spacing(12)
+    .padding(iced::Padding { top: 8.0, right: 12.0, bottom: 8.0, left: 12.0 })
+    .background_color("#FAFAFA")
+    .corner_radius(8);
+
+    column![
+        header,
+        body,
+        footer,
+    ]
+    .spacing(10)
     .into()
 }
