@@ -81,7 +81,7 @@ Les 12 principaux widgets iced sont supportes avec chainage direct de modifiers 
 | `Image` | A (-> InteractiveImage) | `opacity`, `rotation`, `content_fit`, `scale` |
 | `Column` | B | `spacing`, `push`, `extend`, `column![]` |
 | `Row` | B | `spacing`, `push`, `extend`, `row![]` |
-| `Button` | B | `on_press`, `on_press_maybe`, `button_padding` |
+| `Button` | B\* | `on_press`, `on_press_maybe`, `button_padding` |
 | `TextInput` | B | `font_size`, `on_input`, `on_submit`, `on_paste`, `secure` |
 | `TextEditor` | B | `font_size`, `on_action`, `wrapping`, `editor_padding` |
 | `Checkbox` | B | `on_toggle`, `label`, `check_size`, `check_spacing`, `text_size` |
@@ -92,6 +92,7 @@ Les 12 principaux widgets iced sont supportes avec chainage direct de modifiers 
 
 **Modele A** : Pas de generique Message. Les methodes d'interaction (`.on_press()`) effectuent une transition vers le type interactif.
 **Modele B** : Generique Message via enfants/callbacks. Interactions disponibles directement.
+**B\***: Button applique les proprietes de style (`background_color`, `corner_radius`, `border`, `shadow`, `text_color`) directement sur le Button iced, pas via un Container wrapper.
 
 ## Types principaux
 

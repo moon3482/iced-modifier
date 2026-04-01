@@ -81,7 +81,7 @@ All 12 major iced widgets have modifier-aware wrappers with direct chaining:
 | `Image` | A (→ InteractiveImage) | `opacity`, `rotation`, `content_fit`, `scale` |
 | `Column` | B | `spacing`, `push`, `extend`, `column![]` |
 | `Row` | B | `spacing`, `push`, `extend`, `row![]` |
-| `Button` | B | `on_press`, `on_press_maybe`, `button_padding` |
+| `Button` | B\* | `on_press`, `on_press_maybe`, `button_padding` |
 | `TextInput` | B | `font_size`, `on_input`, `on_submit`, `on_paste`, `secure` |
 | `TextEditor` | B | `font_size`, `on_action`, `wrapping`, `editor_padding` |
 | `Checkbox` | B | `on_toggle`, `label`, `check_size`, `check_spacing`, `text_size` |
@@ -92,6 +92,7 @@ All 12 major iced widgets have modifier-aware wrappers with direct chaining:
 
 **Pattern A**: No Message generic. Interaction methods (`.on_press()`) transition to interactive type.
 **Pattern B**: Has Message generic from children/callbacks. Interactions available directly.
+**B\***: Button applies style properties (`background_color`, `corner_radius`, `border`, `shadow`, `text_color`) directly to the iced Button, not through Container wrapping.
 
 ## Core Types
 

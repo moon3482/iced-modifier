@@ -81,7 +81,7 @@ Text::new("Hello")
 | `Image` | A (→ InteractiveImage) | `opacity`, `rotation`, `content_fit`, `scale` |
 | `Column` | B | `spacing`, `push`, `extend`, `column![]` |
 | `Row` | B | `spacing`, `push`, `extend`, `row![]` |
-| `Button` | B | `on_press`, `on_press_maybe`, `button_padding` |
+| `Button` | B\* | `on_press`, `on_press_maybe`, `button_padding` |
 | `TextInput` | B | `font_size`, `on_input`, `on_submit`, `on_paste`, `secure` |
 | `TextEditor` | B | `font_size`, `on_action`, `wrapping`, `editor_padding` |
 | `Checkbox` | B | `on_toggle`, `label`, `check_size`, `check_spacing`, `text_size` |
@@ -92,6 +92,7 @@ Text::new("Hello")
 
 **패턴 A**: Message 제네릭 없음. 인터랙션 메서드(`.on_press()`) 호출 시 인터랙티브 타입으로 전환.
 **패턴 B**: 자식/콜백으로 인해 Message 제네릭 보유. 인터랙션 직접 사용 가능.
+**B\***: Button은 스타일 속성(`background_color`, `corner_radius`, `border`, `shadow`, `text_color`)을 Container 래핑이 아닌 iced Button에 직접 적용합니다.
 
 ## 핵심 타입
 

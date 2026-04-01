@@ -81,7 +81,7 @@ Alle 12 wichtigen iced-Widgets werden mit direkter Modifier-Verkettung unterstue
 | `Image` | A (-> InteractiveImage) | `opacity`, `rotation`, `content_fit`, `scale` |
 | `Column` | B | `spacing`, `push`, `extend`, `column![]` |
 | `Row` | B | `spacing`, `push`, `extend`, `row![]` |
-| `Button` | B | `on_press`, `on_press_maybe`, `button_padding` |
+| `Button` | B\* | `on_press`, `on_press_maybe`, `button_padding` |
 | `TextInput` | B | `font_size`, `on_input`, `on_submit`, `on_paste`, `secure` |
 | `TextEditor` | B | `font_size`, `on_action`, `wrapping`, `editor_padding` |
 | `Checkbox` | B | `on_toggle`, `label`, `check_size`, `check_spacing`, `text_size` |
@@ -92,6 +92,7 @@ Alle 12 wichtigen iced-Widgets werden mit direkter Modifier-Verkettung unterstue
 
 **Muster A**: Kein Message-Generic. Interaktionsmethoden (`.on_press()`) fuehren zum interaktiven Typ.
 **Muster B**: Message-Generic durch Kinder/Callbacks. Interaktionen direkt verfuegbar.
+**B\***: Button wendet Style-Eigenschaften (`background_color`, `corner_radius`, `border`, `shadow`, `text_color`) direkt auf den iced Button an, nicht ueber Container-Wrapping.
 
 ## Kerntypen
 

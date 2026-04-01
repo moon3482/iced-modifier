@@ -81,7 +81,7 @@ Text::new("Hello")
 | `Image` | A (-> InteractiveImage) | `opacity`, `rotation`, `content_fit`, `scale` |
 | `Column` | B | `spacing`, `push`, `extend`, `column![]` |
 | `Row` | B | `spacing`, `push`, `extend`, `row![]` |
-| `Button` | B | `on_press`, `on_press_maybe`, `button_padding` |
+| `Button` | B\* | `on_press`, `on_press_maybe`, `button_padding` |
 | `TextInput` | B | `font_size`, `on_input`, `on_submit`, `on_paste`, `secure` |
 | `TextEditor` | B | `font_size`, `on_action`, `wrapping`, `editor_padding` |
 | `Checkbox` | B | `on_toggle`, `label`, `check_size`, `check_spacing`, `text_size` |
@@ -92,6 +92,7 @@ Text::new("Hello")
 
 **模式 A**: 无 Message 泛型。调用交互方法(`.on_press()`)时转换为交互类型。
 **模式 B**: 因子组件/回调而拥有 Message 泛型。可直接使用交互方法。
+**B\***: Button 将样式属性（`background_color`, `corner_radius`, `border`, `shadow`, `text_color`）直接应用于 iced Button，而非通过 Container 包装。
 
 ## 核心类型
 
